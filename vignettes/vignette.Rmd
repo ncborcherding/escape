@@ -1,0 +1,193 @@
+---
+title: Using escape to perform ssGSEA analyses on single-cell RNA-seq data.
+author: 
+- name: Nick Borcherding
+  email: ncborch@gmail.com
+  affiliation: Washington University in St. Louis, School of Medicine, St. Louis, MO, USA
+- name: Jared Andrews
+  email: jared.andrews07@gmail.com
+  affiliation: Washington University in St. Louis, School of Medicine, St. Louis, MO, USA
+date: "June 1st, 2020"
+output:
+  BiocStyle::html_document:
+    toc_float: true
+package: escape
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{Escape-ingToWork}
+  %\usepackage[UTF-8]{inputenc}
+---
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+knitr::opts_chunk$set(error=FALSE, message=FALSE, warning=FALSE)
+library(BiocStyle)
+```
+
+## Loading Libraries
+
+```{r}
+suppressPackageStartupMessages(library(escapee))
+suppressPackageStartupMessages(library(Seurat))
+suppressPackageStartupMessages(library(dittoSeq))
+suppressPackageStartupMessages(library(SingleCellExperiment))
+```
+
+## Loading Processed Single-Cell Data
+
+For the demonstration of *escape*, we will use the example "pbmc_small" data from *Seurat* and also generate a SingleCellExperiment object from it.
+
+```{r}
+data("pbmc_small")
+pbmc_small <- suppressMessages(UpdateSeuratObject(pbmc_small))
+sce <- as.SingleCellExperiment(pbmc_small)
+```
+
+## Getting Gene Sets
+
+The first step in the process of performing gene set enrichment analysis is identifying the gene sets we would like to use. The function *getGeneSets()* allows users to isolate a whole or multiple libraries from a list of GSEABase GeneSetCollection objects. We can do this for gene set collections from the built-in [Molecular Signature Database](https://www.gsea-msigdb.org/gsea/msigdb/search.jsp) by setting the parameter **library** equal to library/libraries of interest. For multiple libraries, just set **library = c("Library1", "Library2", etc)**. Individual pathways/gene sets can be isolated from the libraries selected, by setting **gene.sets** = the name(s) of the gene sets of interest. 
+
+```{r}
+GS <- getGeneSets(library = "H")
+```
+
+If a user would like to expand beyond the GSEA Molecular Signature Database for pathway analysis, the enrichment function *enrichIt()* uses a list of GeneSetCollection objects from the GSEABase R package. An [excellent vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/GSEABase/inst/doc/GSEABase.pdf) exists on how to create GeneSetCollection objects to be used in the enrichment analysis.
+
+## Enrichment
+
+The next step is performing the enrichment on the RNA count data. The function *enrichIt()* can handle either a matrix of raw count data or will pull that data directly from a SingleCellExperiment or Seurat object. The **gene.sets** parameter in the function is the GeneSetCollection, either generated from *getGeneSets()* or from the user. The enrichment scores will be calculated across all individual cells and **groups** is the n size to break the enrichment by while the **cores** is the number of cores to perform in parallel during the enrichment calculation too. 
+
+*Important Note:* This is computationally intensive and is highly dependent on the number of cells and the number of gene sets included.
+
+```{r}
+ES <- enrichIt(obj = pbmc_small, gene.sets = GS, groups = 1000, cores = 4)
+ES.sce <- enrichIt(obj = sce, gene.sets = GS, groups = 1000, cores = 4)
+```
+
+We can then easily add these results back to our Seurat or SCE object.
+
+```{r}
+pbmc_small <- AddMetaData(pbmc_small, ES)
+met.data <- merge(colData(sce), ES.sce, by = "row.names", all=TRUE)
+row.names(met.data) <- met.data$Row.names
+met.data$Row.names <- NULL
+colData(sce) <- met.data
+```
+
+****
+
+## Visualizations
+
+The easiest way to generate almost any visualization for single cell data is via *r Biocpkg("dittoSeq")*, which is an extremely flexible visualization package for both bulk and single-cell RNA-seq data that works very well for both expression data and metadata. Better yet, it can handle both SingleCellExperiment and Seurat objects.
+
+#### 1. The Heatmap
+A simple way to approach visualizations for enrichment results is the heatmap, especially if you are using a number of gene sets or libraries. 
+
+```{r eval=FALSE}
+dittoHeatmap(sce, genes = NULL, metas = names(ES.sce), annot.by = "groups", fontsize = 7, cluster_cols = TRUE)
+```
+
+A user can also produce a heatmap with select gene sets by providing specific names to the *metas* parameter. For example, we can isolated gene sets involved in apoptosis and DNA damage.
+
+```{r eval=FALSE}
+dittoHeatmap(sce, genes = NULL, metas = c("HALLMARK_APOPTOSIS", "HALLMARK_DNA_REPAIR", "HALLMARK_P53_PATHWAY"), annot.by = "groups", fontsize = 7)
+```
+
+#### 2. The Violin Plot
+
+Another way to visualize a subset of gene set enrichment would be to graph the distribution of enrichment using violin, jitter, boxplot, or ridgeplots. We can also compare between categorical variables using the **group.by** parameter.
+
+```{r}
+multi_dittoPlot(sce, vars = c("HALLMARK_APOPTOSIS", "HALLMARK_DNA_REPAIR", "HALLMARK_P53_PATHWAY"), group.by = "groups", plots = c("jitter", "vlnplot", "boxplot"), ylab = "Enrichment Scores", theme = theme_classic() + theme(plot.title = element_text(size = 10)))
+```
+
+
+#### 3. Hex Density Enrichment Plots
+
+We can also compare the distribution of enrichment scores of 2 distinct gene sets across all single cells using the *dittoScatterHex()* function. Here, we use our SingleCellExperiment object with results of *enrichIt()* and specify gene sets to the **x.var** and **y.var** parameters to produce a density plot. We can also add contours to the plot, by passing **do.contour = TRUE**. 
+
+```{r}
+dittoScatterHex(sce, x.var = "HALLMARK_DNA_REPAIR", y.var = "HALLMARK_MTORC1_SIGNALING", do.contour = TRUE, min.color = "#0348A6", max.color = "#FF4B20")
+```
+
+We can also separate the graph using the **split.by** parameter, allowing for the direct comparison of categorical variables.
+
+```{r}
+dittoScatterHex(sce, x.var = "HALLMARK_DNA_REPAIR", y.var = "HALLMARK_MTORC1_SIGNALING", do.contour = TRUE, min.color = "#0348A6", max.color = "#FF4B20", split.by = "groups")
+```
+
+
+####4. Enrichment along a Ridge Plot
+
+Another distribution visualization is using the [Ridge Plot](https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html) from the ggridges R package. This allows the user to incorporate categorical variables to seperate the enrichment scores along the y-axis in addition to the faceting by categorical variables. 
+
+Like above, we can explore the distribution of the **"HALLMARK_DNA_REPAIR"** between Types by calling the *ridgeEnrichment()* with the ES2 object. We specificy the groups = **letters.idents**, which will seperates tumor and normal cells on the y-axis. We can also add a rug parameter (**add.rug**), to look at the discrete sample placement alon the enrichment ridge plot. 
+
+```{r}
+ES2 <- data.frame(pbmc_small[[]], Idents(pbmc_small))
+colnames(ES2)[ncol(ES2)] <- "cluster"
+ridgeEnrichment(ES2, gene.set = "HALLMARK_DNA_REPAIR", group = "letter.idents", add.rug = TRUE)
+```
+
+In addition to the seperation of **Type**, we can also use the *ridgeEnrichment()* for better granualarity of multiple variables. For example, instead of looking at the difference just between "Type", we can set the **group** = "cluster" and then **facet** by "Type". This gives a visualization of the enrichment of DNA Repair by cluster and Type.
+
+```{r}
+ridgeEnrichment(ES2, gene.set = "HALLMARK_DNA_REPAIR", group = "cluster", facet = "letter.idents", add.rug = TRUE)
+```
+
+#### 5. The Split Violin Plot
+
+Another distribution visualization is a violin plot, which we seperate and directly compare using a binary classification. Like *RidgeEnrichment()*, this allows for greater use of categorical variables. For *SplitEnrichment()*, the output will be two halves of a violin plot bassed on the **split** parameter with a central boxplot with the relative distribution accross all samples. 
+
+Like above, we can explore the distribution of the **"HALLMARK_DNA_REPAIR"** between Types by calling the *SplitEnrichment()* with the ES2 object. We specificy the **split** = "Type"", which will seperates tumor and normal cells in the violin plot itself. Like above, we can also explore the cluster distribution by assigning the **x-axis** = "cluster".
+
+```{r}
+splitEnrichment(ES2, split = "groups", gene.set = "HALLMARK_DNA_REPAIR")
+splitEnrichment(ES2, x.axis = "cluster", split = "groups", gene.set = "HALLMARK_DNA_REPAIR")
+```
+
+***
+
+## Expanded Analysis
+
+One frustration of Gene Set Enrichment is trying to make sense of the values. In order to move away from just selecting pathways that may be of interest, escape offers the ability to *performPCA()* on the enrichment scores. Like the other functions, we will need the output of *enrichIt()* (**enriched**) and the **groups** to include for later graphing.
+
+```{r}
+PCA <- performPCA(enriched = ES2, groups = c("groups", "cluster"))
+```
+
+```{r}
+pcaEnrichment(PCA, PCx = "PC1", PCy = "PC2", contours = TRUE)
+```
+
+We can also look at the *pcaEnrichment()* output separated by categorical factors using the *facet* parameter, for example using the cluster assignment.
+
+```{r}
+pcaEnrichment(PCA, PCx = "PC1", PCy = "PC2", contours = FALSE, facet = "cluster") 
+```
+
+We can more closely examine the construction of the PCA by looking at the contribution of each gene set to the respective principal component using *masterPCAPlot()* with the same input as above with the *pcaEnrichment()*. We can also control the gene sets graphed by selecting more or less than 10 for *top.contribution*. 
+
+```{r}
+masterPCAPlot(ES2, PCx = "PC1", PCy = "PC2", top.contribution = 10)
+```
+
+
+####Signficance
+
+We can also look for significant differences using linear modeling from the limma package, Welch's T test or one-way ANOVA using the function *getSignificance()*. For this, we need to assign a **group** parameter and the type of **fit** (either linear.model, T.test, or ANOVA).
+
+```{r}
+output <- getSignificance(ES2, group = "cluster", fit = "linear.model")
+```
+
+***
+
+##Conclusions
+
+Hopefully this is helpful for analysis of single-cell datasets. Although not extensive, in terms of a fully-functional toolkit, escape functions focus on issues that PIs frequently request, making sense of data If you have any questions, comments or suggestions, feel free to visit the github repository or [email me](mailto:ncborch@gmail.com).
+
+####Session Info
+
+```{r}
+sessionInfo()
+```
