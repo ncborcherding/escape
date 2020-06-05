@@ -11,7 +11,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
 biocViews: Software, SingleCell, Classification, Annotation, GeneSetEnrichment, Sequencing, GeneSignaling, Pathways
-Depends: Seurat, R (>= 3.6)
+Depends: R (>= 3.6)
 Imports: 
 	grDevices, 
 	rlang, 
@@ -20,15 +20,17 @@ Imports:
 	ggplot2, 
 	ggrepel, 
 	GSEABase, 
-	GSVA,  
-	dittoSeq (>= 1.1.2),
+	GSVA,
 	SingleCellExperiment,
 	limma,
-	ggridges
+	ggridges,
+	msigdbr,
+	Seurat,
+	stats
 Suggests: 
 	knitr, 
 	rmarkdown, 
-	Seurat,
 	BiocStyle,
-	testthat
+	testthat,
+	dittoSeq (>= 1.1.2)
 VignetteBuilder: knitr

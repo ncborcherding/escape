@@ -13,7 +13,8 @@ masterPCAPlot(enriched, PCx, PCy, top.contribution = 10)
 
 \item{PCy}{The principal component graphed on the y-axis.}
 
-\item{top.contribution}{The number of gene sets to graph, organized by PCA contribution.}
+\item{top.contribution}{The number of gene sets to graph, organized 
+by PCA contribution.}
 }
 \value{
 ggplot2 object sumamrizing the PCA for the enrichment scores

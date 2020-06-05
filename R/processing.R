@@ -37,44 +37,6 @@ performPCA <- function(enriched, groups) {
 #' This function allows users to select libraries and specific gene.sets from 
 #' a list of \code{\link[GSEABase]{GeneSetCollection}} objects.
 #' 
-#' @param collection A list of \code{\link[GSEABase]{GeneSetCollection}} 
-#' objects.
-#' @param library Individual libraries or multiple libraries to select, 
-#' example: library = c("Hallmark", "C5").
-#' @param gene.sets Select gene sets or pathways, using specific names, 
-#' example: pathways = c("HALLMARK_TNFA_SIGNALING_VIA_NFKB").
-#'
-#' @examples 
-#' gsea_library <- data(gsea_library)
-#' GS <- getGeneSets(collection = gsea_library, library = "Hallmark")
-#' 
-#' @export
-#'
-#' @author Nick Borcherding, Jared Andrews
-#' @return List of GeneSets in collection format
-getGeneSets <- function(collection, library = NULL, gene.sets = NULL) {
-    if (!is.null(library)) {
-        libs <- unlist(collection[library])
-    } else {
-        libs <- unlist(collection)
-    }
-
-    if (!is.null(gene.sets)) {
-        keep <- lapply(libs, function(x, gs) x@setName %in% gs, gs = gene.sets)
-        out <- libs[keep == TRUE]
-    } else {
-        out <- libs
-    }
-
-    return(out)
-}
-
-#' Get a collection of gene sets to perform enrichment on
-#'
-#' This function allows users to select libraries and specific gene.sets from 
-#' a list of \code{\link[GSEABase]{GeneSetCollection}} objects accessed by 
-#'  \code{\link[msigdbr]}.
-#' 
 #' @param species The scientific name of the species of interest in 
 #' order to get correcent gene nomenclature
 #' @param library Individual libraries or multiple libraries to select, 
@@ -93,7 +55,7 @@ getGeneSets <- function(collection, library = NULL, gene.sets = NULL) {
 #' @author Nick Borcherding, Jared Andrews
 #' @return List of GeneSets in collection format
 getGeneSets <- function(species = "Homo sapiens", 
-                         library = NULL, gene.sets = NULL) {
+                    library = NULL, gene.sets = NULL) {
     spec <- msigdbr_show_species()
     spec_check <- spec[spec %in% species]
     if (length(spec_check) == 0) {

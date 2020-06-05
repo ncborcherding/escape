@@ -1,16 +1,17 @@
 #' Perform significance testing between groups and enrichement scores.
 #' 
-#' This functions takes the enrichment scores and performs statistical testing to
-#' evaluate the difference by group selected. The function can perform 3 tests: 1)
-#' linear model based on the limma package, 2) Welch's T test, and 3) one-way ANOVA.
-#' The output includes adjusted p-values based on the Benjamini Hochberg method. The input
+#' This functions takes the enrichment scores and performs statistical 
+#' testing to evaluate the difference by group selected. The function 
+#' can perform 3 tests: 1) linear model based on the limma package, 
+#' 2) Welch's T test, and 3) one-way ANOVA. The output includes 
+#' adjusted p-values based on the Benjamini Hochberg method. 
 #' 
 #'
-#' @param enriched The output of \code{\link{EnrichIt}}.
 #' @param enriched The output of \code{\link{enrichIt}}.
 #' @param group The parameter to group for the comparison, should a column of 
 #' the enriched input
-#' @param fit The test used for significance, either linear.model, ANOVA, or T.test
+#' @param fit The test used for significance, either linear.model, ANOVA, 
+#' or T.test
 #'
 #' @import limma
 #' @importFrom dplyr select_if
@@ -18,13 +19,11 @@
 #' @examples 
 #' ES2 <- readRDS(url(
 #' "https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-#' output <- GetSignificance <- function(enriched, group = "Type",
-#' output <- getSignificance(ES2, group = "Type",
-#' fit = "linear.model")
+#' output <- getSignificance(ES2, group = "Type", fit = "linear.model")
 #' 
 #' @export
 #'
-#' @seealso \code{\link{EnrichIt}} for generating enrichment scores.
+#' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return Data frame of test statistics
 getSignificance <- function(enriched, group = NULL, fit = "linear.model") {
     group2 <- enriched[,group]
@@ -40,23 +39,26 @@ getSignificance <- function(enriched, group = NULL, fit = "linear.model") {
         output <- topTable(fit, number = ncol(input))
     } else if (fit == "T.test") {
         if (unique(group2 != 2)) {
-            stop("Ensure the group selection has only two levels for T.test fit") 
+            stop("Ensure the group selection has only two levels for T.test 
+                fit") 
         } else {
         out <- lapply(input, function(x) t.test(x ~ group2))
         for (i in seq_along(out)) {
             df <- out[[i]]
             mat <- c(df$statistic, df$conf.int[[1]], df$conf.int[[2]],
-                     df$estimate[1], df$estimate[2], df$p.value)
+                        df$estimate[1], df$estimate[2], df$p.value)
             output <- rbind(output,mat)
         }
         output <- as.data.frame(output)
         colnames(output) <- c("T_statistic", "CI_low", "CI_high", 
-            paste0("mean_", gr_names[1]), paste0("mean_", gr_names[2]), "p.value")
+            paste0("mean_", gr_names[1]), paste0("mean_", gr_names[2]), 
+            "p.value")
         rownames(output) <- colnames(input)
         output$FDR <- p.adjust(output$p.value) }
     } else if (fit == "ANOVA") {
         if (unique(group2) <= 2) {
-            stop("Ensure the group selection has more than two levels for ANOVA fit") }
+            stop("Ensure the group selection has more than two levels 
+                for ANOVA fit") }
         out <- lapply(input, function(x) aov(x ~ group2))
         for (i in seq_along(out)) {
             df <- out[[i]]

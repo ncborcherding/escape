@@ -12,25 +12,25 @@ getSignificance(enriched, group = NULL, fit = "linear.model")
 \item{group}{The parameter to group for the comparison, should a column of 
 the enriched input}
 
-\item{fit}{The test used for significance, either linear.model, ANOVA, or T.test}
+\item{fit}{The test used for significance, either linear.model, ANOVA, 
+or T.test}
 }
 \value{
 Data frame of test statistics
 }
 \description{
-This functions takes the enrichment scores and performs statistical testing to
-evaluate the difference by group selected. The function can perform 3 tests: 1)
-linear model based on the limma package, 2) Welch's T test, and 3) one-way ANOVA.
-The output includes adjusted p-values based on the Benjamini Hochberg method. The input
+This functions takes the enrichment scores and performs statistical 
+testing to evaluate the difference by group selected. The function 
+can perform 3 tests: 1) linear model based on the limma package, 
+2) Welch's T test, and 3) one-way ANOVA. The output includes 
+adjusted p-values based on the Benjamini Hochberg method.
 }
 \examples{
 ES2 <- readRDS(url(
 "https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-output <- GetSignificance <- function(enriched, group = "Type",
-output <- getSignificance(ES2, group = "Type",
-fit = "linear.model")
+output <- getSignificance(ES2, group = "Type", fit = "linear.model")
 
 }
 \seealso{
-\code{\link{EnrichIt}} for generating enrichment scores.
+\code{\link{enrichIt}} for generating enrichment scores.
 }

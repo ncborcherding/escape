@@ -65,7 +65,8 @@ pcaEnrichment <- function(PCAout, PCx, PCy,
 #' @param enriched The output of \code{\link{enrichIt}}.
 #' @param PCx The principal component graphed on the x-axis.
 #' @param PCy The principal component graphed on the y-axis.
-#' @param top.contribution The number of gene sets to graph, organized by PCA contribution.
+#' @param top.contribution The number of gene sets to graph, organized 
+#' by PCA contribution.
 #'
 #' @importFrom factoextra fviz_pca_var
 #' @importFrom ggplot2 ggplot
@@ -94,7 +95,8 @@ masterPCAPlot <- function(enriched, PCx, PCy, top.contribution = 10) {
 
     ggplot(output, aes_string(x = "p.data.x", y = "p.data.y")) +
         geom_point() +
-        geom_text_repel(data = output, aes_string(label = "p.data.name"), size=2) +
+        geom_text_repel(data = output, aes_string(label = "p.data.name"), 
+            size=2) +
         theme_classic() +
         xlab(PCx) +
         ylab(PCy) + 
@@ -128,8 +130,8 @@ masterPCAPlot <- function(enriched, PCx, PCy, top.contribution = 10) {
 #' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return ggplot2 object with ridge-based distributions of selected gene.set
 ridgeEnrichment <- function(enriched, group = "cluster", gene.set = NULL, 
-                            colors = c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20"), 
-                            facet = NULL, add.rug = FALSE) {
+            colors = c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20"), 
+            facet = NULL, add.rug = FALSE) {
     
     colors <- assignColor(colors, enriched, group) 
     plot <- ggplot(enriched, aes(x = enriched[,gene.set], 
@@ -235,19 +237,19 @@ splitEnrichment <- function(enriched, x.axis = NULL,
     colors <- assignColor(colors, enriched, split) 
     if (is.null(x.axis)) {
         plot <- ggplot(enriched, aes(x = ".", y = enriched[,gene.set], 
-                                     fill = enriched[,split])) 
+                    fill = enriched[,split])) 
         check = 1
     } else {
         plot <- ggplot(enriched, aes(x = enriched[,x.axis], 
-                                     y = enriched[,gene.set], 
-                                     fill = enriched[,split])) + 
+                    y = enriched[,gene.set], 
+                    fill = enriched[,split])) + 
             xlab(x.axis) 
         check = NULL
     }
     plot <- plot + 
         geom_split_violin(alpha=0.8) +
         geom_boxplot(width=0.1, fill = "grey", alpha=0.5, 
-                     outlier.alpha = 0)  + 
+            outlier.alpha = 0)  + 
         ylab(paste0(gene.set, " (NES)")) +
         labs(fill = split) + 
         scale_fill_manual(values = colors) + 
@@ -255,8 +257,8 @@ splitEnrichment <- function(enriched, x.axis = NULL,
         guides(fill = FALSE)
     if (!is.null(check)) {
         plot <- plot + theme(axis.title.x = element_blank(),
-                             axis.text.x = element_blank(),
-                             axis.ticks.x = element_blank())
+                    axis.text.x = element_blank(),
+                    axis.ticks.x = element_blank())
     }
     return(plot)
 }

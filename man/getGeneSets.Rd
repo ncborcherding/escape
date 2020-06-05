@@ -5,8 +5,6 @@
 \title{Get a collection of gene sets to perform enrichment on}
 \usage{
 getGeneSets(species = "Homo sapiens", library = NULL, gene.sets = NULL)
-
-getGeneSets(species = "Homo sapiens", library = NULL, gene.sets = NULL)
 }
 \arguments{
 \item{species}{The scientific name of the species of interest in 
@@ -17,32 +15,18 @@ example: library = c("H", "C5").}
 
 \item{gene.sets}{Select gene sets or pathways, using specific names, 
 example: pathways = c("HALLMARK_TNFA_SIGNALING_VIA_NFKB").}
-
-\item{collection}{A list of \code{\link[GSEABase]{GeneSetCollection}} 
-objects.}
 }
 \value{
-List of GeneSets in collection format
-
 List of GeneSets in collection format
 }
 \description{
 This function allows users to select libraries and specific gene.sets from 
 a list of \code{\link[GSEABase]{GeneSetCollection}} objects.
-
-This function allows users to select libraries and specific gene.sets from 
-a list of \code{\link[GSEABase]{GeneSetCollection}} objects accessed by 
- \code{\link[msigdbr]}.
 }
 \examples{
-gsea_library <- data(gsea_library)
-GS <- getGeneSets(collection = gsea_library, library = "Hallmark")
-
 GS <- getGeneSets(library = "H")
 
 }
 \author{
-Nick Borcherding, Jared Andrews
-
 Nick Borcherding, Jared Andrews
 }

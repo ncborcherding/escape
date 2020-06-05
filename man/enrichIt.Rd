@@ -26,11 +26,10 @@ other sources. The enrichment calculation itself
 uses the gsva R package and the poisson distribution for RNA.
 }
 \examples{
-data(gsea_library)
-GS <- getGeneSets(collection = gsea_library, library = "Hallmark")
+GS <- getGeneSets(library = "H")
 GS <- GS[[1]] #Reduce list size for example
-seurat_ex <- data("seurat_ex")
-ES <- enrichIt(counts = seurat_ex, gene.sets = GS)
+seurat_ex <- suppressWarnings(Seurat::pbmc_small)
+ES <- enrichIt(obj = seurat_ex, gene.sets = GS)
 
 }
 \seealso{
