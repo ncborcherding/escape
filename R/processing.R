@@ -74,6 +74,7 @@ getGeneSets <- function(species = "Homo sapiens",
     for (i in seq_along(gs)) {
         tmp <- m_df[m_df$gs_name == gs[i],]
         tmp <- tmp$human_gene_symbol
+        tmp <- unique(tmp)
         tmp <- GeneSet(tmp, setName=paste(gs[i]))
         ls[[i]] <- tmp
     }
