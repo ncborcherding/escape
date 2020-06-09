@@ -112,6 +112,8 @@ masterPCAPlot <- function(enriched, PCx, PCy, top.contribution = 10) {
 #' @param enriched The output of \code{\link{enrichIt}}
 #' @param group The parameter to group, displayed on the y-axis.
 #' @param gene.set The gene set to graph on the x-axis. 
+#' @param scale.bracket The convert enrichment to z-scores filter 
+#' ithin the selected range. Must include lower and upper limit.
 #' @param colors The color palette for the ridge plot.
 #' @param facet A parameter to separate the graph.
 #' @param add.rug Binary classifier to add a rug plot to the x-axis.
@@ -130,9 +132,13 @@ masterPCAPlot <- function(enriched, PCx, PCy, top.contribution = 10) {
 #' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return ggplot2 object with ridge-based distributions of selected gene.set
 ridgeEnrichment <- function(enriched, group = "cluster", gene.set = NULL, 
-            colors = c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20"), 
-            facet = NULL, add.rug = FALSE) {
-    
+            scale.bracket = NULL, facet = NULL, add.rug = FALSE,
+            colors = c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20")) 
+             {
+    if (!is.null & length(scale.bracket) == 2) {
+        enriched[,gene.set] <- scale(enriched[,gene.set])
+        enirched <- enriched[enriched[,gene.set] >= brackets[1] & enriched[,gene.set] <= brackets[2], ]
+    }
     colors <- assignColor(colors, enriched, group) 
     plot <- ggplot(enriched, aes(x = enriched[,gene.set], 
                     y = enriched[,group], fill = enriched[,group]))
@@ -212,6 +218,8 @@ geom_split_violin <-
 #' @param enriched The output of \code{\link{enrichIt}}
 #' @param x.axis Optional parameter for seperation.
 #' @param gene.set The gene set to graph on the y-axis. 
+#' @param scale.bracket The convert enrichment to z-scores filter 
+#' ithin the selected range. Must include lower and upper limit.
 #' @param split The parameter to split, must be binary.
 #' @param colors The color palette for the ridge plot.
 #'
@@ -234,6 +242,11 @@ splitEnrichment <- function(enriched, x.axis = NULL,
     
     if (length(unique(enriched[,split])) != 2) {
         stop("SplitEnrichment() can only work for binary classification")}
+    
+    if (!is.null & length(scale.bracket) == 2) {
+        enriched[,gene.set] <- scale(enriched[,gene.set])
+        enirched <- enriched[enriched[,gene.set] >= brackets[1] & enriched[,gene.set] <= brackets[2], ]
+    }
     colors <- assignColor(colors, enriched, split) 
     if (is.null(x.axis)) {
         plot <- ggplot(enriched, aes(x = ".", y = enriched[,gene.set], 

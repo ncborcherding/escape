@@ -22,6 +22,9 @@ splitEnrichment(
 \item{gene.set}{The gene set to graph on the y-axis.}
 
 \item{colors}{The color palette for the ridge plot.}
+
+\item{scale.bracket}{The convert enrichment to z-scores filter 
+ithin the selected range. Must include lower and upper limit.}
 }
 \value{
 ggplot2 object violin-based distributions of selected gene.set

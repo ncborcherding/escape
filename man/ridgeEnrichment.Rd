@@ -8,9 +8,10 @@ ridgeEnrichment(
   enriched,
   group = "cluster",
   gene.set = NULL,
-  colors = c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20"),
+  scale.bracket = NULL,
   facet = NULL,
-  add.rug = FALSE
+  add.rug = FALSE,
+  colors = c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20")
 )
 }
 \arguments{
@@ -20,11 +21,14 @@ ridgeEnrichment(
 
 \item{gene.set}{The gene set to graph on the x-axis.}
 
-\item{colors}{The color palette for the ridge plot.}
+\item{scale.bracket}{The convert enrichment to z-scores filter 
+ithin the selected range. Must include lower and upper limit.}
 
 \item{facet}{A parameter to separate the graph.}
 
 \item{add.rug}{Binary classifier to add a rug plot to the x-axis.}
+
+\item{colors}{The color palette for the ridge plot.}
 }
 \value{
 ggplot2 object with ridge-based distributions of selected gene.set
