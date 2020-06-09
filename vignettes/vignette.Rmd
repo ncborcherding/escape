@@ -44,7 +44,7 @@ sce <- as.SingleCellExperiment(pbmc_small)
 
 # Getting Gene Sets
 
-The first step in the process of performing gene set enrichment analysis is identifying the gene sets we would like to use. The function *getGeneSets()* allows users to isolate a whole or multiple libraries from a list of GSEABase GeneSetCollection objects. We can do this for gene set collections from the built-in [Molecular Signature Database](https://www.gsea-msigdb.org/gsea/msigdb/search.jsp) by setting the parameter **library** equal to library/libraries of interest. For multiple libraries, just set **library = c("Library1", "Library2", etc)**. Individual pathways/gene sets can be isolated from the libraries selected, by setting **gene.sets** = the name(s) of the gene sets of interest. 
+The first step in the process of performing gene set enrichment analysis is identifying the gene sets we would like to use. The function *getGeneSets()* allows users to isolate a whole or multiple libraries from a list of GSEABase GeneSetCollection objects. We can do this for gene set collections from the built-in [Molecular Signature Database](https://www.gsea-msigdb.org/gsea/msigdb/search.jsp) by setting the parameter **library** equal to library/libraries of interest. For multiple libraries, just set **library = c("Library1", "Library2", etc)**. Individual pathways/gene sets can be isolated from the libraries selected, by setting **gene.sets** = the name(s) of the gene sets of interest. If you are using a species, other than Homo sapiens, set the **species** parameter to the appropriate scientific name to ensure the gene nomenclature matches your expression data.
 
 ```{r}
 GS <- getGeneSets(library = "H")
@@ -79,17 +79,31 @@ colData(sce) <- met.data
 
 The easiest way to generate almost any visualization for single cell data is via *r Biocpkg("dittoSeq")*, which is an extremely flexible visualization package for both bulk and single-cell RNA-seq data that works very well for both expression data and metadata. Better yet, it can handle both SingleCellExperiment and Seurat objects.
 
+Quick define a color scheme
+```{r}
+colors <- colorRampPalette(c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6"))
+```
+
+
 ## 1. The Heatmap
 A simple way to approach visualizations for enrichment results is the heatmap, especially if you are using a number of gene sets or libraries. 
 
-```{r eval=FALSE}
-dittoHeatmap(sce, genes = NULL, metas = names(ES.sce), annot.by = "groups", fontsize = 7, cluster_cols = TRUE)
+```{r}
+dittoHeatmap(pbmc_small, genes = NULL, metas = names(ES), 
+             annot.by = "groups", 
+             fontsize = 7, 
+             cluster_cols = TRUE,
+             heatmap.colors = rev(colors(50)))
 ```
 
 A user can also produce a heatmap with select gene sets by providing specific names to the *metas* parameter. For example, we can isolated gene sets involved in apoptosis and DNA damage.
 
-```{r eval=FALSE}
-dittoHeatmap(sce, genes = NULL, metas = c("HALLMARK_APOPTOSIS", "HALLMARK_DNA_REPAIR", "HALLMARK_P53_PATHWAY"), annot.by = "groups", fontsize = 7)
+```{r}
+dittoHeatmap(pbmc_small, genes = NULL, 
+             metas = c("HALLMARK_APOPTOSIS", "HALLMARK_DNA_REPAIR", "HALLMARK_P53_PATHWAY"), 
+             annot.by = "groups", 
+             fontsize = 7,
+             heatmap.colors = rev(colors(50)))
 ```
 
 ## 2. The Violin Plot
@@ -106,13 +120,20 @@ multi_dittoPlot(sce, vars = c("HALLMARK_APOPTOSIS", "HALLMARK_DNA_REPAIR", "HALL
 We can also compare the distribution of enrichment scores of 2 distinct gene sets across all single cells using the *dittoScatterHex()* function. Here, we use our SingleCellExperiment object with results of *enrichIt()* and specify gene sets to the **x.var** and **y.var** parameters to produce a density plot. We can also add contours to the plot, by passing **do.contour = TRUE**. 
 
 ```{r}
-dittoScatterHex(sce, x.var = "HALLMARK_DNA_REPAIR", y.var = "HALLMARK_MTORC1_SIGNALING", do.contour = TRUE, min.color = "#0348A6", max.color = "#FF4B20")
+dittoScatterHex(sce, x.var = "HALLMARK_DNA_REPAIR", 
+                    y.var = "HALLMARK_MTORC1_SIGNALING", 
+                    do.contour = TRUE) + 
+        scale_fill_gradientn(colors = rev(colors(11))) 
 ```
 
 We can also separate the graph using the **split.by** parameter, allowing for the direct comparison of categorical variables.
 
 ```{r}
-dittoScatterHex(sce, x.var = "HALLMARK_DNA_REPAIR", y.var = "HALLMARK_MTORC1_SIGNALING", do.contour = TRUE, min.color = "#0348A6", max.color = "#FF4B20", split.by = "groups")
+dittoScatterHex(sce, x.var = "HALLMARK_DNA_REPAIR", 
+                y.var = "HALLMARK_MTORC1_SIGNALING", 
+                do.contour = TRUE,
+                split.by = "groups")  + 
+        scale_fill_gradientn(colors = rev(colors(11))) 
 ```
 
 
