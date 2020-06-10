@@ -14,6 +14,7 @@
 #' @importFrom GSVA gsva
 #' @importFrom GSEABase GeneSetCollection
 #' @importFrom SingleCellExperiment counts
+#' @importFrom BiocParallel SnowParam
 #' @import Seurat
 #' 
 #' @examples 
@@ -65,7 +66,7 @@ enrichIt <- function(obj, gene.sets = NULL, groups = 1000, cores = 2) {
         last <- min(ncol(cnts), i+groups-1)
         a <- suppressWarnings(gsva(cnts[,i:last], egc, method = 'ssgsea', 
             ssgsea.norm = TRUE, kcdf = "Poisson", parallel.sz = cores, 
-            parallel.type = 'FORK'))
+            BPPARAM = SnowParam())))
         scores[[i]] <- a
     }
     
