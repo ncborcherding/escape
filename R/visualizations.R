@@ -112,8 +112,10 @@ masterPCAPlot <- function(enriched, PCx, PCy, top.contribution = 10) {
 #' @param enriched The output of \code{\link{enrichIt}}
 #' @param group The parameter to group, displayed on the y-axis.
 #' @param gene.set The gene set to graph on the x-axis. 
-#' @param scale.bracket The convert enrichment to z-scores filter 
-#' ithin the selected range. Must include lower and upper limit.
+#' @param scale.bracket This will filter the enrichment scores to remove 
+#' extreme outliers. Values entered (1 or 2 numbers) will be the filtering 
+#' parameter using z-scores of the selected gene.set. If only 1 value is given, 
+#' a seocndary bracket is autommatically selected as the inverse of the number.
 #' @param colors The color palette for the ridge plot.
 #' @param facet A parameter to separate the graph.
 #' @param add.rug Binary classifier to add a rug plot to the x-axis.
@@ -135,9 +137,21 @@ ridgeEnrichment <- function(enriched, group = "cluster", gene.set = NULL,
             scale.bracket = NULL, facet = NULL, add.rug = FALSE,
             colors = c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20")) 
              {
-    if (!is.null & length(scale.bracket) == 2) {
-        enriched[,gene.set] <- scale(enriched[,gene.set])
-        enirched <- enriched[enriched[,gene.set] >= brackets[1] & enriched[,gene.set] <= brackets[2], ]
+    if (!is.null(scale.bracket)) {
+        if (length(scale.bracket) != 1 | length(scale.bracket) != 1) {
+            stop("Please indicate one or two values for the scale.bracket 
+                 parameter, such as scale.bracket = c(-2,2)")
+        }
+        scale.bracket <- order(scale.bracket)
+        if(length(scale.bracket) == 1) {
+            scale.bracket <- c(scale.bracket, -scale.bracket)
+            scale.bracket <- order(scale.bracket)
+        } 
+        tmp <- enriched
+        tmp[,gene.set]<- scale(tmp[,gene.set])
+        rows_selected <- rownames(tmp[tmp[,gene.set] >= scale.bracket[1] & 
+                                          tmp[,gene.set] <= scale.bracket[2],])
+        enriched <- enriched[rownames(enriched) %in% rows_selected,]
     }
     colors <- assignColor(colors, enriched, group) 
     plot <- ggplot(enriched, aes(x = enriched[,gene.set], 
@@ -218,8 +232,10 @@ geom_split_violin <-
 #' @param enriched The output of \code{\link{enrichIt}}
 #' @param x.axis Optional parameter for seperation.
 #' @param gene.set The gene set to graph on the y-axis. 
-#' @param scale.bracket The convert enrichment to z-scores filter 
-#' ithin the selected range. Must include lower and upper limit.
+#' @param scale.bracket This will filter the enrichment scores to remove 
+#' extreme outliers. Values entered (1 or 2 numbers) will be the filtering 
+#' parameter using z-scores of the selected gene.set. If only 1 value is given, 
+#' a seocndary bracket is autommatically selected as the inverse of the number.
 #' @param split The parameter to split, must be binary.
 #' @param colors The color palette for the ridge plot.
 #'
@@ -235,7 +251,7 @@ geom_split_violin <-
 #'
 #' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return ggplot2 object violin-based distributions of selected gene.set
-splitEnrichment <- function(enriched, x.axis = NULL, 
+splitEnrichment <- function(enriched, x.axis = NULL, scale.bracket = NULL,
                             split = NULL, gene.set = NULL, 
                             colors = c("#0348A6", "#7AC5FF", "#C6FDEC", 
                                 "#FFB433", "#FF4B20")) {
@@ -243,9 +259,21 @@ splitEnrichment <- function(enriched, x.axis = NULL,
     if (length(unique(enriched[,split])) != 2) {
         stop("SplitEnrichment() can only work for binary classification")}
     
-    if (!is.null & length(scale.bracket) == 2) {
-        enriched[,gene.set] <- scale(enriched[,gene.set])
-        enirched <- enriched[enriched[,gene.set] >= brackets[1] & enriched[,gene.set] <= brackets[2], ]
+    if (!is.null(scale.bracket)) {
+        if (length(scale.bracket) != 1 | length(scale.bracket) != 1) {
+            stop("Please indicate one or two values for the scale.bracket 
+                 parameter, such as scale.bracket = c(-2,2)")
+        }
+        scale.bracket <- order(scale.bracket)
+        if(length(scale.bracket) == 1) {
+            scale.bracket <- c(scale.bracket, -scale.bracket)
+            scale.bracket <- order(scale.bracket)
+        } 
+        tmp <- enriched
+        tmp[,gene.set]<- scale(tmp[,gene.set])
+        rows_selected <- rownames(tmp[tmp[,gene.set] >= scale.bracket[1] & 
+                                          tmp[,gene.set] <= scale.bracket[2],])
+        enriched <- enriched[rownames(enriched) %in% rows_selected,]
     }
     colors <- assignColor(colors, enriched, split) 
     if (is.null(x.axis)) {
