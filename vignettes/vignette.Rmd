@@ -59,8 +59,8 @@ The next step is performing the enrichment on the RNA count data. The function *
 *Important Note:* This is computationally intensive and is highly dependent on the number of cells and the number of gene sets included.
 
 ```{r}
-ES <- enrichIt(obj = pbmc_small, gene.sets = GS, groups = 1000, cores = 4)
-ES.sce <- enrichIt(obj = sce, gene.sets = GS, groups = 1000, cores = 4)
+ES <- enrichIt(obj = pbmc_small, gene.sets = GS, groups = 1000, cores = 2)
+ES.sce <- enrichIt(obj = sce, gene.sets = GS, groups = 1000, cores = 2)
 ```
 
 We can then easily add these results back to our Seurat or SCE object.

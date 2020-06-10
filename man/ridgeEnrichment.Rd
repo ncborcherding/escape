@@ -21,8 +21,10 @@ ridgeEnrichment(
 
 \item{gene.set}{The gene set to graph on the x-axis.}
 
-\item{scale.bracket}{The convert enrichment to z-scores filter 
-ithin the selected range. Must include lower and upper limit.}
+\item{scale.bracket}{This will filter the enrichment scores to remove 
+extreme outliers. Values entered (1 or 2 numbers) will be the filtering 
+parameter using z-scores of the selected gene.set. If only 1 value is given, 
+a seocndary bracket is autommatically selected as the inverse of the number.}
 
 \item{facet}{A parameter to separate the graph.}
 
