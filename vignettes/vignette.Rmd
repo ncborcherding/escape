@@ -44,17 +44,17 @@ sce <- as.SingleCellExperiment(pbmc_small)
 
 # Getting Gene Sets
 
-The first step in the process of performing gene set enrichment analysis is identifying the gene sets we would like to use. The function *getGeneSets()* allows users to isolate a whole or multiple libraries from a list of GSEABase GeneSetCollection objects. We can do this for gene set collections from the built-in [Molecular Signature Database](https://www.gsea-msigdb.org/gsea/msigdb/search.jsp) by setting the parameter **library** equal to library/libraries of interest. For multiple libraries, just set **library = c("Library1", "Library2", etc)**. Individual pathways/gene sets can be isolated from the libraries selected, by setting **gene.sets** = the name(s) of the gene sets of interest. If you are using a species, other than Homo sapiens, set the **species** parameter to the appropriate scientific name to ensure the gene nomenclature matches your expression data.
+The first step in the process of performing gene set enrichment analysis is identifying the gene sets we would like to use. The function *getGeneSets()* allows users to isolate a whole or multiple libraries from a list of GSEABase GeneSet objects. We can do this for gene set collections from the built-in [Molecular Signature Database](https://www.gsea-msigdb.org/gsea/msigdb/search.jsp) by setting the parameter **library** equal to library/libraries of interest. For multiple libraries, just set **library = c("Library1", "Library2", etc)**. Individual pathways/gene sets can be isolated from the libraries selected, by setting **gene.sets** = the name(s) of the gene sets of interest. If you are using a species, other than Homo sapiens, set the **species** parameter to the appropriate scientific name to ensure the gene nomenclature matches your expression data.
 
 ```{r}
 GS <- getGeneSets(library = "H")
 ```
 
-If a user would like to expand beyond the GSEA Molecular Signature Database for pathway analysis, the enrichment function *enrichIt()* uses a list of GeneSetCollection objects from the GSEABase R package. An [excellent vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/GSEABase/inst/doc/GSEABase.pdf) exists on how to create GeneSetCollection objects to be used in the enrichment analysis.
+If a user would like to expand beyond the GSEA Molecular Signature Database for pathway analysis, the enrichment function *enrichIt()* uses a list of GeneSet objects from the GSEABase R package. An [excellent vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/GSEABase/inst/doc/GSEABase.pdf) exists on how to create GeneSet objects to be used in the enrichment analysis.
 
 # Enrichment
 
-The next step is performing the enrichment on the RNA count data. The function *enrichIt()* can handle either a matrix of raw count data or will pull that data directly from a SingleCellExperiment or Seurat object. The **gene.sets** parameter in the function is the GeneSetCollection, either generated from *getGeneSets()* or from the user. The enrichment scores will be calculated across all individual cells and **groups** is the n size to break the enrichment by while the **cores** is the number of cores to perform in parallel during the enrichment calculation too. 
+The next step is performing the enrichment on the RNA count data. The function *enrichIt()* can handle either a matrix of raw count data or will pull that data directly from a SingleCellExperiment or Seurat object. The **gene.sets** parameter in the function is the GeneSets, either generated from *getGeneSets()* or from the user. The enrichment scores will be calculated across all individual cells and **groups** is the n size to break the enrichment by while the **cores** is the number of cores to perform in parallel during the enrichment calculation too. 
 
 *Important Note:* This is computationally intensive and is highly dependent on the number of cells and the number of gene sets included.
 

@@ -34,9 +34,9 @@ performPCA <- function(enriched, groups) {
 
 #' Get a collection of gene sets to perform enrichment on
 #'
-#' This function allows users to select libraries and specific gene.sets from 
-#' a list of \code{\link[GSEABase]{GeneSetCollection}} objects.
-#' 
+#' This function allows users to select libraries and specific 
+#' gene.sets to form a GeneSetCollection that is a list of gene sets.
+#
 #' @param species The scientific name of the species of interest in 
 #' order to get correcent gene nomenclature
 #' @param library Individual libraries or multiple libraries to select, 

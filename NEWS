@@ -1,3 +1,18 @@
+
+CHANGES IN VERSION 0.99.2
+
+Updated link in description of getGeneSets.
+
+CHANGES IN VERSION 0.99.2
+
+Fixed a parenthesis, yeah a parenthesis. (In enrichIt() call I edited for 99.1)
+
+CHANGES IN VERSION 0.99.1
+
+Removed parallel call in gsva() and added biocparallel
+Changed cores = 4 to cores = 2 in the vignette
+
+
 CHANGES IN VERSION 0.99.0
 
 Preparing for bioconductor submission

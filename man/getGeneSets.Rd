@@ -20,8 +20,8 @@ example: pathways = c("HALLMARK_TNFA_SIGNALING_VIA_NFKB").}
 List of GeneSets in collection format
 }
 \description{
-This function allows users to select libraries and specific gene.sets from 
-a list of \code{\link[GSEABase]{GeneSetCollection}} objects.
+This function allows users to select libraries and specific 
+gene.sets to form a GeneSetCollection that is a list of gene sets.
 }
 \examples{
 GS <- getGeneSets(library = "H")

@@ -16,6 +16,7 @@
 #' @importFrom SingleCellExperiment counts
 #' @importFrom BiocParallel SnowParam
 #' @import Seurat
+#'
 #' 
 #' @examples 
 #' GS <- getGeneSets(library = "H")
