@@ -99,7 +99,7 @@ dittoHeatmap(pbmc_small, genes = NULL, metas = names(ES),
 A user can also produce a heatmap with select gene sets by providing specific names to the *metas* parameter. For example, we can isolated gene sets involved in apoptosis and DNA damage.
 
 ```{r}
-dittoHeatmap(pbmc_small, genes = NULL, 
+dittoHeatmap(sce, genes = NULL, 
              metas = c("HALLMARK_APOPTOSIS", "HALLMARK_DNA_REPAIR", "HALLMARK_P53_PATHWAY"), 
              annot.by = "groups", 
              fontsize = 7,
