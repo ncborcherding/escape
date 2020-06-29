@@ -59,7 +59,7 @@ getGeneSets <- function(species = "Homo sapiens",
     spec <- msigdbr_show_species()
     spec_check <- spec[spec %in% species]
     if (length(spec_check) == 0) {
-        stop(paste0("Please select a compatible species: ", 
+        message(paste0("Please select a compatible species: ", 
                     paste(spec, collapse = ", ")))
     }
     m_df = msigdbr(species = spec_check)
