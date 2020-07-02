@@ -26,8 +26,8 @@
 #' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return Data frame of test statistics
 getSignificance <- function(enriched, group = NULL, 
-                        fit = c("linear.model", "T.test", "ANOVA")) {
-    fit <- match.arg(fit, several.ok = FALSE)
+                        fit = NULL) {
+    fit <- match.arg(fit  choices = c("linear.model", "T.test", "ANOVA"))
     group2 <- enriched[,group]
     gr_names <- unique(group2)
     input <- select_if(enriched, is.numeric)

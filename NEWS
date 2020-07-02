@@ -1,4 +1,8 @@
 
+CHANGES IN VERSION 0.99.5
+
+Edited match.args() in getSignificance
+
 CHANGES IN VERSION 0.99.4
 
 Added match.args() to getSignificance
