@@ -139,7 +139,7 @@ ridgeEnrichment <- function(enriched, group = "cluster", gene.set = NULL,
             {
     if (!is.null(scale.bracket)) {
         if (length(scale.bracket) != 1 | length(scale.bracket) != 1) {
-            stop("Please indicate one or two values for the scale.bracket 
+            message("Please indicate one or two values for the scale.bracket 
                 parameter, such as scale.bracket = c(-2,2)")
         }
         scale.bracket <- order(scale.bracket)
@@ -258,11 +258,11 @@ splitEnrichment <- function(enriched, x.axis = NULL, scale.bracket = NULL,
                                 "#FFB433", "#FF4B20")) {
     
     if (length(unique(enriched[,split])) != 2) {
-        stop("SplitEnrichment() can only work for binary classification")}
+        message("SplitEnrichment() can only work for binary classification")}
     
     if (!is.null(scale.bracket)) {
         if (length(scale.bracket) != 1 | length(scale.bracket) != 1) {
-            stop("Please indicate one or two values for the scale.bracket 
+            message("Please indicate one or two values for the scale.bracket 
                 parameter, such as scale.bracket = c(-2,2)")
         }
         scale.bracket <- order(scale.bracket)
