@@ -1,5 +1,11 @@
 
-CHANGES IN VERSION 0.99.2
+CHANGES IN VERSION 0.99.4
+
+Fixed t.test call for getSignificance
+Changed stop() to message()
+Added match.args() for getSignificance
+
+CHANGES IN VERSION 0.99.3
 
 Updated link in description of getGeneSets.
 
