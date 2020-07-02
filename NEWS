@@ -1,5 +1,12 @@
 
-CHANGES IN VERSION 0.99.2
+CHANGES IN VERSION 0.99.4
+
+Added match.args() to getSignificance
+Changed stop() to message()
+Modified getSignficance to allow for ANOVA and T.test
+
+
+CHANGES IN VERSION 0.99.3
 
 Updated link in description of getGeneSets.
 

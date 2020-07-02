@@ -58,7 +58,7 @@ getSignificance <- function(enriched, group = NULL,
         rownames(output) <- colnames(input)
         output$FDR <- p.adjust(output$p.value) }
     } else if (fit == "ANOVA") {
-        if (unique(group2) <= 2) {
+        if (length(unique(group2)) <= 2) {
             message("Ensure the group selection has more than two levels 
                 for ANOVA fit") }
         out <- lapply(input, function(x) aov(x ~ group2))
