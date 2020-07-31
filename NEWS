@@ -1,5 +1,24 @@
+CHANGES IN VERSION 0.99.7
 
-CHANGES IN VERSION 0.99.2
+Edited getSignificance fit call to match documentation
+
+CHANGES IN VERSION 0.99.6
+
+Edited match.args() in getSignificance
+
+
+CHANGES IN VERSION 0.99.5
+
+Edited match.args() in getSignificance
+
+CHANGES IN VERSION 0.99.4
+
+Added match.args() to getSignificance
+Changed stop() to message()
+Modified getSignficance to allow for ANOVA and T.test
+
+
+CHANGES IN VERSION 0.99.3
 
 Updated link in description of getGeneSets.
 
