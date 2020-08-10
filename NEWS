@@ -1,3 +1,7 @@
+CHANGES IN VERSION 0.99.8
+
+Edited getSignificance ANOVA model call
+
 CHANGES IN VERSION 0.99.7
 
 Edited getSignificance fit call to match documentation

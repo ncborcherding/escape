@@ -198,7 +198,7 @@ masterPCAPlot(ES2, PCx = "PC1", PCy = "PC2", top.contribution = 10)
 We can also look for significant differences using linear modeling from the limma package, Welch's T test or one-way ANOVA using the function *getSignificance()*. For this, we need to assign a **group** parameter and the type of **fit** (either linear.model, T.test, or ANOVA).
 
 ```{r}
-output <- getSignificance(ES2, group = "cluster", fit = "linear.model")
+output <- getSignificance(ES2, group = "cluster", fit = "ANOVA")
 ```
 
 ***
