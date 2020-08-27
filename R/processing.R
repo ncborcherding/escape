@@ -38,11 +38,11 @@ performPCA <- function(enriched, groups) {
 #' gene.sets to form a GeneSetCollection that is a list of gene sets.
 #
 #' @param species The scientific name of the species of interest in 
-#' order to get correcent gene nomenclature
+#' order to get correcent gene nomenclature.
 #' @param library Individual libraries or multiple libraries to select, 
-#' example: library = c("H", "C5").
+#' example: \code{library = c("H", "C5")}.
 #' @param gene.sets Select gene sets or pathways, using specific names, 
-#' example: pathways = c("HALLMARK_TNFA_SIGNALING_VIA_NFKB").
+#' example: \code{pathways = c("HALLMARK_TNFA_SIGNALING_VIA_NFKB")}.
 #'
 #' @examples 
 #' GS <- getGeneSets(library = "H")
@@ -53,7 +53,7 @@ performPCA <- function(enriched, groups) {
 #' @importFrom msigdbr msigdbr msigdbr_show_species
 #' 
 #' @author Nick Borcherding, Jared Andrews
-#' @return List of GeneSets in collection format
+#' @return A \code{GeneSetCollection} object containing the requested \code{GeneSet} objects.
 getGeneSets <- function(species = "Homo sapiens", 
                     library = NULL, gene.sets = NULL) {
     spec <- msigdbr_show_species()
@@ -73,7 +73,7 @@ getGeneSets <- function(species = "Homo sapiens",
     ls <- list()
     for (i in seq_along(gs)) {
         tmp <- m_df[m_df$gs_name == gs[i],]
-        tmp <- tmp$human_gene_symbol
+        tmp <- tmp$gene_symbol
         tmp <- unique(tmp)
         tmp <- GeneSet(tmp, setName=paste(gs[i]))
         ls[[i]] <- tmp
