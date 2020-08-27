@@ -55,12 +55,12 @@ performPCA <- function(enriched, groups) {
 #' @author Nick Borcherding, Jared Andrews
 #' @return List of GeneSets in collection format
 getGeneSets <- function(species = "Homo sapiens", 
-                    library = NULL, gene.sets = NULL) {
+                        library = NULL, gene.sets = NULL) {
     spec <- msigdbr_show_species()
     spec_check <- spec[spec %in% species]
     if (length(spec_check) == 0) {
         message(paste0("Please select a compatible species: ", 
-                    paste(spec, collapse = ", ")))
+                       paste(spec, collapse = ", ")))
     }
     m_df = msigdbr(species = spec_check)
     if(!is.null(library)) {
@@ -73,7 +73,7 @@ getGeneSets <- function(species = "Homo sapiens",
     ls <- list()
     for (i in seq_along(gs)) {
         tmp <- m_df[m_df$gs_name == gs[i],]
-        tmp <- tmp$human_gene_symbol
+        tmp <- tmp$gene_symbol
         tmp <- unique(tmp)
         tmp <- GeneSet(tmp, setName=paste(gs[i]))
         ls[[i]] <- tmp
@@ -81,6 +81,5 @@ getGeneSets <- function(species = "Homo sapiens",
     gsc <- GeneSetCollection(ls)
     return(gsc)
 }
-
 
 
