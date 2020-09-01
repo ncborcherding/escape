@@ -1,3 +1,9 @@
+
+CHANGES IN VERSION 0.99.9
+
+Changing Seurat dependency, updated vignette
+
+
 CHANGES IN VERSION 0.99.8
 
 Edited getSignificance ANOVA model call

@@ -29,10 +29,10 @@ For the demonstration of *escape*, we will use the example "pbmc_small" data fro
 
 ```{r}
 suppressPackageStartupMessages(library(escape))
-suppressPackageStartupMessages(library(Seurat))
 suppressPackageStartupMessages(library(dittoSeq))
 suppressPackageStartupMessages(library(SingleCellExperiment))
-data("pbmc_small")
+suppressPackageStartupMessages(library(Seurat))
+pbmc_small <- get("pbmc_small")
 pbmc_small <- suppressMessages(UpdateSeuratObject(pbmc_small))
 sce <- as.SingleCellExperiment(pbmc_small)
 ```

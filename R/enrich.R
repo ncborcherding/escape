@@ -15,7 +15,6 @@
 #' @importFrom GSEABase GeneSetCollection
 #' @importFrom SingleCellExperiment counts
 #' @importFrom BiocParallel SnowParam
-#' @import Seurat
 #'
 #' 
 #' @examples 
