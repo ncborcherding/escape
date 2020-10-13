@@ -50,13 +50,13 @@ performPCA <- function(enriched, groups) {
 #' @export
 #' 
 #' @importFrom GSEABase GeneSet GeneSetCollection
-#' @importFrom msigdbr msigdbr msigdbr_show_species
+#' @importFrom msigdbr msigdbr msigdbr_species
 #' 
 #' @author Nick Borcherding, Jared Andrews
 #' @return List of GeneSets in collection format
 getGeneSets <- function(species = "Homo sapiens", 
                         library = NULL, gene.sets = NULL) {
-    spec <- msigdbr_show_species()
+    spec <- msigdbr_species()
     spec_check <- spec[spec %in% species]
     if (length(spec_check) == 0) {
         message(paste0("Please select a compatible species: ", 
