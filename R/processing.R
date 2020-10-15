@@ -57,14 +57,22 @@ performPCA <- function(enriched, groups) {
 getGeneSets <- function(species = "Homo sapiens", 
                         library = NULL, gene.sets = NULL) {
     spec <- msigdbr_species()
-    spec_check <- spec[spec %in% species]
+    spec_check <- unlist(spec[spec$species_name %in% species,][,1])
     if (length(spec_check) == 0) {
         message(paste0("Please select a compatible species: ", 
                        paste(spec, collapse = ", ")))
     }
-    m_df = msigdbr(species = spec_check)
+    
     if(!is.null(library)) {
-        m_df <- m_df[m_df$gs_cat %in% library,]
+        if (length(library) == 1) {
+            m_df = msigdbr(species = spec_check, category = library)
+        }
+        m_df <- NULL
+        for (x in seq_along(library)) {
+            tmp2 = msigdbr(species = spec_check, category = library[x])
+            m_df <- rbind(m_df, tmp2)
+        }
+        
     }
     if(!is.null(gene.sets)) {
         m_df <- m_df[m_df$gs_name %in% gene.sets,]
