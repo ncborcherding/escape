@@ -60,7 +60,7 @@ getGeneSets <- function(species = "Homo sapiens",
     spec_check <- unlist(spec[spec$species_name %in% species,][,1])
     if (length(spec_check) == 0) {
         message(paste0("Please select a compatible species: ", 
-                       paste(spec, collapse = ", ")))
+                    paste(spec, collapse = ", ")))
     }
     
     if(!is.null(library)) {
