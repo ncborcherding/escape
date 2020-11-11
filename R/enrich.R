@@ -44,7 +44,6 @@ enrichIt <- function(obj, gene.sets = NULL, groups = 1000, cores = 2) {
         cnts <- as.matrix(counts(obj))
     } else {
         cnts <- obj
-        message("NOTHING")
     }
     
     egc <- GeneSetCollection(egc)
