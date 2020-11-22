@@ -1,4 +1,8 @@
 
+CHANGES IN VERSION 1.1.1
+
+* Removed ggrepel, rlang,and factoextra dependencies.
+
 CHANGES IN VERSION 0.99.9
 
 * Changing Seurat dependency, updated vignette
