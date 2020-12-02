@@ -295,7 +295,7 @@ splitEnrichment <- function(enriched, x.axis = NULL, scale.bracket = NULL,
         labs(fill = split) + 
         scale_fill_manual(values = colors) + 
         theme_classic() +
-        guides(fill = FALSE)
+        #guides(fill = FALSE)
     if (!is.null(check)) {
         plot <- plot + theme(axis.title.x = element_blank(),
                     axis.text.x = element_blank(),
