@@ -8,7 +8,6 @@ Single-cell sequencing (SCS) is an emerging technology in the across the diverse
 
 ### R Packages Imported
 +  dplyr
-+  [facoextra](http://www.sthda.com/english/wiki/fviz-pca-quick-principal-component-analysis-data-visualization-r-software-and-data-mining) ```devtools::install_github("kassambara/factoextra")```
 +  ggplots2
 +  ggrepel
 +  ggridges
@@ -29,6 +28,10 @@ Single-cell sequencing (SCS) is an emerging technology in the across the diverse
 ### Learning To Use escape:
 
 Vignette available [here](https://ncborcherding.github.io/vignettes/escape_vignette.html), includes 2,000 malignant and nonmalignant peripheral blood T cells from a patient with cutaenous T cell lymphoma.
+
+### Citation 
+If using escape, please cite the [article](https://www.nature.com/articles/s42003-020-01625-6): Borcherding, N., Vishwakarma, A., Voigt, A.P. et al. Mapping the immune environment in clear cell renal carcinoma by single-cell genomics. Commun Biol 4, 122 (2021). https://doi.org/10.1038/s42003-020-01625-6. 
+
 
 ### Contact
 Questions, comments, suggestions, please feel free to contact Nick Borcherding via this repository, [email](mailto:ncborch@gmail.com), or using [twitter](https://twitter.com/theHumanBorch). 
