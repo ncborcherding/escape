@@ -7,7 +7,10 @@
 #'
 #' @param obj The count matrix, Seurat, or SingleCellExperiment object.
 #' @param gene.sets Gene sets from \code{\link{getGeneSets}} to use 
-#' for the enrichment analysis.
+#' for the enrichment analysis. Alternatively a simple base R list where
+#' the names of the list elements correspond to the name of the gene set
+#' and the elements themselves are simple vectors of gene names representing
+#' the gene set. 
 #' @param groups The number of cells to separate the enrichment calculation.
 #' @param cores The number of cores to use for parallelization.
 #'
@@ -48,7 +51,9 @@ enrichIt <- function(obj, gene.sets = NULL, groups = 1000, cores = 2) {
     
     # egc <- GeneSetCollection(egc) ## maybe it's a version thing, but supplying a matrix with a GeneSet did not work for me
     # names <- NULL
-    egc <- GSEABase::geneIds(egc) # will return a simple list, which will work if a matrix is supplied to GSVA
+    if( attr(class(egc), "package") == "GSEABase"){
+        egc <- GSEABase::geneIds(egc) # will return a simple list, which will work if a matrix is supplied to GSVA
+    }
     
     #for (x in seq_along(egc)) {
     #    setName <- egc[[x]]@setName
