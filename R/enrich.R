@@ -46,13 +46,15 @@ enrichIt <- function(obj, gene.sets = NULL, groups = 1000, cores = 2) {
         cnts <- obj
     }
     
-    egc <- GeneSetCollection(egc)
-    names <- NULL
+    # egc <- GeneSetCollection(egc) ## maybe it's a version thing, but supplying a matrix with a GeneSet did not work for me
+    # names <- NULL
+    egc <- GSEABase::geneIds(egc) # will return a simple list, which will work if a matrix is supplied to GSVA
     
-    for (x in seq_along(egc)) {
-        setName <- egc[[x]]@setName
-        names <- c(names, setName)
-    }
+    #for (x in seq_along(egc)) {
+    #    setName <- egc[[x]]@setName
+    #    names <- c(names, setName)
+    #} ## this doesn't seem to serve a purpose; otherwise unlist(lapply(egc, function(x) x@setName)) does the job, too
+    ## I wouldn't overwrite the inbuilt names() function, though
     
     cnts <- cnts[rowSums(cnts > 0) != 0, ] 
     # break to groups of cells
