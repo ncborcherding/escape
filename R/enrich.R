@@ -21,11 +21,15 @@
 #'
 #' 
 #' @examples 
-#' GS <- getGeneSets(library = "H")
+#' # download HALLMARK gene set collection
+#' GS <- getGeneSets(library = "H") 
 #' GS <- GS[[1]] #Reduce list size for example
 #' seurat_ex <- suppressWarnings(Seurat::pbmc_small)
 #' ES <- enrichIt(obj = seurat_ex, gene.sets = GS)
-#'
+#' 
+#' # alternatively, construct your own list of gene sets
+#' myGS <- list(Housekeeping = c("ACTA1", "ACTN1", "GAPDH"),
+#'   Cancer = c("TP53","BRCA2","ERBB2","MYC"))
 #' @export
 #'
 #' @author Nick Borcherding, Jared Andrews
