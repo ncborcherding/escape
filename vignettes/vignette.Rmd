@@ -79,7 +79,7 @@ The easiest way to generate almost any visualization for single cell data is via
 
 To keep things consistent, we'll define a pleasing color scheme.
 ```{r}
-colors <- rev(colorRampPalette(c("#FF4B20", "#FFB433", "#C6FDEC", "#7AC5FF", "#0348A6")))
+colors <- colorRampPalette(c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20"))
 ```
 
 
