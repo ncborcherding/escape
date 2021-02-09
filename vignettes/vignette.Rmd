@@ -48,7 +48,8 @@ Individual pathways/gene sets can be isolated from the libraries selected, by se
 If you are using a species other than Homo sapiens, set the `species` parameter to the appropriate scientific name to ensure the gene nomenclature matches your expression data. To check which species are available, use `msigdbr::msigdbr_species()`. 
 
 ```{r}
-GS <- getGeneSets(library = "H")
+## We'll use the HALLMARK gene set collection ("H")
+GS.hallmark <- getGeneSets(library = "H")
 ```
 
 If a user would like to expand beyond the GSEA Molecular Signature Database for pathway analysis, the enrichment function `enrichIt()` uses a list of GeneSet objects from the GSEABase R package. An [excellent vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/GSEABase/inst/doc/GSEABase.pdf) exists on how to create GeneSet objects to be used in the enrichment analysis.
@@ -60,8 +61,8 @@ The next step is performing the enrichment on the RNA count data. The function `
 *Important Note:* This is computationally intensive and is highly dependent on the number of cells and the number of gene sets included.
 
 ```{r}
-ES.seurat <- enrichIt(obj = pbmc_small, gene.sets = GS, groups = 1000, cores = 2)
-ES.sce <- enrichIt(obj = sce, gene.sets = GS, groups = 1000, cores = 2)
+ES.seurat <- enrichIt(obj = pbmc_small, gene.sets = GS.hallmark, groups = 1000, cores = 2)
+ES.sce <- enrichIt(obj = sce, gene.sets = GS.hallmark, groups = 1000, cores = 2)
 ```
 
 We can then easily add these results back to our Seurat or SCE object.
