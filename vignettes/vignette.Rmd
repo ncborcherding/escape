@@ -7,7 +7,9 @@ author:
 - name: Jared Andrews
   email: jared.andrews07@gmail.com
   affiliation: Washington University in St. Louis, School of Medicine, St. Louis, MO, USA
+
 date: "February 9, 2021"
+
 output:
   BiocStyle::html_document:
     toc_float: true
@@ -25,7 +27,9 @@ library(BiocStyle)
 
 # Loading Processed Single-Cell Data
 
+
 For the demonstration of *escape*, we will use the example "pbmc_small" data from *Seurat* and also generate a `SingleCellExperiment` object from it.
+
 
 ```{r}
 suppressPackageStartupMessages(library(escape))
@@ -33,11 +37,13 @@ suppressPackageStartupMessages(library(dittoSeq))
 suppressPackageStartupMessages(library(SingleCellExperiment))
 suppressPackageStartupMessages(library(Seurat))
 pbmc_small <- get("pbmc_small")
+data("pbmc_small")
 pbmc_small <- suppressMessages(UpdateSeuratObject(pbmc_small))
 sce <- as.SingleCellExperiment(pbmc_small)
 ```
 
 # Getting Gene Sets
+
 
 The first step in the process of performing gene set enrichment analysis is identifying the gene sets we would like to use. The function `getGeneSets()` allows users to isolate a whole or multiple libraries from a list of `GSEABase` GeneSet objects. We can do this for gene set collections from the built-in [Molecular Signature Database](https://www.gsea-msigdb.org/gsea/msigdb/search.jsp) by setting the parameter `library` equal to the collection(s) of interest.
 For multiple libraries, just set `library = c("C2", "C5")`. 
@@ -47,13 +53,16 @@ Individual pathways/gene sets can be isolated from the selected libraries select
 If you are using a species other than Homo sapiens, set the `species` parameter to the appropriate scientific name to ensure the gene nomenclature matches your expression data. 
 To check which species are available, use `msigdbr::msigdbr_species()`. 
 
+
 ```{r}
 ## We'll use the HALLMARK gene set collection ("H")
 GS.hallmark <- getGeneSets(library = "H")
 ```
 
+
 If a user would like to expand beyond the GSEA Molecular Signature Database for pathway analysis, the enrichment function `enrichIt()` can use any list of `GeneSet` objects from the `GSEABase` R package. An [excellent vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/GSEABase/inst/doc/GSEABase.pdf) exists on how to create GeneSet objects to be used in the enrichment analysis.
 Otherwise, you may also provide a simple named list of gene sets of interest. See `?enrichIt()` for details.
+
 
 # Enrichment
 

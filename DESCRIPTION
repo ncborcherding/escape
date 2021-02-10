@@ -11,7 +11,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 biocViews: Software, SingleCell, Classification, Annotation, GeneSetEnrichment, Sequencing, GeneSignaling, Pathways
-Depends: R (>= 4.0)
+Depends: R (>= 3.6)
 Imports: 
 	grDevices,  
 	dplyr, 

@@ -55,7 +55,7 @@ performPCA <- function(enriched, groups) {
 #' @importFrom msigdbr msigdbr msigdbr_species
 #' 
 #' @author Nick Borcherding, Jared Andrews
-#' @return List of GeneSets in collection format
+#' @return A \code{GeneSetCollection} object containing the requested \code{GeneSet} objects.
 getGeneSets <- function(species = "Homo sapiens", 
                         library = NULL, gene.sets = NULL) {
     spec <- msigdbr_species()
