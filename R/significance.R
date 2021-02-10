@@ -66,7 +66,7 @@ getSignificance <- function(enriched, group = NULL,
             df <- out[[i]]
             fval <- summary(df)[[1]]$'F value'[[1]]
             pval <- summary(df)[[1]]$'Pr(>F)'[[1]]
-            output <- rbind(output,mat)
+            output <- rbind(output, c(fval, pval))
         }
         output <- as.data.frame(output)
         colnames(output) <- c("f.value", "p.value")
