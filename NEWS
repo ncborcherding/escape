@@ -1,24 +1,47 @@
 
+CHANGES IN VERSION 1.1.1
+
+* Removed ggrepel, rlang,and factoextra dependencies.
+
+CHANGES IN VERSION 0.99.9
+
+* Changing Seurat dependency, updated vignette
+
+CHANGES IN VERSION 0.99.8
+
+* Edited getSignificance ANOVA model call
+
+CHANGES IN VERSION 0.99.7
+
+* Edited getSignificance fit call to match documentation
+
+CHANGES IN VERSION 0.99.6
+
+* Edited match.args() in getSignificance
+
+CHANGES IN VERSION 0.99.5
+
+* Edited match.args() in getSignificance
+
 CHANGES IN VERSION 0.99.4
 
-Fixed t.test call for getSignificance
-Changed stop() to message()
-Added match.args() for getSignificance
+* Added match.args() to getSignificance
+* Changed stop() to message()
+* Modified getSignficance to allow for ANOVA and T.test
 
 CHANGES IN VERSION 0.99.3
 
-Updated link in description of getGeneSets.
+* Updated link in description of getGeneSets.
 
 CHANGES IN VERSION 0.99.2
 
-Fixed a parenthesis, yeah a parenthesis. (In enrichIt() call I edited for 99.1)
+*Fixed a parenthesis, yeah a parenthesis. (In enrichIt() call I edited for 99.1)
 
 CHANGES IN VERSION 0.99.1
 
-Removed parallel call in gsva() and added biocparallel
-Changed cores = 4 to cores = 2 in the vignette
-
+* Removed parallel call in gsva() and added biocparallel
+* Changed cores = 4 to cores = 2 in the vignette
 
 CHANGES IN VERSION 0.99.0
 
-Preparing for bioconductor submission
+* Preparing for bioconductor submission

@@ -7,7 +7,10 @@
 #'
 #' @param obj The count matrix, Seurat, or SingleCellExperiment object.
 #' @param gene.sets Gene sets from \code{\link{getGeneSets}} to use 
-#' for the enrichment analysis.
+#' for the enrichment analysis. Alternatively a simple base R list where
+#' the names of the list elements correspond to the name of the gene set
+#' and the elements themselves are simple vectors of gene names representing
+#' the gene set. 
 #' @param groups The number of cells to separate the enrichment calculation.
 #' @param cores The number of cores to use for parallelization.
 #'
@@ -15,15 +18,18 @@
 #' @importFrom GSEABase GeneSetCollection
 #' @importFrom SingleCellExperiment counts
 #' @importFrom BiocParallel SnowParam
-#' @import Seurat
 #'
 #' 
 #' @examples 
-#' GS <- getGeneSets(library = "H")
+#' # download HALLMARK gene set collection
+#' GS <- getGeneSets(library = "H") 
 #' GS <- GS[[1]] #Reduce list size for example
 #' seurat_ex <- suppressWarnings(Seurat::pbmc_small)
 #' ES <- enrichIt(obj = seurat_ex, gene.sets = GS)
-#'
+#' 
+#' # alternatively, construct your own list of gene sets
+#' myGS <- list(Housekeeping = c("ACTA1", "ACTN1", "GAPDH"),
+#'   Cancer = c("TP53","BRCA2","ERBB2","MYC"))
 #' @export
 #'
 #' @author Nick Borcherding, Jared Andrews
@@ -45,16 +51,19 @@ enrichIt <- function(obj, gene.sets = NULL, groups = 1000, cores = 2) {
         cnts <- as.matrix(counts(obj))
     } else {
         cnts <- obj
-        message("NOTHING")
     }
     
-    egc <- GeneSetCollection(egc)
-    names <- NULL
-    
-    for (x in seq_along(egc)) {
-        setName <- egc[[x]]@setName
-        names <- c(names, setName)
+    # egc <- GeneSetCollection(egc) ## maybe it's a version thing, but supplying a matrix with a GeneSet did not work for me
+    # names <- NULL
+    if( attr(class(egc), "package") == "GSEABase"){
+        egc <- GSEABase::geneIds(egc) # will return a simple list, which will work if a matrix is supplied to GSVA
     }
+    
+    #for (x in seq_along(egc)) {
+    #    setName <- egc[[x]]@setName
+    #    names <- c(names, setName)
+    #} ## this doesn't seem to serve a purpose; otherwise unlist(lapply(egc, function(x) x@setName)) does the job, too
+    ## I wouldn't overwrite the inbuilt names() function, though
     
     cnts <- cnts[rowSums(cnts > 0) != 0, ] 
     # break to groups of cells

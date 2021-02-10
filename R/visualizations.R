@@ -68,11 +68,8 @@ pcaEnrichment <- function(PCAout, PCx, PCy,
 #' @param top.contribution The number of gene sets to graph, organized 
 #' by PCA contribution.
 #'
-#' @importFrom factoextra fviz_pca_var
 #' @importFrom ggplot2 ggplot
-#' @importFrom ggrepel geom_text_repel
 #' @importFrom stats prcomp
-#' @importFrom rlang .data
 #' @import dplyr
 #' 
 #' @examples 
@@ -87,21 +84,28 @@ pcaEnrichment <- function(PCAout, PCx, PCy,
 masterPCAPlot <- function(enriched, PCx, PCy, top.contribution = 10) {
     input <- select_if(enriched, is.numeric)
     PCA <- prcomp(input, scale. = TRUE)
-    PCx1 <- which(colnames(PCA$x) == PCx)
-    PCy1 <- which(colnames(PCA$x) == PCy)
-    p <- fviz_pca_var(PCA, axes = c(PCx1, PCy1))
-    output <- data.frame(p$data$name, p$data$contrib, p$data$x, p$data$y)
-    output <- output %>% top_n(n = top.contribution, wt = .data$p.data.contrib)
-
-    ggplot(output, aes_string(x = "p.data.x", y = "p.data.y")) +
-        geom_point() +
-        geom_text_repel(data = output, aes_string(label = "p.data.name"), 
-            size=2) +
-        theme_classic() +
-        xlab(PCx) +
-        ylab(PCy) + 
+    var_explained <- PCA$sdev^2/sum(PCA$sdev^2)
+    
+    tbl <- data.frame(names = rownames(PCA$rotation), 
+            factors.y = PCA$rotation[,PCy]^2/sum(PCA$rotation[,PCy]^2),
+            factors.x = PCA$rotation[,PCx]^2/sum(PCA$rotation[,PCx]^2)) 
+    names <- tbl %>% top_n(n = 10, (factors.x + factors.y)/2)
+    names <- names$names
+    df <- as.data.frame(PCA$rotation)
+    df <- df[rownames(df) %in% names,]
+    df$names <- rownames(df)
+    
+    plot <- df %>%
+        ggplot(aes(x=df[,PCx],y=df[,PCy])) + 
+        geom_point() + 
+        geom_text(aes_string(label = "names"), 
+            size=2, hjust = 0.5, nudge_y = -0.01) + 
         geom_hline(yintercept = 0, lty=2) + 
-        geom_vline(xintercept = 0, lty=2)
+        geom_vline(xintercept = 0, lty=2) +
+        labs(x=paste0(PCx,": ",round(var_explained[1]*100,1),"%"),
+            y=paste0(PCy, ": ",round(var_explained[2]*100,1),"%")) +
+        theme_classic()
+    return(plot)
 }
 
 #' Generate a ridge plot to examine enrichment distributions
@@ -295,7 +299,7 @@ splitEnrichment <- function(enriched, x.axis = NULL, scale.bracket = NULL,
         labs(fill = split) + 
         scale_fill_manual(values = colors) + 
         theme_classic() +
-        guides(fill = FALSE)
+        #guides(fill = FALSE)
     if (!is.null(check)) {
         plot <- plot + theme(axis.title.x = element_blank(),
                     axis.text.x = element_blank(),

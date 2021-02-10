@@ -26,8 +26,8 @@
 #' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return Data frame of test statistics
 getSignificance <- function(enriched, group = NULL, 
-                        fit = c("linear.model", "T.test", "ANOVA")) {
-    fit <- match.arg(fit, several.ok = FALSE)
+                        fit = "linear.model") {
+    fit <- match.arg(fit,  choices = c("linear.model", "T.test", "ANOVA"))
     group2 <- enriched[,group]
     gr_names <- unique(group2)
     input <- select_if(enriched, is.numeric)
@@ -58,7 +58,7 @@ getSignificance <- function(enriched, group = NULL,
         rownames(output) <- colnames(input)
         output$FDR <- p.adjust(output$p.value) }
     } else if (fit == "ANOVA") {
-        if (unique(group2) <= 2) {
+        if (length(unique(group2)) <= 2) {
             message("Ensure the group selection has more than two levels 
                 for ANOVA fit") }
         out <- lapply(input, function(x) aov(x ~ group2))
@@ -66,7 +66,7 @@ getSignificance <- function(enriched, group = NULL,
             df <- out[[i]]
             fval <- summary(df)[[1]]$'F value'[[1]]
             pval <- summary(df)[[1]]$'Pr(>F)'[[1]]
-            output <- rbind(output,mat)
+            output <- rbind(output, c(fval, pval))
         }
         output <- as.data.frame(output)
         colnames(output) <- c("f.value", "p.value")
