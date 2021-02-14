@@ -4,11 +4,7 @@
 \alias{getSignificance}
 \title{Perform significance testing between groups and enrichement scores.}
 \usage{
-getSignificance(
-  enriched,
-  group = NULL,
-  fit = c("linear.model", "T.test", "ANOVA")
-)
+getSignificance(enriched, group = NULL, fit = "linear.model")
 }
 \arguments{
 \item{enriched}{The output of \code{\link{enrichIt}}.}

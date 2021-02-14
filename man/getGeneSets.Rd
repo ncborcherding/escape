@@ -10,14 +10,16 @@ getGeneSets(species = "Homo sapiens", library = NULL, gene.sets = NULL)
 \item{species}{The scientific name of the species of interest in 
 order to get correcent gene nomenclature}
 
-\item{library}{Individual libraries or multiple libraries to select, 
-example: library = c("H", "C5").}
+\item{library}{Individual collection(s) of gene sets, e.g. c("H", "C5").
+See \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp} for
+all MSigDB collections.}
 
 \item{gene.sets}{Select gene sets or pathways, using specific names, 
-example: pathways = c("HALLMARK_TNFA_SIGNALING_VIA_NFKB").}
+example: pathways = c("HALLMARK_TNFA_SIGNALING_VIA_NFKB"). Will only be
+honored if library is set, too.}
 }
 \value{
-List of GeneSets in collection format
+A \code{GeneSetCollection} object containing the requested \code{GeneSet} objects.
 }
 \description{
 This function allows users to select libraries and specific 

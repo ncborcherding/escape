@@ -1,7 +1,9 @@
 
-CHANGES IN VERSION 1.1.1
+CHANGES IN VERSION 1.1.2
 
-* Removed ggrepel, rlang,and factoextra dependencies.
+* Removed ggrepel, rlang, and factoextra dependencies.
+* Updated Seurat package switch
+* Switch the way counts are processed by first eliminating rows with 0 expression in the sparse matrix before converting to a full matrix
 
 CHANGES IN VERSION 0.99.9
 
