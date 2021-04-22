@@ -18,13 +18,14 @@
 #' @importFrom GSEABase GeneSetCollection
 #' @importFrom SingleCellExperiment counts
 #' @importFrom BiocParallel SnowParam
+#' @importFrom Matrix summary
 #'
 #' 
 #' @examples 
 #' # download HALLMARK gene set collection
 #' GS <- getGeneSets(library = "H") 
-#' GS <- GS[[1]] #Reduce list size for example
-#' seurat_ex <- suppressWarnings(Seurat::pbmc_small)
+#' GS <- GS[c(1:2)] #Reduce list size for example
+#' seurat_ex <- suppressWarnings(SeuratObject::pbmc_small)
 #' ES <- enrichIt(obj = seurat_ex, gene.sets = GS)
 #' 
 #' # alternatively, construct your own list of gene sets
@@ -46,25 +47,20 @@ enrichIt <- function(obj, gene.sets = NULL, groups = 1000, cores = 2) {
     }
     
     if (inherits(x = obj, what = "Seurat")) {
-        cnts <- as.matrix(as.matrix(obj@assays[["RNA"]]@counts))
+        cnts <- obj@assays[["RNA"]]@counts
+        cnts<- cnts[tabulate(summary(cnts)$i) != 0, , drop = FALSE]
+        cnts <- as.matrix(cnts)
     } else if (inherits(x = obj, what = "SingleCellExperiment")) {
-        cnts <- as.matrix(counts(obj))
+        cnts <- counts(obj)
+        cnts<- cnts[tabulate(summary(cnts)$i) != 0, , drop = FALSE]
+        cnts <- as.matrix(cnts)
     } else {
         cnts <- obj
     }
-    
-    # egc <- GeneSetCollection(egc) ## maybe it's a version thing, but supplying a matrix with a GeneSet did not work for me
-    # names <- NULL
     if( attr(class(egc), "package") == "GSEABase"){
-        egc <- GSEABase::geneIds(egc) # will return a simple list, which will work if a matrix is supplied to GSVA
+        egc <- GSEABase::geneIds(egc) # will return a simple list, which will work if 
+        #a matrix is supplied to GSVA
     }
-    
-    #for (x in seq_along(egc)) {
-    #    setName <- egc[[x]]@setName
-    #    names <- c(names, setName)
-    #} ## this doesn't seem to serve a purpose; otherwise unlist(lapply(egc, function(x) x@setName)) does the job, too
-    ## I wouldn't overwrite the inbuilt names() function, though
-    
     cnts <- cnts[rowSums(cnts > 0) != 0, ] 
     # break to groups of cells
     scores <- list()

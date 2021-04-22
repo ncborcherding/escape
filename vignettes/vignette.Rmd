@@ -36,6 +36,7 @@ suppressPackageStartupMessages(library(escape))
 suppressPackageStartupMessages(library(dittoSeq))
 suppressPackageStartupMessages(library(SingleCellExperiment))
 suppressPackageStartupMessages(library(Seurat))
+suppressPackageStartupMessages(library(SeuratObject))
 pbmc_small <- get("pbmc_small")
 data("pbmc_small")
 pbmc_small <- suppressMessages(UpdateSeuratObject(pbmc_small))
@@ -166,9 +167,6 @@ Like above, we can explore the distribution of the **"HALLMARK_DNA_REPAIR"** gen
 ## Seurat object example
 ES2 <- data.frame(pbmc_small[[]], Idents(pbmc_small))
 colnames(ES2)[ncol(ES2)] <- "cluster"
-
-## SCE object example -- assumes that colData(sce) has a column named "cluster"
-ES2 <- as.data.frame(met.data) # alternatively: as.data.frame(colData(sce))
 
 ## plot
 ridgeEnrichment(ES2, gene.set = "HALLMARK_DNA_REPAIR", group = "cluster", add.rug = TRUE)
