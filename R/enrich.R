@@ -15,7 +15,7 @@
 #' @param cores The number of cores to use for parallelization.
 #'
 #' @importFrom GSVA gsva
-#' @importFrom GSEABase GeneSetCollection
+#' @importFrom GSEABase GeneSetCollection geneIds
 #' @importFrom SingleCellExperiment counts
 #' @importFrom BiocParallel SnowParam
 #' @importFrom Matrix summary
@@ -57,9 +57,9 @@ enrichIt <- function(obj, gene.sets = NULL, groups = 1000, cores = 2) {
     } else {
         cnts <- obj
     }
-    if( attr(class(egc), "package") == "GSEABase"){
-        egc <- GSEABase::geneIds(egc) # will return a simple list, which will work if 
-        #a matrix is supplied to GSVA
+    if(inherits(egc, what = "GeneSetCollection")){
+        egc <- GSEABase::geneIds(egc) # will return a simple list, 
+        #which will work if a matrix is supplied to GSVA
     }
     cnts <- cnts[rowSums(cnts > 0) != 0, ] 
     # break to groups of cells

@@ -39,8 +39,8 @@ suppressPackageStartupMessages(library(Seurat))
 suppressPackageStartupMessages(library(SeuratObject))
 pbmc_small <- get("pbmc_small")
 data("pbmc_small")
-pbmc_small <- suppressMessages(UpdateSeuratObject(pbmc_small))
-sce <- as.SingleCellExperiment(pbmc_small)
+pbmc_small <- DietSeurat(suppressMessages(UpdateSeuratObject(pbmc_small)))
+sce <- as.SingleCellExperiment(pbmc_small, assay = "RNA")
 ```
 
 # Getting Gene Sets
@@ -49,7 +49,7 @@ sce <- as.SingleCellExperiment(pbmc_small)
 The first step in the process of performing gene set enrichment analysis is identifying the gene sets we would like to use. The function `getGeneSets()` allows users to isolate a whole or multiple libraries from a list of `GSEABase` GeneSet objects. We can do this for gene set collections from the built-in [Molecular Signature Database](https://www.gsea-msigdb.org/gsea/msigdb/search.jsp) by setting the parameter `library` equal to the collection(s) of interest.
 For multiple libraries, just set `library = c("C2", "C5")`. 
 To check which collections are available, use `msigdbr::msigdbr_collections()`. 
-The `gs_cat` entry indicates the individal gene set collection names (e.g. "C2"). 
+The `gs_cat` entry indicates the individual gene set collection names (e.g. "C2"). 
 Individual pathways/gene sets can be isolated from the selected libraries selected, by setting `gene.sets` = the name(s) of the gene sets of interest. For an overview of the gene sets and collections, see <https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp>.
 If you are using a species other than Homo sapiens, set the `species` parameter to the appropriate scientific name to ensure the gene nomenclature matches your expression data. 
 To check which species are available, use `msigdbr::msigdbr_species()`. 
