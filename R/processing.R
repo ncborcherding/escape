@@ -32,6 +32,21 @@ performPCA <- function(enriched, groups) {
     return(merged)
 }
 
+#split data matrix into cell chunks
+#stole this from https://github.com/carmonalab/UCell
+split_data.matrix <- function(matrix, chunk.size=1000) {
+  ncols <- dim(matrix)[2]
+  nchunks <- (ncols-1) %/% chunk.size + 1
+  
+  split.data <- list()
+  for (i in 1:nchunks) {
+    min <- 1 + (i-1)*chunk.size
+    max <- min(i*chunk.size, ncols)
+    split.data[[i]] <- matrix[,min:max]
+  }
+  return(split.data)
+}
+
 #' Get a collection of gene sets to perform enrichment on
 #'
 #' This function allows users to select libraries and specific 
