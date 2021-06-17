@@ -31,7 +31,7 @@ uses the gsva R package and the poisson distribution for RNA.
 \examples{
 # download HALLMARK gene set collection
 GS <- getGeneSets(library = "H") 
-GS <- GS[[1]] #Reduce list size for example
+GS <- GS[c(1:2)] #Reduce list size for example
 seurat_ex <- suppressWarnings(SeuratObject::pbmc_small)
 ES <- enrichIt(obj = seurat_ex, gene.sets = GS)
 
