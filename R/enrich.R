@@ -28,14 +28,12 @@
 #' 
 #' @examples 
 #' # download HALLMARK gene set collection
-#' GS <- getGeneSets(library = "H") 
-#' GS <- GS[c(1:2)] #Reduce list size for example
+#' GS <- list(Housekeeping = c("ACTA1", "ACTN1", "GAPDH"),
+#'   Cancer = c("TP53","BRCA2","ERBB2","MYC"))
+#' 
 #' seurat_ex <- suppressWarnings(SeuratObject::pbmc_small)
 #' ES <- enrichIt(obj = seurat_ex, gene.sets = GS)
 #' 
-#' # alternatively, construct your own list of gene sets
-#' myGS <- list(Housekeeping = c("ACTA1", "ACTN1", "GAPDH"),
-#'   Cancer = c("TP53","BRCA2","ERBB2","MYC"))
 #' @export
 #'
 #' @author Nick Borcherding, Jared Andrews
@@ -87,6 +85,6 @@ enrichIt <- function(obj, gene.sets = NULL,
                                         chunk.size = groups, ncores = 1))
     }
     scores <- do.call(cbind, scores)
-    output <- data.frame(t(scores))
+    output <- data.frame(t(as.matrix(scores)))
     return(output)
 }

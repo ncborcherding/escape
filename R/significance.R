@@ -10,8 +10,7 @@
 #' @param enriched The output of \code{\link{enrichIt}}.
 #' @param group The parameter to group for the comparison, should a column of 
 #' the enriched input
-#' @param fit The test used for significance, either linear.model, ANOVA, 
-#' or T.test
+#' @param fit The test used for significance, either ANOVA or T.test
 #'
 #' @import limma
 #' @importFrom dplyr select_if
@@ -26,20 +25,13 @@
 #' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return Data frame of test statistics
 getSignificance <- function(enriched, group = NULL, 
-                        fit = "linear.model") {
-    fit <- match.arg(fit,  choices = c("linear.model", "T.test", "ANOVA"))
+                        fit = NULL) {
+    fit <- match.arg(fit,  choices = c("T.test", "ANOVA"))
     group2 <- enriched[,group]
     gr_names <- unique(group2)
     input <- select_if(enriched, is.numeric)
     output <- NULL
-    if (fit == "linear.model") {
-        group2 <- factor(group2)
-        design <- model.matrix(~ -1 + group2)
-        colnames(design) <- levels(group2)
-        fit <- lmFit(t(input), design)
-        fit <- eBayes(fit)
-        output <- topTable(fit, number = ncol(input))
-    } else if (fit == "T.test") {
+    if (fit == "T.test") {
         if (length(unique(group2)) != 2) {
             message("Ensure the group selection has only two levels for T.test 
                 fit") 

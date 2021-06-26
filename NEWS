@@ -1,6 +1,8 @@
 CHANGES IN VERSION 1.3.1
 * Aligning versions to the current bioconductor release
 * Added DietSeurat() call in vignette to prevent issues
+* Adding internal gene sets - escape.gene.sets
+* Removed lm.fit using limma from getSignificance
 
 CHANGES IN VERSION 1.0.1
 

@@ -4,7 +4,7 @@
 \alias{enrichIt}
 \title{Calculate gene set enrichment scores for single-cell data}
 \usage{
-enrichIt(obj, gene.sets = NULL, groups = 1000, cores = 2)
+enrichIt(obj, gene.sets = NULL, method = "ssGSEA", groups = 1000, cores = 2)
 }
 \arguments{
 \item{obj}{The count matrix, Seurat, or SingleCellExperiment object.}
@@ -14,6 +14,8 @@ for the enrichment analysis. Alternatively a simple base R list where
 the names of the list elements correspond to the name of the gene set
 and the elements themselves are simple vectors of gene names representing
 the gene set.}
+
+\item{method}{select the method to calculate enrichment, either ssGSEA or UCell}
 
 \item{groups}{The number of cells to separate the enrichment calculation.}
 
@@ -26,7 +28,10 @@ Data frame of normalized enrichmenet scores (NES)
 This function allows users to input both the single-cell RNA-sequencing 
 counts and any gene set pathways either from the stored data or from 
 other sources. The enrichment calculation itself 
-uses the gsva R package and the poisson distribution for RNA.
+uses the two methods 1) gsva R package and the poisson distribution for RNA
+or the \href{https://github.com/carmonalab/UCell}{UCell package}. 
+If using the method "UCell", the core option will be ignored due to openMP
+support issues on Macs (will be changed in the future).
 }
 \examples{
 # download HALLMARK gene set collection
