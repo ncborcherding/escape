@@ -10,7 +10,7 @@ splitEnrichment(
   scale.bracket = NULL,
   split = NULL,
   gene.set = NULL,
-  colors = c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20")
+  colors = c("#0D0887FF", "#7E03A8FF", "#CC4678FF", "#F89441FF", "#F0F921FF")
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ splitEnrichment(
 \item{scale.bracket}{This will filter the enrichment scores to remove 
 extreme outliers. Values entered (1 or 2 numbers) will be the filtering 
 parameter using z-scores of the selected gene.set. If only 1 value is given, 
-a seocndary bracket is autommatically selected as the inverse of the number.}
+a secondary bracket is automatically selected as the inverse of the number.}
 
 \item{split}{The parameter to split, must be binary.}
 

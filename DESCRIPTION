@@ -1,17 +1,16 @@
 Package: escape
 Title: Easy single cell analysis platform for enrichment
-Version: 1.3.1
-Date: 2020-11-05
+Version: 1.3.2
 Authors@R: c(
     person(given = "Nick", family = "Borcherding", role = c("aut", "cre"), email = "ncborch@gmail.com"),
     person(given = "Jared", family = "Andrews", role = c("aut"), email = "jared.andrews07@gmail.com"))
 Description: A bridging R package to facilitate gene set enrichment analysis (GSEA) in the context of single-cell RNA sequencing. Using raw count information, Seurat objects, or SingleCellExperiment format, users can perform and visualize GSEA across individual cells. 
-License: Apache License 2.0
+License: GPL-2
 Encoding: UTF-8
-LazyData: true
+LazyData: false
 RoxygenNote: 7.1.1
 biocViews: Software, SingleCell, Classification, Annotation, GeneSetEnrichment, Sequencing, GeneSignaling, Pathways
-Depends: R (>= 4.0)
+Depends: R (>= 4.1)
 Imports: 
 	grDevices,  
 	dplyr, 
@@ -24,7 +23,9 @@ Imports:
 	msigdbr,
 	stats, 
 	BiocParallel, 
-	Matrix
+	Matrix,
+	UCell,
+	singscore
 Suggests: 
 	Seurat,
 	SeuratObject,

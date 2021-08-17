@@ -4,7 +4,14 @@
 \alias{enrichIt}
 \title{Calculate gene set enrichment scores for single-cell data}
 \usage{
-enrichIt(obj, gene.sets = NULL, method = "ssGSEA", groups = 1000, cores = 2)
+enrichIt(
+  obj,
+  gene.sets = NULL,
+  method = "ssGSEA",
+  groups = 1000,
+  cores = 2,
+  weight.by.nFeatures = TRUE
+)
 }
 \arguments{
 \item{obj}{The count matrix, Seurat, or SingleCellExperiment object.}
@@ -15,11 +22,15 @@ the names of the list elements correspond to the name of the gene set
 and the elements themselves are simple vectors of gene names representing
 the gene set.}
 
-\item{method}{select the method to calculate enrichment, either ssGSEA or UCell}
+\item{method}{select the method to calculate enrichment, either "ssGSEA", "UCell" or
+"singscore"}
 
 \item{groups}{The number of cells to separate the enrichment calculation.}
 
 \item{cores}{The number of cores to use for parallelization.}
+
+\item{weight.by.nFeatures}{Weight the normalized enrichment score by the inverse
+of the nFeature by cell (recommended if using ssGSEA).}
 }
 \value{
 Data frame of normalized enrichmenet scores (NES)
@@ -29,20 +40,7 @@ This function allows users to input both the single-cell RNA-sequencing
 counts and any gene set pathways either from the stored data or from 
 other sources. The enrichment calculation itself 
 uses the two methods 1) gsva R package and the poisson distribution for RNA
-or the \href{https://github.com/carmonalab/UCell}{UCell package}. 
-If using the method "UCell", the core option will be ignored due to openMP
-support issues on Macs (will be changed in the future).
-}
-\examples{
-# download HALLMARK gene set collection
-GS <- getGeneSets(library = "H") 
-GS <- GS[c(1:2)] #Reduce list size for example
-seurat_ex <- suppressWarnings(SeuratObject::pbmc_small)
-ES <- enrichIt(obj = seurat_ex, gene.sets = GS)
-
-# alternatively, construct your own list of gene sets
-myGS <- list(Housekeeping = c("ACTA1", "ACTN1", "GAPDH"),
-  Cancer = c("TP53","BRCA2","ERBB2","MYC"))
+or the \href{https://github.com/carmonalab/UCell}{UCell package}.
 }
 \seealso{
 \code{\link{getGeneSets}} to collect gene sets.

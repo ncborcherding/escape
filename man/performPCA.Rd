@@ -4,15 +4,17 @@
 \alias{performPCA}
 \title{Calculate Principal Components for the Enrichment Scores}
 \usage{
-performPCA(enriched, groups)
+performPCA(enriched, gene.sets = NULL, groups)
 }
 \arguments{
 \item{enriched}{The output of \code{\link{enrichIt}}.}
 
+\item{gene.sets}{Names of gene sets to include in the PCA}
+
 \item{groups}{The column headers to use in future graphing functions.}
 }
 \value{
-Data frame of principal compoenents
+Data frame of principal components
 }
 \description{
 Using all or selected enrichment scores of individual 
@@ -23,7 +25,9 @@ to the output columns to use to graph later.
 \examples{
 ES2 <- readRDS(url(
 "https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-PCA <- performPCA(enriched = ES2, groups = c("Type", "Cluster"))
+
+PCA <- performPCA(enriched = ES2, groups = c("Type", "Cluster"), 
+gene.sets = colnames(ES2))
 
 }
 \author{

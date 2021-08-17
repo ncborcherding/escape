@@ -18,7 +18,7 @@
 #' @examples 
 #' ES2 <- readRDS(url(
 #' "https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-#' output <- getSignificance(ES2, group = "Type", fit = "linear.model")
+#' output <- getSignificance(ES2, group = "Type", fit = "T.test")
 #' 
 #' @export
 #'

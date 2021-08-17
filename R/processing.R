@@ -6,6 +6,7 @@
 #' to the output columns to use to graph later.
 #'
 #' @param enriched The output of \code{\link{enrichIt}}.
+#' @param gene.sets Names of gene sets to include in the PCA
 #' @param groups The column headers to use in future graphing functions.
 #'
 #' @importFrom dplyr select_if
@@ -14,16 +15,21 @@
 #' @examples 
 #' ES2 <- readRDS(url(
 #' "https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-#' PCA <- performPCA(enriched = ES2, groups = c("Type", "Cluster"))
+#' 
+#' PCA <- performPCA(enriched = ES2, groups = c("Type", "Cluster"), 
+#' gene.sets = colnames(ES2))
 #'
 #' @export
-#' @return Data frame of principal compoenents
+#' @return Data frame of principal components
 #'
 #' @author Nick Borcherding
 #'
-performPCA <- function(enriched, groups) {
-    groups <- enriched[,colnames(enriched) %in% groups]
+performPCA <- function(enriched, gene.sets = NULL, groups) {
+    groups <- enriched[,colnames(enriched) %in% c(groups)]
     input <- select_if(enriched, is.numeric)
+    if (!is.null(gene.sets)) {
+      input <- input[,colnames(input) %in% gene.sets]
+    }
     PCA <- prcomp(input, scale. = TRUE)
     merged <- merge(PCA$x, groups, by = "row.names")
     rownames(merged) <- merged[,1]
@@ -108,4 +114,64 @@ getGeneSets <- function(species = "Homo sapiens",
     return(gsc)
 }
 
+#Function for normalizing value
+normalize <- function(x)
+{
+  (x- min(x)) /(max(x)-min(x))
+}
 
+#' @importFrom SingleCellExperiment counts
+#' @importFrom Matrix summary
+cntEval <- function(obj) {
+  if (inherits(x = obj, what = "Seurat")) {
+    cnts <- obj@assays[["RNA"]]@counts
+  } else if (inherits(x = obj, what = "SingleCellExperiment")) {
+    cnts <- counts(obj)
+  } else {
+    cnts <- obj
+  }
+  if (!inherits(cnts, what = "dgCMatrix")) {
+    cnts <- Matrix::Matrix(as.matrix(cnts),sparse = TRUE)
+  }
+  cnts <- cnts[tabulate(summary(cnts)$i) != 0, , drop = FALSE]
+  return(cnts)
+}
+
+#' @importFrom GSEABase geneIds
+GS.check <- function(gene.sets) {
+  if(is.null(gene.sets)) {
+    stop("Please provide the gene.sets you would like to use for 
+            the enrichment analysis")
+  } else {
+    egc <- gene.sets
+  }
+  if(inherits(egc, what = "GeneSetCollection")){
+    egc <- GSEABase::geneIds(egc) # will return a simple list, 
+    #which will work if a matrix is supplied to GSVA
+  }
+  return(egc)
+}
+
+#This is to grab the meta data from a seurat or SCE object
+#' @importFrom SingleCellExperiment colData 
+grabMeta <- function(sc) {
+  if (inherits(x=sc, what ="Seurat")) {
+    meta <- data.frame(sc[[]], slot(sc, "active.ident"))
+    if ("cluster" %in% colnames(meta)) {
+      colnames(meta)[length(meta)] <- "cluster.active.ident"
+    } else {
+      colnames(meta)[length(meta)] <- "cluster"
+    }
+  }
+  else if (inherits(x=sc, what ="SingleCellExperiment")){
+    meta <- data.frame(colData(sc))
+    rownames(meta) <- sc@colData@rownames
+    clu <- which(colnames(meta) == "ident")
+    if ("cluster" %in% colnames(meta)) {
+      colnames(meta)[clu] <- "cluster.active.idents"
+    } else {
+      colnames(meta)[clu] <- "cluster"
+    }
+  }
+  return(meta)
+}

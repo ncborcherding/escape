@@ -8,7 +8,7 @@ author:
   email: jared.andrews07@gmail.com
   affiliation: Washington University in St. Louis, School of Medicine, St. Louis, MO, USA
 
-date: "February 9, 2021"
+date: "August 17, 2021"
 
 output:
   BiocStyle::html_document:
@@ -38,7 +38,6 @@ suppressPackageStartupMessages(library(SingleCellExperiment))
 suppressPackageStartupMessages(library(Seurat))
 suppressPackageStartupMessages(library(SeuratObject))
 pbmc_small <- get("pbmc_small")
-data("pbmc_small")
 pbmc_small <- DietSeurat(suppressMessages(UpdateSeuratObject(pbmc_small)))
 sce <- as.SingleCellExperiment(pbmc_small, assay = "RNA")
 ```
@@ -197,7 +196,7 @@ splitEnrichment(ES2, x.axis = "cluster", split = "groups", gene.set = "HALLMARK_
 One frustration of Gene Set Enrichment is trying to make sense of the values. In order to move away from just selecting pathways that may be of interest, escape offers the ability to `performPCA()` on the enrichment scores. Like the other functions, we will need to provide the output of `enrichIt()` to the `enriched` parameter and the `groups` to include for later graphing.
 
 ```{r}
-PCA <- performPCA(enriched = ES2, groups = c("groups", "cluster"))
+PCA <- performPCA(enriched = ES2, gene.sets = names(GS.hallmark), groups = c("groups", "cluster"))
 ```
 
 ```{r}
@@ -213,7 +212,7 @@ pcaEnrichment(PCA, PCx = "PC1", PCy = "PC2", contours = FALSE, facet = "cluster"
 We can more closely examine the construction of the PCA by looking at the contribution of each gene set to the respective principal component using `masterPCAPlot()` with the same input as above with the `pcaEnrichment()`. We can also control the number of gene sets plotted with `top.contribution`. 
 
 ```{r}
-masterPCAPlot(ES2, PCx = "PC1", PCy = "PC2", top.contribution = 10)
+masterPCAPlot(ES2, gene.sets = names(GS.hallmark), PCx = "PC1", PCy = "PC2", top.contribution = 10)
 ```
 
 
@@ -222,7 +221,7 @@ masterPCAPlot(ES2, PCx = "PC1", PCy = "PC2", top.contribution = 10)
 We can also look for significant differences using linear modeling from the limma package, Welch's T test or one-way ANOVA using `getSignificance()`. For this, we need to assign a `group` parameter and the type of `fit` (either linear.model, T.test, or ANOVA).
 
 ```{r}
-output <- getSignificance(ES2, group = "cluster", fit = "linear.model")
+output <- getSignificance(ES2, group = "cluster", fit = "T.test")
 ```
 
 ***

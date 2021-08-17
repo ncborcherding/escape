@@ -4,7 +4,7 @@
 \alias{getSignificance}
 \title{Perform significance testing between groups and enrichement scores.}
 \usage{
-getSignificance(enriched, group = NULL, fit = "linear.model")
+getSignificance(enriched, group = NULL, fit = NULL)
 }
 \arguments{
 \item{enriched}{The output of \code{\link{enrichIt}}.}
@@ -12,8 +12,7 @@ getSignificance(enriched, group = NULL, fit = "linear.model")
 \item{group}{The parameter to group for the comparison, should a column of 
 the enriched input}
 
-\item{fit}{The test used for significance, either linear.model, ANOVA, 
-or T.test}
+\item{fit}{The test used for significance, either ANOVA or T.test}
 }
 \value{
 Data frame of test statistics
@@ -28,7 +27,7 @@ adjusted p-values based on the Benjamini Hochberg method.
 \examples{
 ES2 <- readRDS(url(
 "https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-output <- getSignificance(ES2, group = "Type", fit = "linear.model")
+output <- getSignificance(ES2, group = "Type", fit = "T.test")
 
 }
 \seealso{

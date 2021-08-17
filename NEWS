@@ -1,3 +1,9 @@
+CHANGES IN VERSION 1.3.2
+* Added weight.by.nFeatures for enrichIt()
+* Added Ucell and singScore support
+* new parameter gene.sets in MasterPCAPlot() and performPCA() to allow for selecting specific columns and prevent using other numeric vectors in meta data. 
+
+
 CHANGES IN VERSION 1.3.1
 * Aligning versions to the current bioconductor release
 * Added DietSeurat() call in vignette to prevent issues

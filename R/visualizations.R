@@ -1,4 +1,4 @@
-# Assigning color pallette
+# Assigning color palette
 #' @importFrom grDevices colorRampPalette
 assignColor <- function(x, enriched, group) {
     if (length(x) != length(unique(enriched[,group]))) {
@@ -6,6 +6,79 @@ assignColor <- function(x, enriched, group) {
     } else { x <- x }
     return(x)
 }
+# Gene Rank Enrichment Plot
+# 
+# Not ready for primetime, issues with sucky interface
+# 
+# @param obj The Seurat or SingleCellExperiment object.
+# @param @param gene.sets Gene sets from \code{\link{getGeneSets}} to use 
+# for the enrichment analysis. Alternatively a simple base R list where
+# the names of the list elements correspond to the name of the gene set
+# and the elements themselves are simple vectors of gene names representing
+# the gene set. 
+# @param which The specific name of gene set to display
+# @param group The header in the meta data that will be used for the comparison
+# @param colors The color palette for the density plot
+# @param contours Binary classifier to add contours to the density plot
+# @param facet A parameter to separate the graph
+#
+# @import ggplot2
+# @importFrom singscore rankGenes
+# @importFrom reshape2 melt
+# @importFrom grDevices colorRampPalette
+# @importFrom patchwork wrap_plots patchworkGrob
+# @importFrom gridExtra grid.arrange
+# 
+# @examples 
+# \dontrun{
+# GS <- list(Housekeeping = c("ACTA1", "ACTN1", "GAPDH"),
+#   Cancer = c("TP53","BRCA2","ERBB2","MYC"))
+# 
+# seurat_ex <- suppressWarnings(SeuratObject::pbmc_small)
+# ES <- enrichIt(obj = seurat_ex, gene.sets = GS)
+# geneRankPlot(seurat_ex, GS, which = "Cancer", group = "Type")
+#}
+#
+#
+# @return gtable object of the density plots with gene ranks by group
+
+#geneRankPlot <- function(obj, gene.sets, which, group, 
+#                           colors = c("#0D0887FF", "#7E03A8FF", "#CC4678FF", "#F89441FF", "#F0F921FF")) {
+#    cnts <- cntEval(obj)
+#    egc <- GS.check(gene.sets)
+#    egc <- egc[[which]]
+#    rank <- rankGenes(as.matrix(cnts))
+#    meta <- grabMeta(obj)[,group]
+#    unique.group <- unique(meta)
+#    out <- NULL
+#    for (i in seq_along(unique.group)) {
+#        tmp.rank <- rank[,which(meta == unique.group[i])]
+#        row.means <- rowMeans(tmp.rank)
+#        tmp.rank <- rank(row.means)
+#        out <- cbind(out, tmp.rank)
+#    }
+#    out2 <- out[rownames(out) %in% egc,]
+#    colnames(out2) <- unique.group
+#    enriched <- reshape2::melt(out2)
+#    gg <- list()
+#    colors <- colorRampPalette(colors)(length(unique.group))
+#    
+#    for (j in seq_along(unique.group)) {
+#        plot <- ggplot(enriched[enriched$Var2 == unique.group[j],], aes(x = value)) + 
+#            geom_density(alpha = 0.7, fill = colors[j]) +
+#            geom_rug(length=unit(0.1, "npc")) + 
+#            theme_classic() + 
+#            guides(fill = "none") + 
+#            labs(title = unique.group[j]) + 
+#            theme(axis.title = element_blank())
+#        gg[[j]] <- plot
+#    }
+#    patch <- wrap_plots(gg, ncol = 1)
+#    gt <- patchwork::patchworkGrob(patch)
+#    gt <- gridExtra::grid.arrange(gt, left = "Rank Density", bottom = "Gene Rank")
+#    plot(gt)
+#}
+
 
 
 #' Density plot of the principal components
@@ -31,7 +104,7 @@ assignColor <- function(x, enriched, group) {
 #' @seealso \code{\link{performPCA}} for generating PCA results.
 #' @return ggplot2 object of the results of PCA for the enrichment scores
 pcaEnrichment <- function(PCAout, PCx, PCy, 
-    colors = c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20"), 
+    colors = c("#0D0887FF","#7E03A8FF","#CC4678FF","#F89441FF","#F0F921FF"), 
     contours = TRUE, facet = NULL) 
 {
     plot <- ggplot(PCAout, aes(x=PCAout[,PCx], y=PCAout[,PCy])) +
@@ -63,6 +136,7 @@ pcaEnrichment <- function(PCAout, PCx, PCy,
 #' Graph the major gene set contributors to the \code{\link{pcaEnrichment}}.
 #'
 #' @param enriched The output of \code{\link{enrichIt}}.
+#' @param gene.sets Names of gene sets to include in the PCA
 #' @param PCx The principal component graphed on the x-axis.
 #' @param PCy The principal component graphed on the y-axis.
 #' @param top.contribution The number of gene sets to graph, organized 
@@ -75,14 +149,19 @@ pcaEnrichment <- function(PCAout, PCx, PCy,
 #' @examples 
 #' ES2 <- readRDS(url(
 #' "https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-#' masterPCAPlot(ES2, PCx = "PC1", PCy = "PC2", top.contribution = 10)
+#' 
+#' masterPCAPlot(ES2, PCx = "PC1", PCy = "PC2", gene.sets = colnames(ES2), 
+#' top.contribution = 10)
 #'
 #' @export
 #'
 #' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return ggplot2 object sumamrizing the PCA for the enrichment scores
-masterPCAPlot <- function(enriched, PCx, PCy, top.contribution = 10) {
+masterPCAPlot <- function(enriched, gene.sets, PCx, PCy, top.contribution = 10) {
     input <- select_if(enriched, is.numeric)
+    if (!is.null(gene.sets)) {
+        input <- input[,colnames(input) %in% gene.sets]
+    }
     PCA <- prcomp(input, scale. = TRUE)
     var_explained <- PCA$sdev^2/sum(PCA$sdev^2)
     
@@ -139,7 +218,7 @@ masterPCAPlot <- function(enriched, PCx, PCy, top.contribution = 10) {
 #' @return ggplot2 object with ridge-based distributions of selected gene.set
 ridgeEnrichment <- function(enriched, group = "cluster", gene.set = NULL, 
             scale.bracket = NULL, facet = NULL, add.rug = FALSE,
-            colors = c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20")) 
+            colors = c("#0D0887FF", "#7E03A8FF", "#CC4678FF", "#F89441FF", "#F0F921FF")) 
             {
     if (!is.null(scale.bracket)) {
         if (length(scale.bracket) != 1 | length(scale.bracket) != 1) {
@@ -240,7 +319,7 @@ geom_split_violin <-
 #' @param scale.bracket This will filter the enrichment scores to remove 
 #' extreme outliers. Values entered (1 or 2 numbers) will be the filtering 
 #' parameter using z-scores of the selected gene.set. If only 1 value is given, 
-#' a seocndary bracket is autommatically selected as the inverse of the number.
+#' a secondary bracket is automatically selected as the inverse of the number.
 #' @param split The parameter to split, must be binary.
 #' @param colors The color palette for the ridge plot.
 #'
@@ -258,8 +337,8 @@ geom_split_violin <-
 #' @return ggplot2 object violin-based distributions of selected gene.set
 splitEnrichment <- function(enriched, x.axis = NULL, scale.bracket = NULL,
                             split = NULL, gene.set = NULL, 
-                            colors = c("#0348A6", "#7AC5FF", "#C6FDEC", 
-                                "#FFB433", "#FF4B20")) {
+                            colors = c("#0D0887FF", "#7E03A8FF", "#CC4678FF", 
+                                       "#F89441FF", "#F0F921FF")) {
     
     if (length(unique(enriched[,split])) != 2) {
         message("SplitEnrichment() can only work for binary classification")}

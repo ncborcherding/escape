@@ -8,6 +8,7 @@
     utils::globalVariables ("as.formula")
     utils::globalVariables ("factors.x")
     utils::globalVariables ("factors.y")
+    utils::globalVariables ("slot")
     invisible ()
 
 }
