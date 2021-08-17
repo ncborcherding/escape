@@ -29,9 +29,8 @@
 #' @examples 
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A),
 #'   Tcells = c("CD3E","CD7","CD8A",))
-#' 
-#' seurat_ex <- suppressWarnings(SeuratObject::pbmc_small)
-#' ES <- enrichIt(obj = seurat_ex, gene.sets = GS)
+#' pbmc_small <- suppressWarnings(SeuratObject::pbmc_small)
+#' ES <- enrichIt(obj = pbmc_small, gene.sets = GS)
 #' 
 #' @export
 #'

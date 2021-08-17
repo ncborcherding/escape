@@ -18,7 +18,6 @@ Imports:
 	GSEABase, 
 	GSVA,
 	SingleCellExperiment,
-	limma,
 	ggridges,
 	msigdbr,
 	stats, 
