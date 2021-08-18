@@ -25,6 +25,12 @@ Single-cell sequencing (SCS) is an emerging technology in the across the diverse
 
 ```devtools::install_github("ncborcherding/escape")```
 
+#### Developmental Version
+
+```devtools::install_github("ncborcherding/escape@dev")```
+
+A newer version of escape is in the works to address previous issues and add new functions. For the most up-to-date version, check out the dev branch. These changes include adding support of [UCell](https://github.com/carmonalab/UCell) and [singscore](https://github.com/DavisLaboratory/singscore) to the ```enrichIt()``` function. 
+
 ### Learning To Use escape:
 
 Vignette available [here](https://ncborcherding.github.io/vignettes/escape_vignette.html), includes 2,000 malignant and nonmalignant peripheral blood T cells from a patient with cutaenous T cell lymphoma.
