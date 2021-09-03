@@ -16,8 +16,8 @@
 #' "singscore"
 #' @param groups The number of cells to separate the enrichment calculation.
 #' @param cores The number of cores to use for parallelization.
-#' @param weight.by.nFeatures Weight the normalized enrichment score by the inverse
-#' of the nFeature by cell (recommended if using ssGSEA).
+#' @param min.size Minimum number of gene nessecary to perform the enrichment
+#' calculation
 #'
 #' @importFrom GSVA gsva
 #' @importFrom GSEABase GeneSetCollection 
@@ -27,8 +27,8 @@
 #'
 #' 
 #' @examples 
-#' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A),
-#'   Tcells = c("CD3E","CD7","CD8A",))
+#' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
+#'   Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
 #' pbmc_small <- suppressWarnings(SeuratObject::pbmc_small)
 #' ES <- enrichIt(obj = pbmc_small, gene.sets = GS)
 #' 
@@ -39,11 +39,15 @@
 #' @seealso \code{\link{getGeneSets}} to collect gene sets.
 #' @return Data frame of normalized enrichmenet scores (NES)
 enrichIt <- function(obj, gene.sets = NULL, 
-                     method = "ssGSEA", groups = 1000, cores = 2, 
-                     weight.by.nFeatures = TRUE) {
+                     method = "ssGSEA", groups = 1000, cores = 2,
+                     min.size = 5) {
     egc <- GS.check(gene.sets)
     cnts <- cntEval(obj)
-    nFeature = apply(cnts,2,function(x) sum(x > 0))
+    if (!is.null(min.size)){
+        GS.size <- lapply(egc, function(x) length(which(rownames(cnts) %in% x)))
+        remove <- unname(which(GS.size < 5))
+        egc <- egc[-remove]
+    }
     scores <- list()
     wind <- seq(1, ncol(cnts), by=groups)
     print(paste('Using sets of', groups, 'cells. Running', 
@@ -53,14 +57,15 @@ enrichIt <- function(obj, gene.sets = NULL,
         split.data <- split_data.matrix(matrix=cnts, chunk.size=groups)
         for (i in seq_along(wind)) {
             last <- min(ncol(cnts), i+groups-1)
-            a <- suppressWarnings(gsva(split.data[[i]], egc, method = 'ssgsea', 
-                ssgsea.norm = TRUE, kcdf = "Poisson", parallel.sz = cores, 
-                BPPARAM = SnowParam()))
+            a <- gsva(split.data[[i]], egc, method = 'ssgsea', 
+                ssgsea.norm = TRUE, min.sz = min.sz,
+                kcdf = "Poisson", parallel.sz = cores, 
+                BPPARAM = SnowParam())
             scores[[i]] <- a
         }
     } else if (method == "UCell") {
-        scores[[1]] <- suppressWarnings(ScoreSignatures_UCell(cnts, features=egc, 
-                                        chunk.size = groups, ncores = cores))
+        scores[[1]] <- t(suppressWarnings(ScoreSignatures_UCell(cnts, features=egc, 
+                                        chunk.size = groups, ncores = cores)))
     } else if (method == "singscore") {
         tmp.list <- list()
         rankData <- rankGenes(as.matrix(cnts))
@@ -76,10 +81,6 @@ enrichIt <- function(obj, gene.sets = NULL,
     }
     scores <- do.call(cbind, scores)
     output <- t(as.matrix(scores))
-    if (weight.by.nFeatures) {
-        nFeature <- 0.5+normalize(nFeature)
-        output <- apply(output,2 , function(x) x*nFeature)
-    }
     output <- data.frame(output)
     return(output)
 }

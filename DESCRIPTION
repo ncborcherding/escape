@@ -29,7 +29,8 @@ Suggests:
 	Seurat,
 	SeuratObject,
 	knitr, 
-	rmarkdown, 
+	rmarkdown,
+	markdown, 
 	BiocStyle,
 	testthat,
 	dittoSeq (>= 1.1.2)
