@@ -68,11 +68,20 @@ Otherwise, you may also provide a simple named list of gene sets of interest. Se
 
 The next step is performing the enrichment on the RNA count data. The function `enrichIt()` can handle either a matrix of raw count data or will pull that data directly from a SingleCellExperiment or Seurat object. The `gene.sets` parameter in the function is the GeneSets, either generated from `getGeneSets()` or from the user. The enrichment scores will be calculated across all individual cells and `groups` is the n size to break the enrichment by while the `cores` is the number of cores to perform in parallel during the enrichment calculation too. 
 
+To prevent issues with enrichment calculations for gene sets with a low number of genes represented in the count data of a single-cell object - `min.size` was instituted to remove gene sets with less than the indicated genes. 
+
 *Important Note:* This is computationally intensive and is highly dependent on the number of cells and the number of gene sets included.
 
 ```{r}
-ES.seurat <- enrichIt(obj = pbmc_small, gene.sets = GS.hallmark, groups = 1000, cores = 2)
-ES.sce <- enrichIt(obj = sce, gene.sets = GS.hallmark, groups = 1000, cores = 2)
+ES.seurat <- enrichIt(obj = pbmc_small, 
+                      gene.sets = GS.hallmark, 
+                      groups = 1000, cores = 2, 
+                      min.size = 5)
+
+ES.sce <- enrichIt(obj = sce, 
+                   gene.sets = GS.hallmark, 
+                   groups = 1000, cores = 2, 
+                   min.size = 5)
 ```
 
 We can then easily add these results back to our Seurat or SCE object.
@@ -96,7 +105,7 @@ The easiest way to generate almost any visualization for single cell data is via
 
 To keep things consistent, we'll define a pleasing color scheme.
 ```{r}
-colors <- colorRampPalette(c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20"))
+colors <- colorRampPalette(c("#0D0887FF","#7E03A8FF","#CC4678FF","#F89441FF","#F0F921FF"))
 ```
 
 
@@ -112,11 +121,13 @@ dittoHeatmap(pbmc_small, genes = NULL, metas = names(ES.seurat),
              heatmap.colors = colors(50))
 ```
 
-A user can also produce a heatmap with select gene sets by providing specific names to the `metas` parameter. For example, we can isolated gene sets involved in apoptosis and DNA damage.
+A user can also produce a heatmap with select gene sets by providing specific names to the `metas` parameter. For example, we can isolated gene sets involved immune response.
 
 ```{r}
 dittoHeatmap(sce, genes = NULL, 
-             metas = c("HALLMARK_APOPTOSIS", "HALLMARK_DNA_REPAIR", "HALLMARK_P53_PATHWAY"), 
+             metas = c("HALLMARK_IL2_STAT5_SIGNALING", 
+                       "HALLMARK_IL6_JAK_STAT3_SIGNALING", 
+                       "HALLMARK_INFLAMMATORY_RESPONSE"), 
              annot.by = "groups", 
              fontsize = 7,
              heatmap.colors = colors(50))
@@ -127,7 +138,9 @@ dittoHeatmap(sce, genes = NULL,
 Another way to visualize a subset of gene set enrichment would be to graph the distribution of enrichment using violin, jitter, boxplot, or ridgeplots. We can also compare between categorical variables using the `group.by` parameter.
 
 ```{r}
-multi_dittoPlot(sce, vars = c("HALLMARK_APOPTOSIS", "HALLMARK_DNA_REPAIR", "HALLMARK_P53_PATHWAY"), 
+multi_dittoPlot(sce, vars = c("HALLMARK_IL2_STAT5_SIGNALING", 
+                       "HALLMARK_IL6_JAK_STAT3_SIGNALING", 
+                       "HALLMARK_INFLAMMATORY_RESPONSE"), 
                 group.by = "groups", plots = c("jitter", "vlnplot", "boxplot"), 
                 ylab = "Enrichment Scores", 
                 theme = theme_classic() + theme(plot.title = element_text(size = 10)))
@@ -139,8 +152,8 @@ multi_dittoPlot(sce, vars = c("HALLMARK_APOPTOSIS", "HALLMARK_DNA_REPAIR", "HALL
 We can also compare the distribution of enrichment scores of 2 distinct gene sets across all single cells using the `dittoScatterHex()` function. Here, we use our SingleCellExperiment object with results of `enrichIt()` and specify gene sets to the `x.var` and `y.var` parameters to produce a density plot. We can also add contours to the plot, by passing `do.contour = TRUE`. 
 
 ```{r}
-dittoScatterHex(sce, x.var = "HALLMARK_DNA_REPAIR", 
-                    y.var = "HALLMARK_MTORC1_SIGNALING", 
+dittoScatterHex(sce, x.var = "HALLMARK_IL2_STAT5_SIGNALING", 
+                    y.var = "HALLMARK_IL6_JAK_STAT3_SIGNALING", 
                     do.contour = TRUE) + 
         scale_fill_gradientn(colors = colors(11)) 
 ```
@@ -148,8 +161,8 @@ dittoScatterHex(sce, x.var = "HALLMARK_DNA_REPAIR",
 We can also separate the graph using the `split.by` parameter, allowing for the direct comparison of categorical variables.
 
 ```{r}
-dittoScatterHex(sce, x.var = "HALLMARK_DNA_REPAIR", 
-                y.var = "HALLMARK_MTORC1_SIGNALING", 
+dittoScatterHex(sce, x.var = "HALLMARK_IL2_STAT5_SIGNALING", 
+                    y.var = "HALLMARK_IL6_JAK_STAT3_SIGNALING", 
                 do.contour = TRUE,
                 split.by = "groups")  + 
         scale_fill_gradientn(colors = colors(11)) 
@@ -168,13 +181,13 @@ ES2 <- data.frame(pbmc_small[[]], Idents(pbmc_small))
 colnames(ES2)[ncol(ES2)] <- "cluster"
 
 ## plot
-ridgeEnrichment(ES2, gene.set = "HALLMARK_DNA_REPAIR", group = "cluster", add.rug = TRUE)
+ridgeEnrichment(ES2, gene.set = "HALLMARK_IL2_STAT5_SIGNALING", group = "cluster", add.rug = TRUE)
 ```
 
 In addition to the separation of **letter.idents**, we can also use `ridgeEnrichment()` for better granualarity of multiple variables. For example, instead of looking at the difference just between "Type", we can set `group = "cluster"` and then `facet = "letter.idents"`. This gives a visualization of the enrichment of DNA Repair by cluster and Type.
 
 ```{r}
-ridgeEnrichment(ES2, gene.set = "HALLMARK_DNA_REPAIR", group = "cluster", 
+ridgeEnrichment(ES2, gene.set = "HALLMARK_IL2_STAT5_SIGNALING", group = "cluster", 
                 facet = "letter.idents", add.rug = TRUE)
 ```
 
@@ -185,8 +198,8 @@ Another distribution visualization is a violin plot, which we seperate and direc
 Like above, we can explore the distribution of the **"HALLMARK_DNA_REPAIR"** gene set between groups by calling `splitEnrichment()` with the ES2 object and `split = "groups"`. We can also explore the cluster distribution by assigning the `x-axis = "cluster"`.
 
 ```{r}
-splitEnrichment(ES2, split = "groups", gene.set = "HALLMARK_DNA_REPAIR")
-splitEnrichment(ES2, x.axis = "cluster", split = "groups", gene.set = "HALLMARK_DNA_REPAIR")
+splitEnrichment(ES2, split = "groups", gene.set = "HALLMARK_IL2_STAT5_SIGNALING")
+splitEnrichment(ES2, x.axis = "cluster", split = "groups", gene.set = "HALLMARK_IL2_STAT5_SIGNALING")
 ```
 
 ***
@@ -218,10 +231,10 @@ masterPCAPlot(ES2, gene.sets = names(GS.hallmark), PCx = "PC1", PCy = "PC2", top
 
 ## Signficance
 
-We can also look for significant differences using linear modeling from the limma package, Welch's T test or one-way ANOVA using `getSignificance()`. For this, we need to assign a `group` parameter and the type of `fit` (either linear.model, T.test, or ANOVA).
+We can also look for significant differences using linear modeling from the limma package, Welch's T test or one-way ANOVA using `getSignificance()`. For this, we need to assign a `group` parameter and the type of `fit`including: T.test, linear regression (LR), Wilcoxon Rank Sum Test (Wilcoxon), ANOVA).
 
 ```{r}
-output <- getSignificance(ES2, group = "cluster", fit = "T.test")
+output <- getSignificance(ES2, group = "groups", fit = "T.test")
 ```
 
 ***

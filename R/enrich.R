@@ -27,13 +27,14 @@
 #'
 #' 
 #' @examples 
+#' \dontrun{
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
 #'   Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
 #' pbmc_small <- suppressWarnings(SeuratObject::pbmc_small)
-#' ES <- enrichIt(obj = pbmc_small, gene.sets = GS)
+#' ES <- enrichIt(obj = pbmc_small, gene.sets = GS, min.size = 4)
+#' }
 #' 
 #' @export
-#'
 #' @author Nick Borcherding, Jared Andrews
 #'
 #' @seealso \code{\link{getGeneSets}} to collect gene sets.
@@ -57,10 +58,10 @@ enrichIt <- function(obj, gene.sets = NULL,
         split.data <- split_data.matrix(matrix=cnts, chunk.size=groups)
         for (i in seq_along(wind)) {
             last <- min(ncol(cnts), i+groups-1)
-            a <- gsva(split.data[[i]], egc, method = 'ssgsea', 
-                ssgsea.norm = TRUE, min.sz = min.sz,
+            a <- suppressWarnings(gsva(split.data[[i]], egc, method = 'ssgsea', 
+                ssgsea.norm = TRUE,
                 kcdf = "Poisson", parallel.sz = cores, 
-                BPPARAM = SnowParam())
+                BPPARAM = SnowParam()))
             scores[[i]] <- a
         }
     } else if (method == "UCell") {

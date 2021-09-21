@@ -12,7 +12,7 @@ getSignificance(enriched, group = NULL, fit = NULL)
 \item{group}{The parameter to group for the comparison, should a column of 
 the enriched input}
 
-\item{fit}{The test used for significance, either ANOVA or T.test}
+\item{fit}{The test used for significance, either ANOVA, Wilcoxon, LR, T.test}
 }
 \value{
 Data frame of test statistics

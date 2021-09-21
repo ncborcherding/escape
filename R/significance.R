@@ -10,10 +10,9 @@
 #' @param enriched The output of \code{\link{enrichIt}}.
 #' @param group The parameter to group for the comparison, should a column of 
 #' the enriched input
-#' @param fit The test used for significance, either ANOVA or T.test
-#'
-#' @import limma
+#' @param fit The test used for significance, either ANOVA, Wilcoxon, LR, T.test
 #' @importFrom dplyr select_if
+#' @importFrom broom tidy
 #' 
 #' @examples 
 #' ES2 <- readRDS(url(
@@ -26,29 +25,37 @@
 #' @return Data frame of test statistics
 getSignificance <- function(enriched, group = NULL, 
                         fit = NULL) {
-    fit <- match.arg(fit,  choices = c("T.test", "ANOVA"))
+    fit <- match.arg(fit,  choices = c("T.test", "ANOVA", "Wilcoxon", "LR"))
     group2 <- enriched[,group]
     gr_names <- unique(group2)
     input <- select_if(enriched, is.numeric)
     output <- NULL
-    if (fit == "T.test") {
+    if (fit == "T.test" || fit == "Wilcoxon" || fit == "LR") {
         if (length(unique(group2)) != 2) {
             message("Ensure the group selection has only two levels for T.test 
                 fit") 
         } else {
-        out <- lapply(input, function(x) t.test(x ~ group2))
+            if (fit == "T.test") {
+                out <- lapply(input, function(x) t.test(x ~ group2))
+                stat <- "T"
+            } else if (fit == "Wilcoxon") {
+                out <- lapply(input, function(x) wilcox.test(x ~ group2))
+                stat <- "W"
+            }  else if (fit == "LR") {
+                levels <- unique(group2)
+                group2 <- ifelse(group2 == levels[1], 0,1)
+                out <- lapply(input, function(x) glm(group3 ~ x, family = "binomial"))
+                out <- lapply(out, function(x) tidy(x)[2,])
+                stat <- "L"
+            }
         for (i in seq_along(out)) {
             df <- out[[i]]
-            mat <- c(df$statistic, df$conf.int[[1]], df$conf.int[[2]],
-                        df$estimate[1], df$estimate[2], df$p.value)
+            mat <- c(df$statistic, df$p.value)
             output <- rbind(output,mat)
         }
         output <- as.data.frame(output)
-        colnames(output) <- c("T_statistic", "CI_low", "CI_high", 
-            paste0("mean_", gr_names[1]), paste0("mean_", gr_names[2]), 
-            "p.value")
-        rownames(output) <- colnames(input)
-        output$FDR <- p.adjust(output$p.value) }
+        colnames(output) <- c(paste0(stat, ".statistic"), "p.value")
+        }
     } else if (fit == "ANOVA") {
         if (length(unique(group2)) <= 2) {
             message("Ensure the group selection has more than two levels 
@@ -62,8 +69,8 @@ getSignificance <- function(enriched, group = NULL,
         }
         output <- as.data.frame(output)
         colnames(output) <- c("f.value", "p.value")
-        rownames(output) <- colnames(input)
-        output$FDR <- p.adjust(output$p.value)
     }
+    rownames(output) <- colnames(input)
+    output$FDR <- p.adjust(output$p.value) 
     return(output)
 }
