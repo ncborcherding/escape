@@ -9,9 +9,6 @@
     utils::globalVariables ("factors.x")
     utils::globalVariables ("factors.y")
     utils::globalVariables ("slot")
-    utils::globalVariables ("stats")
-    utils::globalVariables ("glm")
-    utils::globalVariables ("wilcox.test")
     invisible ()
 
 }

@@ -10,9 +10,12 @@
 #' @param enriched The output of \code{\link{enrichIt}}.
 #' @param group The parameter to group for the comparison, should a column of 
 #' the enriched input
+#' @param gene.sets Names of gene sets to compare
 #' @param fit The test used for significance, either ANOVA, Wilcoxon, LR, T.test
 #' @importFrom dplyr select_if
 #' @importFrom broom tidy
+#' @importFrom reshape2 melt
+#' @importFrom stats TukeyHSD median glm wilcox.test
 #' 
 #' @examples 
 #' ES2 <- readRDS(url(
@@ -23,12 +26,18 @@
 #'
 #' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return Data frame of test statistics
-getSignificance <- function(enriched, group = NULL, 
-                        fit = NULL) {
+getSignificance <- function(enriched, group = NULL,
+                            gene.sets = NULL,
+                            fit = NULL) {
     fit <- match.arg(fit,  choices = c("T.test", "ANOVA", "Wilcoxon", "LR"))
     group2 <- enriched[,group]
     gr_names <- unique(group2)
-    input <- select_if(enriched, is.numeric)
+    if (!is.null(gene.sets)) {
+        input <- enriched[,colnames(enriched) %in% gene.sets]
+    } else {
+        input <- select_if(enriched, is.numeric)
+    }
+    medians <- get.medians(input, group2)
     output <- NULL
     if (fit == "T.test" || fit == "Wilcoxon" || fit == "LR") {
         if (length(unique(group2)) != 2) {
@@ -42,8 +51,7 @@ getSignificance <- function(enriched, group = NULL,
                 out <- lapply(input, function(x) wilcox.test(x ~ group2))
                 stat <- "W"
             }  else if (fit == "LR") {
-                levels <- unique(group2)
-                group2 <- ifelse(group2 == levels[1], 0,1)
+                group2 <- ifelse(group2 == gr_names[1], 0,1)
                 out <- lapply(input, function(x) glm(group3 ~ x, family = "binomial"))
                 out <- lapply(out, function(x) tidy(x)[2,])
                 stat <- "L"
@@ -63,14 +71,31 @@ getSignificance <- function(enriched, group = NULL,
         out <- lapply(input, function(x) aov(x ~ group2))
         for (i in seq_along(out)) {
             df <- out[[i]]
+            tukey <- TukeyHSD(df)
+            ind.p.values <- melt(tukey$group2[,4])
+            names.ind.p.values <- gsub("-", "v", rownames(ind.p.values))
+            names.ind.p.values <- paste0(names.ind.p.values,".p.value")
             fval <- summary(df)[[1]]$'F value'[[1]]
             pval <- summary(df)[[1]]$'Pr(>F)'[[1]]
-            output <- rbind(output, c(fval, pval))
+            output <- rbind(output, c(fval, pval, t(ind.p.values)))
         }
         output <- as.data.frame(output)
-        colnames(output) <- c("f.value", "p.value")
+        colnames(output) <- c("f.value", "p.value", names.ind.p.values)
     }
     rownames(output) <- colnames(input)
     output$FDR <- p.adjust(output$p.value) 
+    output <- cbind.data.frame(output, medians)
     return(output)
+}
+
+get.medians<- function(input, group2) {
+    input <- cbind.data.frame(group2, input)
+    num <- ncol(input)-1
+    med <- input %>%
+        group_by(group2) %>%
+        summarise(across(seq_len(all_of(num)), median))
+    med <- as.data.frame(med[,seq_len(num) + 1])
+    rownames(med) <- paste0("median.", unique(group2))
+    med <- as.data.frame(t(med))
+    return(med)
 }

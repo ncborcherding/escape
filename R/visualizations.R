@@ -256,7 +256,7 @@ ridgeEnrichment <- function(enriched, group = "cluster", gene.set = NULL,
         labs(fill = group) + 
         scale_fill_manual(values = colors) + 
         theme_classic() +
-        guides(fill = FALSE)
+        guides(fill = "none")
     
     if (!is.null(facet)) {
         plot <- plot + facet_grid(as.formula(paste('. ~', facet))) }

@@ -25,7 +25,8 @@ Imports:
 	Matrix,
 	UCell,
 	singscore,
-	broom
+	broom, 
+	reshape2
 Suggests: 
 	Seurat,
 	SeuratObject,
