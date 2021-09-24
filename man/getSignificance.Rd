@@ -4,13 +4,15 @@
 \alias{getSignificance}
 \title{Perform significance testing between groups and enrichement scores.}
 \usage{
-getSignificance(enriched, group = NULL, fit = NULL)
+getSignificance(enriched, group = NULL, gene.sets = NULL, fit = NULL)
 }
 \arguments{
 \item{enriched}{The output of \code{\link{enrichIt}}.}
 
 \item{group}{The parameter to group for the comparison, should a column of 
 the enriched input}
+
+\item{gene.sets}{Names of gene sets to compare}
 
 \item{fit}{The test used for significance, either ANOVA, Wilcoxon, LR, T.test}
 }

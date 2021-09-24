@@ -27,12 +27,10 @@
 #'
 #' 
 #' @examples 
-#' \dontrun{
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
 #'   Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
 #' pbmc_small <- suppressWarnings(SeuratObject::pbmc_small)
-#' ES <- enrichIt(obj = pbmc_small, gene.sets = GS, min.size = 4)
-#' }
+#' ES <- enrichIt(obj = pbmc_small, gene.sets = GS, min.size = NULL)
 #' 
 #' @export
 #' @author Nick Borcherding, Jared Andrews
@@ -46,7 +44,7 @@ enrichIt <- function(obj, gene.sets = NULL,
     cnts <- cntEval(obj)
     if (!is.null(min.size)){
         GS.size <- lapply(egc, function(x) length(which(rownames(cnts) %in% x)))
-        remove <- unname(which(GS.size < 5))
+        remove <- unname(which(GS.size < min.size))
         egc <- egc[-remove]
     }
     scores <- list()

@@ -202,6 +202,18 @@ splitEnrichment(ES2, split = "groups", gene.set = "HALLMARK_IL2_STAT5_SIGNALING"
 splitEnrichment(ES2, x.axis = "cluster", split = "groups", gene.set = "HALLMARK_IL2_STAT5_SIGNALING")
 ```
 
+
+## Enrichment Plots
+
+New to the dev version of the escape is `enrichmentPlot()` that takes the single-cell expression object (**pbmc_small**) and calculates mean rank order for a gene set across groups. The function requires the name of the specific gene set (**gene.set**) and the library of gene sets (**gene.sets**) to extract the rank positions from the count data stored in the Seurat or single-cell expression object. 
+
+```{r}
+enrichmentPlot(pbmc_small, 
+               gene.set = "HALLMARK_IL2_STAT5_SIGNALING",
+               gene.sets = GS.hallmark,
+               group = "groups")
+```
+
 ***
 
 # Expanded Analysis

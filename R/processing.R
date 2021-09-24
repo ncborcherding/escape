@@ -1,6 +1,5 @@
 "%!in%" <- Negate("%in%")
 
-
 #' Calculate Principal Components for the Enrichment Scores
 #'
 #' Using all or selected enrichment scores of individual 

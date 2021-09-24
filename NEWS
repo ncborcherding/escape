@@ -3,6 +3,7 @@ CHANGES IN VERSION 1.3.3
 * median calculated and appended to the getSignificance() function output
 * ANOVA in getSignificance() returns p-values for each comparison using TukeyHSD()
 * new parameter gene.sets getSignificance() to select only gene sets or subsets.
+* enrichmentPlot() beta release
 
 
 CHANGES IN VERSION 1.3.2
