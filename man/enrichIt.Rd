@@ -43,12 +43,10 @@ uses the two methods 1) gsva R package and the poisson distribution for RNA
 or the \href{https://github.com/carmonalab/UCell}{UCell package}.
 }
 \examples{
-\dontrun{
 GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
   Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
 pbmc_small <- suppressWarnings(SeuratObject::pbmc_small)
-ES <- enrichIt(obj = pbmc_small, gene.sets = GS, min.size = 4)
-}
+ES <- enrichIt(obj = pbmc_small, gene.sets = GS, min.size = NULL)
 
 }
 \seealso{

@@ -4,15 +4,22 @@
 \alias{getGeneSets}
 \title{Get a collection of gene sets to perform enrichment on}
 \usage{
-getGeneSets(species = "Homo sapiens", library = NULL, gene.sets = NULL)
+getGeneSets(
+  species = "Homo sapiens",
+  library = NULL,
+  subcategory = NULL,
+  gene.sets = NULL
+)
 }
 \arguments{
 \item{species}{The scientific name of the species of interest in 
 order to get correcent gene nomenclature}
 
 \item{library}{Individual collection(s) of gene sets, e.g. c("H", "C5").
-See \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp} for
+See \href{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}{msigdbr}for
 all MSigDB collections.}
+
+\item{subcategory}{MSigDB sub-collection abbreviation, such as CGP or BP.}
 
 \item{gene.sets}{Select gene sets or pathways, using specific names, 
 example: pathways = c("HALLMARK_TNFA_SIGNALING_VIA_NFKB"). Will only be

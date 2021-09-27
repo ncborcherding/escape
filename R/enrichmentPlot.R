@@ -8,6 +8,7 @@
 #' @param gene.sets Gene sets from \code{\link{getGeneSets}} to use 
 # for the enrichment analysis. 
 #' @param group The header in the meta data that will be used for the comparison
+#' @param colors The color palette for the enrichment plot
 #' @examples 
 #'  \dontrun{
 #'  GS <- list(Housekeeping = c("ACTA1", "ACTN1", "GAPDH"),
@@ -21,16 +22,22 @@
 #'  }
 #' @import patchwork
 #' @import GSVA
+#' @import ggplot2
 #' @importFrom reshape2 melt
 #' @export
 #'
 #' @return ggplot2 object mean rank gene density
-enrichmentPlot <- function(obj, gene.set, gene.sets, group) {
+enrichmentPlot <- function(obj, 
+                           gene.set, 
+                           gene.sets, 
+                           group, 
+                           colors = c("#0D0887FF","#7E03A8FF","#CC4678FF","#F89441FF","#F0F921FF")) {
   cnts <- cntEval(obj)
   cnts.filter <- as.matrix(.filterFeatures.mod(cnts, "ssgsea"))
   meta <- grabMeta(obj)
   group <- meta[, group]
   uniq.grp <- sort(as.character(unique(group)))
+  colpal<- colorRampPalette(colors)(length(uniq.grp))
   gene.sets <- GS.check(gene.sets)
   gene.set <- unlist(gene.sets[[gene.set]])
   mapped.gset.idx.list <- na.omit(match(gene.set, rownames(cnts.filter)))
@@ -52,6 +59,7 @@ enrichmentPlot <- function(obj, gene.set, gene.sets, group) {
   plot1 <- ggplot(mlt, aes(x = value, color = variable)) + 
     geom_density(data = subset(mlt, GS == "yes"), linetype="dashed") + 
     theme_classic() + 
+    scale_color_manual(values = colpal) + 
     labs(color = "Group") + 
     ylab("Rank Density") + 
     theme(axis.title.x = element_blank(),
@@ -68,6 +76,7 @@ enrichmentPlot <- function(obj, gene.set, gene.sets, group) {
     geom_segment(aes(x = value,y=segmenty,yend=segmenty2,xend=value, color = variable)) + 
     guides(color = "none") +
     xlab("Mean Rank Order") + 
+    scale_color_manual(values = colpal) + 
     theme(axis.title.y = element_blank(),
           axis.ticks.y = element_blank(), 
           axis.text.y = element_blank(), 

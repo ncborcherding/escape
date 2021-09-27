@@ -44,33 +44,44 @@ sce <- as.SingleCellExperiment(pbmc_small, assay = "RNA")
 
 # Getting Gene Sets
 
+# Getting Gene Sets
 
-The first step in the process of performing gene set enrichment analysis is identifying the gene sets we would like to use. The function `getGeneSets()` allows users to isolate a whole or multiple libraries from a list of `GSEABase` GeneSet objects. We can do this for gene set collections from the built-in [Molecular Signature Database](https://www.gsea-msigdb.org/gsea/msigdb/search.jsp) by setting the parameter `library` equal to the collection(s) of interest.
-For multiple libraries, just set `library = c("C2", "C5")`. 
-To check which collections are available, use `msigdbr::msigdbr_collections()`. 
-The `gs_cat` entry indicates the individual gene set collection names (e.g. "C2"). 
-Individual pathways/gene sets can be isolated from the selected libraries selected, by setting `gene.sets` = the name(s) of the gene sets of interest. For an overview of the gene sets and collections, see <https://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp>.
-If you are using a species other than Homo sapiens, set the `species` parameter to the appropriate scientific name to ensure the gene nomenclature matches your expression data. 
-To check which species are available, use `msigdbr::msigdbr_species()`. 
+## Option 1: Molecular Signture Database
 
+The first step in the process of performing gene set enrichment analysis is identifying the gene sets we would like to use. The function `getGeneSets()` allows users to isolate a whole or multiple libraries from a list of GSEABase GeneSetCollection objects. We can do this for gene set collections from the built-in [Molecular Signature Database](https://www.gsea-msigdb.org/gsea/msigdb/search.jsp) by setting the parameter **library** equal to library/libraries of interest. For multiple libraries, just set **library = c("Library1", "Library2", etc)**. 
+
+In Addition:    
+- Individual pathways/gene sets can be isolated from the libraries selected, by setting **gene.sets** = the name(s) of the gene sets of interest.   
+- Subcategories of the invidual libaries can be selected using the **subcategory** parameter.   
+
+If the sequencing of the single-cell data is performed on a species other than "Homo sapiens", make sure to use the **species** parameter in `getGeneSets()` in order to get the correct gene nomenclature.
 
 ```{r}
-## We'll use the HALLMARK gene set collection ("H")
 GS.hallmark <- getGeneSets(library = "H")
 ```
 
+## Option 2: Built-In gene sets
 
-If a user would like to expand beyond the GSEA Molecular Signature Database for pathway analysis, the enrichment function `enrichIt()` can use any list of `GeneSet` objects from the `GSEABase` R package. An [excellent vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/GSEABase/inst/doc/GSEABase.pdf) exists on how to create GeneSet objects to be used in the enrichment analysis.
-Otherwise, you may also provide a simple named list of gene sets of interest. See `?enrichIt()` for details.
+```{r, eval = FALSE}
+data("escape.gene.sets", package="escape")
+gene.sets <- escape.gene.sets
+```
 
+
+## Option 3: Define personal gene sets
+
+```{r, eval=FALSE}
+gene.sets <- list(Tcell_signature = c("CD2","CD3E","CD3D"),
+			Myeloid_signature = c("SPI1","FCER1G","CSF1R"))
+```
 
 # Enrichment
 
-The next step is performing the enrichment on the RNA count data. The function `enrichIt()` can handle either a matrix of raw count data or will pull that data directly from a SingleCellExperiment or Seurat object. The `gene.sets` parameter in the function is the GeneSets, either generated from `getGeneSets()` or from the user. The enrichment scores will be calculated across all individual cells and `groups` is the n size to break the enrichment by while the `cores` is the number of cores to perform in parallel during the enrichment calculation too. 
+The next step is performing the enrichment on the RNA count data. The function `enrichIt()` can handle either a matrix of raw count data or will pull that data directly from a SingleCellExperiment or Seurat object. The **gene.sets** parameter in the function is the GeneSets, either generated from `getGeneSets()` or from the user. The enrichment scores will be calculated across all individual cells and **groups** is the n size to break the enrichment by while the **cores** is the number of cores to perform in parallel during the enrichment calculation too. 
 
-To prevent issues with enrichment calculations for gene sets with a low number of genes represented in the count data of a single-cell object - `min.size` was instituted to remove gene sets with less than the indicated genes. 
+To prevent issues with enrichment calculations for gene sets with a low number of genes represented in the count data of a single-cell object - **min.size** was instituted to remove gene sets with less than the indicated genes. 
 
-*Important Note:* This is computationally intensive and is highly dependent on the number of cells and the number of gene sets included.
+**Important Note:** This is computationally intensive and is highly dependent on the number of cells and the number of gene sets included.
 
 ```{r}
 ES.seurat <- enrichIt(obj = pbmc_small, 
@@ -121,7 +132,7 @@ dittoHeatmap(pbmc_small, genes = NULL, metas = names(ES.seurat),
              heatmap.colors = colors(50))
 ```
 
-A user can also produce a heatmap with select gene sets by providing specific names to the `metas` parameter. For example, we can isolated gene sets involved immune response.
+A user can also produce a heatmap with select gene sets by providing specific names to the **metas** parameter. For example, we can isolated gene sets involved immune response.
 
 ```{r}
 dittoHeatmap(sce, genes = NULL, 
@@ -135,7 +146,7 @@ dittoHeatmap(sce, genes = NULL,
 
 ## Violin Plots
 
-Another way to visualize a subset of gene set enrichment would be to graph the distribution of enrichment using violin, jitter, boxplot, or ridgeplots. We can also compare between categorical variables using the `group.by` parameter.
+Another way to visualize a subset of gene set enrichment would be to graph the distribution of enrichment using violin, jitter, boxplot, or ridgeplots. We can also compare between categorical variables using the **group.by** parameter.
 
 ```{r}
 multi_dittoPlot(sce, vars = c("HALLMARK_IL2_STAT5_SIGNALING", 
@@ -149,7 +160,7 @@ multi_dittoPlot(sce, vars = c("HALLMARK_IL2_STAT5_SIGNALING",
 
 ## Hex Density Enrichment Plots
 
-We can also compare the distribution of enrichment scores of 2 distinct gene sets across all single cells using the `dittoScatterHex()` function. Here, we use our SingleCellExperiment object with results of `enrichIt()` and specify gene sets to the `x.var` and `y.var` parameters to produce a density plot. We can also add contours to the plot, by passing `do.contour = TRUE`. 
+We can also compare the distribution of enrichment scores of 2 distinct gene sets across all single cells using the `dittoScatterHex()` function. Here, we use our SingleCellExperiment object with results of `enrichIt()` and specify gene sets to the **x.var** and **y.var** parameters to produce a density plot. We can also add contours to the plot, by passing **do.contour = TRUE**. 
 
 ```{r}
 dittoScatterHex(sce, x.var = "HALLMARK_IL2_STAT5_SIGNALING", 
@@ -158,7 +169,7 @@ dittoScatterHex(sce, x.var = "HALLMARK_IL2_STAT5_SIGNALING",
         scale_fill_gradientn(colors = colors(11)) 
 ```
 
-We can also separate the graph using the `split.by` parameter, allowing for the direct comparison of categorical variables.
+We can also separate the graph using the **split.by** parameter, allowing for the direct comparison of categorical variables.
 
 ```{r}
 dittoScatterHex(sce, x.var = "HALLMARK_IL2_STAT5_SIGNALING", 
@@ -168,12 +179,11 @@ dittoScatterHex(sce, x.var = "HALLMARK_IL2_STAT5_SIGNALING",
         scale_fill_gradientn(colors = colors(11)) 
 ```
 
-
 ## Ridge Plots
 
 Another distribution visualization is using a [Ridge Plot](https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html) from the ggridges R package. This allows the user to incorporate categorical variables to seperate the enrichment scores along the y-axis in addition to the faceting by categorical variables. 
 
-Like above, we can explore the distribution of the **"HALLMARK_DNA_REPAIR"** gene set between groups by calling `ridgeEnrichment()` with the ES2 object. We specify `group = letters.idents`, which will seperate groups on the y-axis. We can also add a rug plot (`add.rug = TRUE`) to look at the discrete sample placement along the enrichment ridge plot. 
+Like above, we can explore the distribution of the **"HALLMARK_DNA_REPAIR"** gene set between groups by calling `ridgeEnrichment()` with the ES2 object. We specify **group = letters.idents**, which will separate groups on the y-axis. We can also add a rug plot (**add.rug = TRUE**) to look at the discrete sample placement along the enrichment ridge plot. 
 
 ```{r}
 ## Seurat object example
@@ -184,7 +194,7 @@ colnames(ES2)[ncol(ES2)] <- "cluster"
 ridgeEnrichment(ES2, gene.set = "HALLMARK_IL2_STAT5_SIGNALING", group = "cluster", add.rug = TRUE)
 ```
 
-In addition to the separation of **letter.idents**, we can also use `ridgeEnrichment()` for better granualarity of multiple variables. For example, instead of looking at the difference just between "Type", we can set `group = "cluster"` and then `facet = "letter.idents"`. This gives a visualization of the enrichment of DNA Repair by cluster and Type.
+In addition to the separation of **letter.idents**, we can also use `ridgeEnrichment()` for better granularity of multiple variables. For example, instead of looking at the difference just between "Type", we can set **group = "cluster"** and then **facet = "letter.idents"**. This gives a visualization of the enrichment of DNA Repair by cluster and Type.
 
 ```{r}
 ridgeEnrichment(ES2, gene.set = "HALLMARK_IL2_STAT5_SIGNALING", group = "cluster", 
@@ -195,7 +205,7 @@ ridgeEnrichment(ES2, gene.set = "HALLMARK_IL2_STAT5_SIGNALING", group = "cluster
 
 Another distribution visualization is a violin plot, which we seperate and directly compare using a binary classification. Like `ridgeEnrichment()`, this allows for greater use of categorical variables. For `splitEnrichment()`, the output will be two halves of a violin plot bassed on the `split` parameter with a central boxplot with the relative distribution accross all samples. 
 
-Like above, we can explore the distribution of the **"HALLMARK_DNA_REPAIR"** gene set between groups by calling `splitEnrichment()` with the ES2 object and `split = "groups"`. We can also explore the cluster distribution by assigning the `x-axis = "cluster"`.
+Like above, we can explore the distribution of the **"HALLMARK_DNA_REPAIR"** gene set between groups by calling `splitEnrichment()` with the ES2 object and **split = "groups"**. We can also explore the cluster distribution by assigning the **x-axis = "cluster"**.
 
 ```{r}
 splitEnrichment(ES2, split = "groups", gene.set = "HALLMARK_IL2_STAT5_SIGNALING")
@@ -218,7 +228,7 @@ enrichmentPlot(pbmc_small,
 
 # Expanded Analysis
 
-One frustration of Gene Set Enrichment is trying to make sense of the values. In order to move away from just selecting pathways that may be of interest, escape offers the ability to `performPCA()` on the enrichment scores. Like the other functions, we will need to provide the output of `enrichIt()` to the `enriched` parameter and the `groups` to include for later graphing.
+One frustration of Gene Set Enrichment is trying to make sense of the values. In order to move away from just selecting pathways that may be of interest, escape offers the ability to `performPCA()` on the enrichment scores. Like the other functions, we will need to provide the output of `enrichIt()` to the **enriched** parameter and the **groups** to include for later graphing.
 
 ```{r}
 PCA <- performPCA(enriched = ES2, gene.sets = names(GS.hallmark), groups = c("groups", "cluster"))
@@ -228,13 +238,13 @@ PCA <- performPCA(enriched = ES2, gene.sets = names(GS.hallmark), groups = c("gr
 pcaEnrichment(PCA, PCx = "PC1", PCy = "PC2", contours = TRUE)
 ```
 
-We can also look at the `pcaEnrichment()` output separated by categorical factors using the `facet` parameter, for example using the cluster assignment.
+We can also look at the `pcaEnrichment()` output separated by categorical factors using the **facet** parameter, for example using the cluster assignment.
 
 ```{r}
 pcaEnrichment(PCA, PCx = "PC1", PCy = "PC2", contours = FALSE, facet = "cluster") 
 ```
 
-We can more closely examine the construction of the PCA by looking at the contribution of each gene set to the respective principal component using `masterPCAPlot()` with the same input as above with the `pcaEnrichment()`. We can also control the number of gene sets plotted with `top.contribution`. 
+We can more closely examine the construction of the PCA by looking at the contribution of each gene set to the respective principal component using `masterPCAPlot()` with the same input as above with the `pcaEnrichment()`. We can also control the number of gene sets plotted with **top.contribution**. 
 
 ```{r}
 masterPCAPlot(ES2, gene.sets = names(GS.hallmark), PCx = "PC1", PCy = "PC2", top.contribution = 10)
@@ -243,7 +253,7 @@ masterPCAPlot(ES2, gene.sets = names(GS.hallmark), PCx = "PC1", PCy = "PC2", top
 
 ## Signficance
 
-We can also look for significant differences between groups of variables using `getSignificance()`. For this, we need to assign a `group` parameter and the type of `fit`including: T.test, linear regression (LR), Wilcoxon Rank Sum Test (Wilcoxon), ANOVA). `getSignificance()` will pull any numeric values, to ensure only gene sets, use the `gene.sets` parameter, similar to the PCAplot functions above. 
+We can also look for significant differences between groups of variables using `getSignificance()`. For this, we need to assign a **group** parameter and the type of **fit** including: T.test, linear regression (LR), Wilcoxon Rank Sum Test (Wilcoxon), ANOVA). `getSignificance()` will pull any numeric values, to ensure only gene sets, use the **gene.sets** parameter, similar to the PCAplot functions above. 
 
 Returned is a test statistic, raw p value, FDR value using Bonferroni correction, and the median values for each group. In addition, ANOVA will automatically return the raw p-values for each comparison in the group. 
 
