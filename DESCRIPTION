@@ -28,7 +28,8 @@ Imports:
 	broom, 
 	reshape2, 
 	patchwork, 
-	MatrixGenerics
+	MatrixGenerics,
+	utils
 Suggests: 
 	Seurat,
 	SeuratObject,

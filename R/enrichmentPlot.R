@@ -21,7 +21,7 @@
 #'                 gene.sets = GS, group = "Type")
 #'  }
 #' @import patchwork
-#' @import GSVA
+#' @importFrom utils getFromNamespace
 #' @import ggplot2
 #' @importFrom reshape2 melt
 #' @export
@@ -32,6 +32,7 @@ enrichmentPlot <- function(obj,
                            gene.sets, 
                            group, 
                            colors = c("#0D0887FF","#7E03A8FF","#CC4678FF","#F89441FF","#F0F921FF")) {
+  compute.gene.density<-utils::getFromNamespace("compute.gene.density", "GSVA")
   cnts <- cntEval(obj)
   cnts.filter <- as.matrix(.filterFeatures.mod(cnts, "ssgsea"))
   meta <- grabMeta(obj)
@@ -41,7 +42,7 @@ enrichmentPlot <- function(obj,
   gene.sets <- GS.check(gene.sets)
   gene.set <- unlist(gene.sets[[gene.set]])
   mapped.gset.idx.list <- na.omit(match(gene.set, rownames(cnts.filter)))
-  gene.density <- compute.gene.density.mod(cnts.filter, seq_len(ncol(cnts)), TRUE)
+  gene.density <- compute.gene.density(cnts.filter, seq_len(ncol(cnts)), TRUE, TRUE)
   rank.scores <- rep(0, nrow(cnts.filter))
   sort.sgn.idxs <- apply(gene.density, 2, order, decreasing=TRUE)
   gsva_rnk2 <- apply(sort.sgn.idxs, 2, compute_rank_score.mod, nrow(cnts))
@@ -90,23 +91,6 @@ compute_rank_score.mod <- function(sort_idx_vec, p){
   tmp <- rep(0, p)
   tmp[sort_idx_vec] <- abs(seq(from=p,to=1) - p/2)
   return (tmp)
-}
-
-# Internal function from GSVA
-#' @importFrom stats ecdf
-compute.gene.density.mod <- function(expr, sample.idxs, rnaseq=FALSE){
-  n.test.samples <- ncol(expr)
-  n.genes <- nrow(expr)
-  n.density.samples <- length(sample.idxs)
-  
-  gene.density <- NA
-    gene.density <- t(apply(expr, 1, function(x, sample.idxs) {
-      f <- ecdf(x[sample.idxs])
-      f(x)
-    }, sample.idxs))
-    gene.density <- log(gene.density / (1-gene.density)) 
-  
-  return(gene.density)	
 }
 
 # Internal function from GSVA
