@@ -7,6 +7,7 @@ CHANGES IN VERSION 1.3.3
 * Added subcategory to getGeneSets to select subsets of libraries.
 * Added default coloring to enrichmentPlot()
 * enrichmentPlot() now imports calculations partially from GSVA internal functions to facilitate use of C
+* Filtering based on min.size now works instead of not working. 
 
 
 CHANGES IN VERSION 1.3.2

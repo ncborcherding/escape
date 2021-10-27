@@ -131,7 +131,7 @@ normalize <- function(x)
 }
 
 #' @importFrom SingleCellExperiment counts
-#' @importFrom Matrix summary
+#' @importFrom Matrix summary Matrix
 cntEval <- function(obj) {
   if (inherits(x = obj, what = "Seurat")) {
     cnts <- obj@assays[["RNA"]]@counts
@@ -141,7 +141,7 @@ cntEval <- function(obj) {
     cnts <- obj
   }
   if (!inherits(cnts, what = "dgCMatrix")) {
-    cnts <- Matrix::Matrix(as.matrix(cnts),sparse = TRUE)
+    cnts <- Matrix(as.matrix(cnts),sparse = TRUE)
   }
   cnts <- cnts[tabulate(summary(cnts)$i) != 0, , drop = FALSE]
   return(cnts)
