@@ -45,7 +45,7 @@ enrichIt <- function(obj, gene.sets = NULL,
     if (!is.null(min.size)){
         GS.size <- lapply(egc, function(x) length(which(rownames(cnts) %in% x)))
         remove <- unname(which(GS.size < min.size))
-        if (length(remove) == 0) {
+        if (length(remove) != 0) {
             egc <- egc[-remove]
         }
     }
