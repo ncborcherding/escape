@@ -16,8 +16,11 @@
 #' "singscore"
 #' @param groups The number of cells to separate the enrichment calculation.
 #' @param cores The number of cores to use for parallelization.
-#' @param min.size Minimum number of gene nessecary to perform the enrichment
+#' @param min.size Minimum number of gene necessary to perform the enrichment
 #' calculation
+#' @param ssGSEA.norm normalized the enrichment score based on the range of the
+#' individual gene set. If TRUE, the returned enrichment score is based may change
+#' with cell composition.
 #'
 #' @importFrom GSVA gsva
 #' @importFrom GSEABase GeneSetCollection 
@@ -38,8 +41,11 @@
 #' @seealso \code{\link{getGeneSets}} to collect gene sets.
 #' @return Data frame of normalized enrichmenet scores (NES)
 enrichIt <- function(obj, gene.sets = NULL, 
-                     method = "ssGSEA", groups = 1000, cores = 2,
-                     min.size = 5) {
+                     method = "ssGSEA", 
+                     groups = 1000, 
+                     cores = 2,
+                     min.size = 5,
+                     ssGSEA.norm = FALSE) {
     egc <- GS.check(gene.sets)
     cnts <- cntEval(obj)
     if (!is.null(min.size)){
@@ -59,7 +65,7 @@ enrichIt <- function(obj, gene.sets = NULL,
         for (i in seq_along(wind)) {
             last <- min(ncol(cnts), i+groups-1)
             a <- suppressWarnings(gsva(split.data[[i]], egc, method = 'ssgsea', 
-                ssgsea.norm = TRUE,
+                ssgsea.norm = FALSE,
                 kcdf = "Poisson", parallel.sz = cores, 
                 BPPARAM = SnowParam()))
             scores[[i]] <- a
@@ -82,6 +88,9 @@ enrichIt <- function(obj, gene.sets = NULL,
     }
     scores <- do.call(cbind, scores)
     output <- t(as.matrix(scores))
+    if(method == "ssGSEA" & ssGSEA.norm) {
+        output <- apply(output, 2, normalize)
+    }
     output <- data.frame(output)
     return(output)
 }

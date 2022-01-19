@@ -10,7 +10,8 @@ enrichIt(
   method = "ssGSEA",
   groups = 1000,
   cores = 2,
-  min.size = 5
+  min.size = 5,
+  ssGSEA.norm = FALSE
 )
 }
 \arguments{
@@ -29,8 +30,12 @@ the gene set.}
 
 \item{cores}{The number of cores to use for parallelization.}
 
-\item{min.size}{Minimum number of gene nessecary to perform the enrichment
+\item{min.size}{Minimum number of gene necessary to perform the enrichment
 calculation}
+
+\item{ssGSEA.norm}{normalized the enrichment score based on the range of the
+individual gene set. If TRUE, the returned enrichment score is based may change
+with cell composition.}
 }
 \value{
 Data frame of normalized enrichmenet scores (NES)

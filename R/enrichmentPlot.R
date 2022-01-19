@@ -52,6 +52,8 @@ enrichmentPlot <- function(obj,
     rank <- round(order(means)/2)
     output <- cbind(output, rank)
   }
+  ###EDCF Calculation
+  
   output <- data.frame(output)
   colnames(output) <- paste0("Group.", uniq.grp)
   output$GS <- NA
