@@ -8,7 +8,7 @@ author:
   email: jared.andrews07@gmail.com
   affiliation: Washington University in St. Louis, School of Medicine, St. Louis, MO, USA
 
-date: "August 17, 2021"
+date: "January 29, 2021"
 
 output:
   BiocStyle::html_document:
@@ -253,9 +253,9 @@ masterPCAPlot(ES2, gene.sets = names(GS.hallmark), PCx = "PC1", PCy = "PC2", top
 
 ## Signficance
 
-We can also look for significant differences between groups of variables using `getSignificance()`. For this, we need to assign a **group** parameter and the type of **fit** including: T.test, linear regression (LR), Wilcoxon Rank Sum Test (Wilcoxon), ANOVA). `getSignificance()` will pull any numeric values, to ensure only gene sets, use the **gene.sets** parameter, similar to the PCAplot functions above. 
+We can also look for significant differences between groups of variables using `getSignificance()`. For this, we need to assign a **group** parameter and the type of **fit** including: T.test, logistic regression (LR), Wilcoxon Rank Sum Test (Wilcoxon), ANOVA, and Kruskal-Wallis (KW) test. `getSignificance()` will pull any numeric values, to ensure only gene sets, use the **gene.sets** parameter, similar to the PCAplot functions above. 
 
-Returned is a test statistic, raw p value, FDR value using Bonferroni correction, and the median values for each group. In addition, ANOVA will automatically return the raw p-values for each comparison in the group. 
+Returned is a test statistic, raw p value, FDR value , and the median values for each group. In addition, ANOVA and the Kruskal-Wallis test will automatically return the corrected p-values for each comparison in the group. 
 
 
 

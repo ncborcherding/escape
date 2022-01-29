@@ -1,5 +1,6 @@
 CHANGES IN VERSION 1.3.4
 * Normalization for ssGSEA no longer uses the range of all gene sets, but columns, normalizing it to 0 to 1.
+* Added Kruskal-Wallis test for additional support of multi-group comparison
 
 CHANGES IN VERSION 1.3.3
 * Added wilcoxon and LR for getSignificance
