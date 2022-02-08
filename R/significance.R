@@ -99,7 +99,7 @@ getSignificance <- function(enriched, group = NULL,
             ind.p.values <- ind.p.values[,3]
             Chi.squared <- out[[i]]$statistic 
             pval <- out[[i]]$p.value
-            output <- rbind(output, c(fval, pval, t(ind.p.values)))
+            output <- rbind(output, c(Chi.squared, pval, t(ind.p.values)))
         }
         output <- as.data.frame(output)
         colnames(output) <- c("Chi.square", "p.value", names.ind.p.values)
