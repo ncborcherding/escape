@@ -93,4 +93,64 @@ getGeneSets <- function(species = "Homo sapiens",
     return(gsc)
 }
 
+#Function for normalizing value
+normalize <- function(x)
+{
+  (x- min(x)) /(max(x)-min(x))
+}
 
+#' @importFrom SingleCellExperiment counts
+#' @importFrom Matrix summary Matrix
+cntEval <- function(obj) {
+  if (inherits(x = obj, what = "Seurat")) {
+    cnts <- obj@assays[["RNA"]]@counts
+  } else if (inherits(x = obj, what = "SingleCellExperiment")) {
+    cnts <- counts(obj)
+  } else {
+    cnts <- obj
+  }
+  if (!inherits(cnts, what = "dgCMatrix")) {
+    cnts <- Matrix(as.matrix(cnts),sparse = TRUE)
+  }
+  cnts <- cnts[tabulate(summary(cnts)$i) != 0, , drop = FALSE]
+  return(cnts)
+}
+
+#' @importFrom GSEABase geneIds
+GS.check <- function(gene.sets) {
+  if(is.null(gene.sets)) {
+    stop("Please provide the gene.sets you would like to use for 
+            the enrichment analysis")
+  } else {
+    egc <- gene.sets
+  }
+  if(inherits(egc, what = "GeneSetCollection")){
+    egc <- GSEABase::geneIds(egc) # will return a simple list, 
+    #which will work if a matrix is supplied to GSVA
+  }
+  return(egc)
+}
+
+#This is to grab the meta data from a seurat or SCE object
+#' @importFrom SingleCellExperiment colData 
+grabMeta <- function(sc) {
+  if (inherits(x=sc, what ="Seurat")) {
+    meta <- data.frame(sc[[]], slot(sc, "active.ident"))
+    if ("cluster" %in% colnames(meta)) {
+      colnames(meta)[length(meta)] <- "cluster.active.ident"
+    } else {
+      colnames(meta)[length(meta)] <- "cluster"
+    }
+  }
+  else if (inherits(x=sc, what ="SingleCellExperiment")){
+    meta <- data.frame(colData(sc))
+    rownames(meta) <- sc@colData@rownames
+    clu <- which(colnames(meta) == "ident")
+    if ("cluster" %in% colnames(meta)) {
+      colnames(meta)[clu] <- "cluster.active.idents"
+    } else {
+      colnames(meta)[clu] <- "cluster"
+    }
+  }
+  return(meta)
+}
