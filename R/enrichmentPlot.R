@@ -15,10 +15,9 @@
 #'  Cancer = c("TP53","BRCA2","ERBB2","MYC"))
 #'  
 #'  seurat_ex <- suppressWarnings(SeuratObject::pbmc_small)
-#'  ES <- enrichIt(obj = seurat_ex, gene.sets = GS)
 #'  
 #'  enrichmentPlot(seurat_ex, gene.set = "Cancer",
-#'                 gene.sets = GS, group = "Type")
+#'                 gene.sets = GS, group = "groups")
 #'  }
 #' @import patchwork
 #' @importFrom utils getFromNamespace
