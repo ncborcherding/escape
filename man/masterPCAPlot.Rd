@@ -4,10 +4,12 @@
 \alias{masterPCAPlot}
 \title{Visualize the components of the PCA analysis of the enrichment results}
 \usage{
-masterPCAPlot(enriched, PCx, PCy, top.contribution = 10)
+masterPCAPlot(enriched, gene.sets, PCx, PCy, top.contribution = 10)
 }
 \arguments{
 \item{enriched}{The output of \code{\link{enrichIt}}.}
+
+\item{gene.sets}{Names of gene sets to include in the PCA}
 
 \item{PCx}{The principal component graphed on the x-axis.}
 
@@ -25,7 +27,9 @@ Graph the major gene set contributors to the \code{\link{pcaEnrichment}}.
 \examples{
 ES2 <- readRDS(url(
 "https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-masterPCAPlot(ES2, PCx = "PC1", PCy = "PC2", top.contribution = 10)
+
+masterPCAPlot(ES2, PCx = "PC1", PCy = "PC2", gene.sets = colnames(ES2), 
+top.contribution = 10)
 
 }
 \seealso{

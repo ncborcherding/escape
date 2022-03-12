@@ -1,4 +1,4 @@
-# Assigning color pallette
+# Assigning color palette
 #' @importFrom grDevices colorRampPalette
 assignColor <- function(x, enriched, group) {
     if (length(x) != length(unique(enriched[,group]))) {
@@ -31,7 +31,7 @@ assignColor <- function(x, enriched, group) {
 #' @seealso \code{\link{performPCA}} for generating PCA results.
 #' @return ggplot2 object of the results of PCA for the enrichment scores
 pcaEnrichment <- function(PCAout, PCx, PCy, 
-    colors = c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20"), 
+    colors = c("#0D0887FF","#7E03A8FF","#CC4678FF","#F89441FF","#F0F921FF"), 
     contours = TRUE, facet = NULL) 
 {
     plot <- ggplot(PCAout, aes(x=PCAout[,PCx], y=PCAout[,PCy])) +
@@ -63,6 +63,7 @@ pcaEnrichment <- function(PCAout, PCx, PCy,
 #' Graph the major gene set contributors to the \code{\link{pcaEnrichment}}.
 #'
 #' @param enriched The output of \code{\link{enrichIt}}.
+#' @param gene.sets Names of gene sets to include in the PCA
 #' @param PCx The principal component graphed on the x-axis.
 #' @param PCy The principal component graphed on the y-axis.
 #' @param top.contribution The number of gene sets to graph, organized 
@@ -75,14 +76,19 @@ pcaEnrichment <- function(PCAout, PCx, PCy,
 #' @examples 
 #' ES2 <- readRDS(url(
 #' "https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-#' masterPCAPlot(ES2, PCx = "PC1", PCy = "PC2", top.contribution = 10)
+#' 
+#' masterPCAPlot(ES2, PCx = "PC1", PCy = "PC2", gene.sets = colnames(ES2), 
+#' top.contribution = 10)
 #'
 #' @export
 #'
 #' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return ggplot2 object sumamrizing the PCA for the enrichment scores
-masterPCAPlot <- function(enriched, PCx, PCy, top.contribution = 10) {
+masterPCAPlot <- function(enriched, gene.sets, PCx, PCy, top.contribution = 10) {
     input <- select_if(enriched, is.numeric)
+    if (!is.null(gene.sets)) {
+        input <- input[,colnames(input) %in% gene.sets]
+    }
     PCA <- prcomp(input, scale. = TRUE)
     var_explained <- PCA$sdev^2/sum(PCA$sdev^2)
     
@@ -139,7 +145,7 @@ masterPCAPlot <- function(enriched, PCx, PCy, top.contribution = 10) {
 #' @return ggplot2 object with ridge-based distributions of selected gene.set
 ridgeEnrichment <- function(enriched, group = "cluster", gene.set = NULL, 
             scale.bracket = NULL, facet = NULL, add.rug = FALSE,
-            colors = c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20")) 
+            colors = c("#0D0887FF", "#7E03A8FF", "#CC4678FF", "#F89441FF", "#F0F921FF")) 
             {
     if (!is.null(scale.bracket)) {
         if (length(scale.bracket) != 1 | length(scale.bracket) != 1) {
@@ -177,7 +183,7 @@ ridgeEnrichment <- function(enriched, group = "cluster", gene.set = NULL,
         labs(fill = group) + 
         scale_fill_manual(values = colors) + 
         theme_classic() +
-        guides(fill = FALSE)
+        guides(fill = "none")
     
     if (!is.null(facet)) {
         plot <- plot + facet_grid(as.formula(paste('. ~', facet))) }
@@ -240,7 +246,7 @@ geom_split_violin <-
 #' @param scale.bracket This will filter the enrichment scores to remove 
 #' extreme outliers. Values entered (1 or 2 numbers) will be the filtering 
 #' parameter using z-scores of the selected gene.set. If only 1 value is given, 
-#' a seocndary bracket is autommatically selected as the inverse of the number.
+#' a secondary bracket is automatically selected as the inverse of the number.
 #' @param split The parameter to split, must be binary.
 #' @param colors The color palette for the ridge plot.
 #'
@@ -258,8 +264,8 @@ geom_split_violin <-
 #' @return ggplot2 object violin-based distributions of selected gene.set
 splitEnrichment <- function(enriched, x.axis = NULL, scale.bracket = NULL,
                             split = NULL, gene.set = NULL, 
-                            colors = c("#0348A6", "#7AC5FF", "#C6FDEC", 
-                                "#FFB433", "#FF4B20")) {
+                            colors = c("#0D0887FF", "#7E03A8FF", "#CC4678FF", 
+                                       "#F89441FF", "#F0F921FF")) {
     
     if (length(unique(enriched[,split])) != 2) {
         message("SplitEnrichment() can only work for binary classification")}

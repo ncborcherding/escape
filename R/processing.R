@@ -1,3 +1,5 @@
+"%!in%" <- Negate("%in%")
+
 #' Calculate Principal Components for the Enrichment Scores
 #'
 #' Using all or selected enrichment scores of individual 
@@ -6,6 +8,7 @@
 #' to the output columns to use to graph later.
 #'
 #' @param enriched The output of \code{\link{enrichIt}}.
+#' @param gene.sets Names of gene sets to include in the PCA
 #' @param groups The column headers to use in future graphing functions.
 #'
 #' @importFrom dplyr select_if
@@ -14,22 +17,42 @@
 #' @examples 
 #' ES2 <- readRDS(url(
 #' "https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-#' PCA <- performPCA(enriched = ES2, groups = c("Type", "Cluster"))
+#' 
+#' PCA <- performPCA(enriched = ES2, groups = c("Type", "Cluster"), 
+#' gene.sets = colnames(ES2))
 #'
 #' @export
-#' @return Data frame of principal compoenents
+#' @return Data frame of principal components
 #'
 #' @author Nick Borcherding
 #'
-performPCA <- function(enriched, groups) {
-    groups <- enriched[,colnames(enriched) %in% groups]
+performPCA <- function(enriched, gene.sets = NULL, groups) {
+    groups <- enriched[,colnames(enriched) %in% c(groups)]
     input <- select_if(enriched, is.numeric)
+    if (!is.null(gene.sets)) {
+      input <- input[,colnames(input) %in% gene.sets]
+    }
     PCA <- prcomp(input, scale. = TRUE)
     merged <- merge(PCA$x, groups, by = "row.names")
     rownames(merged) <- merged[,1]
     merged <- merged[,-1]
 
     return(merged)
+}
+
+#split data matrix into cell chunks
+#stole this from https://github.com/carmonalab/UCell
+split_data.matrix <- function(matrix, chunk.size=1000) {
+  ncols <- dim(matrix)[2]
+  nchunks <- (ncols-1) %/% chunk.size + 1
+  
+  split.data <- list()
+  for (i in 1:nchunks) {
+    min <- 1 + (i-1)*chunk.size
+    max <- min(i*chunk.size, ncols)
+    split.data[[i]] <- matrix[,min:max]
+  }
+  return(split.data)
 }
 
 #' Get a collection of gene sets to perform enrichment on
@@ -40,8 +63,9 @@ performPCA <- function(enriched, groups) {
 #' @param species The scientific name of the species of interest in 
 #' order to get correcent gene nomenclature
 #' @param library Individual collection(s) of gene sets, e.g. c("H", "C5").
-#' See \url{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp} for
+#' See \href{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}{msigdbr}for
 #' all MSigDB collections.
+#' @param subcategory MSigDB sub-collection abbreviation, such as CGP or BP.
 #' @param gene.sets Select gene sets or pathways, using specific names, 
 #' example: pathways = c("HALLMARK_TNFA_SIGNALING_VIA_NFKB"). Will only be
 #' honored if library is set, too.
@@ -57,29 +81,36 @@ performPCA <- function(enriched, groups) {
 #' @author Nick Borcherding, Jared Andrews
 #' @return A \code{GeneSetCollection} object containing the requested \code{GeneSet} objects.
 getGeneSets <- function(species = "Homo sapiens", 
-                        library = NULL, gene.sets = NULL) {
+                        library = NULL, 
+                        subcategory = NULL,
+                        gene.sets = NULL) {
     spec <- msigdbr_species()
     spec_check <- unlist(spec[spec$species_name %in% species,][,1])
     if (length(spec_check) == 0) {
         message(paste0("Please select a compatible species: ", 
                     paste(spec, collapse = ", ")))
     }
-    
     if(!is.null(library)) {
         if (length(library) == 1) {
+          if (is.null(subcategory)) {
             m_df = msigdbr(species = spec_check, category = library)
+          } else {
+            m_df = msigdbr(species = spec_check, category = library, subcategory = subcategory)
+          }
         }
         m_df <- NULL
         for (x in seq_along(library)) {
+          if (is.null(subcategory)) {
             tmp2 = msigdbr(species = spec_check, category = library[x])
-            m_df <- rbind(m_df, tmp2)
+          } else {
+            tmp2 = msigdbr(species = spec_check, category = library, subcategory = subcategory)
+          }
+          m_df <- rbind(m_df, tmp2)
         }
-      
         if(!is.null(gene.sets)) {
         m_df <- m_df[m_df$gs_name %in% gene.sets,]
         }    
     }
-    
     gs <- unique(m_df$gs_name)
     ls <- list()
     for (i in seq_along(gs)) {

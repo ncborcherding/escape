@@ -4,7 +4,7 @@
 \alias{getSignificance}
 \title{Perform significance testing between groups and enrichement scores.}
 \usage{
-getSignificance(enriched, group = NULL, fit = "linear.model")
+getSignificance(enriched, group = NULL, gene.sets = NULL, fit = NULL)
 }
 \arguments{
 \item{enriched}{The output of \code{\link{enrichIt}}.}
@@ -12,8 +12,10 @@ getSignificance(enriched, group = NULL, fit = "linear.model")
 \item{group}{The parameter to group for the comparison, should a column of 
 the enriched input}
 
-\item{fit}{The test used for significance, either linear.model, ANOVA, 
-or T.test}
+\item{gene.sets}{Names of gene sets to compare}
+
+\item{fit}{The test used for significance, 2 group: Wilcoxon, LR, T.test.
+Multigroup: ANOVA or KW.}
 }
 \value{
 Data frame of test statistics
@@ -21,14 +23,18 @@ Data frame of test statistics
 \description{
 This functions takes the enrichment scores and performs statistical 
 testing to evaluate the difference by group selected. The function 
-can perform 3 tests: 1) linear model based on the limma package, 
-2) Welch's T test, and 3) one-way ANOVA. The output includes 
-adjusted p-values based on the Benjamini Hochberg method.
+can perform 5 tests: 1) Welch's T test (T.test), 2) Logistic 
+Regression (LR), 3) Wilcoxon Rank Sum Test (Wilcoxon), 
+4) one-way ANOVA (ANOVA), and 5) Kruskal-Wallis (KW). The latter 
+two output will include the individual comparisons between groups 
+using TukeyHSD for ANOVA and pairwise Wilcoxon Rank Sum Test 
+for KW. The output includes adjusted p-values based on the 
+Benjamini Hochberg method.
 }
 \examples{
 ES2 <- readRDS(url(
 "https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-output <- getSignificance(ES2, group = "Type", fit = "linear.model")
+output <- getSignificance(ES2, group = "Type", fit = "T.test")
 
 }
 \seealso{

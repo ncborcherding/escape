@@ -19,7 +19,6 @@ Single-cell sequencing (SCS) is an emerging technology in the across the diverse
 + BiocParallel
 + Matrix
 + [UCell](https://github.com/carmonalab/UCell)
-+ [singscore](https://www.bioconductor.org/packages/release/bioc/html/singscore.html)
 + broom
 + reshape2
 + [patchwork](https://patchwork.data-imaginist.com/)

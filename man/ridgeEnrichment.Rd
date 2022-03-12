@@ -11,7 +11,7 @@ ridgeEnrichment(
   scale.bracket = NULL,
   facet = NULL,
   add.rug = FALSE,
-  colors = c("#0348A6", "#7AC5FF", "#C6FDEC", "#FFB433", "#FF4B20")
+  colors = c("#0D0887FF", "#7E03A8FF", "#CC4678FF", "#F89441FF", "#F0F921FF")
 )
 }
 \arguments{
