@@ -13,10 +13,9 @@
 #'  \dontrun{
 #'  GS <- list(Housekeeping = c("ACTA1", "ACTN1", "GAPDH"),
 #'  Cancer = c("TP53","BRCA2","ERBB2","MYC"))
+#'  pbmc_small <- suppressWarnings(SeuratObject::pbmc_small)
 #'  
-#'  seurat_ex <- suppressWarnings(SeuratObject::pbmc_small)
-#'  
-#'  enrichmentPlot(seurat_ex, gene.set = "Cancer",
+#'  enrichmentPlot(pbmc_small gene.set = "Cancer",
 #'                 gene.sets = GS, group = "groups")
 #'  }
 #' @import patchwork
@@ -52,6 +51,7 @@ enrichmentPlot <- function(obj,
     output <- cbind(output, rank)
   }
   ###EDCF Calculation
+  
   
   output <- data.frame(output)
   colnames(output) <- paste0("Group.", uniq.grp)

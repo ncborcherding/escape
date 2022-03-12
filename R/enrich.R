@@ -12,8 +12,7 @@
 #' the names of the list elements correspond to the name of the gene set
 #' and the elements themselves are simple vectors of gene names representing
 #' the gene set. 
-#' @param method select the method to calculate enrichment, either "ssGSEA", "UCell" or
-#' "singscore"
+#' @param method select the method to calculate enrichment, either "ssGSEA" or "UCell" 
 #' @param groups The number of cells to separate the enrichment calculation.
 #' @param cores The number of cores to use for parallelization.
 #' @param min.size Minimum number of gene necessary to perform the enrichment
@@ -25,7 +24,6 @@
 #' @importFrom GSVA gsva
 #' @importFrom GSEABase GeneSetCollection 
 #' @importFrom UCell ScoreSignatures_UCell
-#' @importFrom singscore rankGenes simpleScore
 #' @importFrom BiocParallel SnowParam
 #'
 #' 
@@ -73,18 +71,6 @@ enrichIt <- function(obj, gene.sets = NULL,
     } else if (method == "UCell") {
         scores[[1]] <- t(suppressWarnings(ScoreSignatures_UCell(cnts, features=egc, 
                                         chunk.size = groups, ncores = cores)))
-    } else if (method == "singscore") {
-        tmp.list <- list()
-        rankData <- rankGenes(as.matrix(cnts))
-        for (i in seq_along(egc)) {
-            tmp <- simpleScore(rankData, egc[[i]])
-            colnames(tmp)[1] <- names(egc)[i]
-            tmp.list[[i]] <- t(tmp[,1])
-        }
-        tmp.list <- do.call(rbind, tmp.list)
-        rownames(tmp.list) <- names(egc)
-        colnames(tmp.list) <- colnames(cnts)
-        scores[[1]] <- tmp.list
     }
     scores <- do.call(cbind, scores)
     output <- t(as.matrix(scores))

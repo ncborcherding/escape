@@ -79,6 +79,9 @@ gene.sets <- list(Tcell_signature = c("CD2","CD3E","CD3D"),
 
 The next step is performing the enrichment on the RNA count data. The function `enrichIt()` can handle either a matrix of raw count data or will pull that data directly from a SingleCellExperiment or Seurat object. The **gene.sets** parameter in the function is the GeneSets, either generated from `getGeneSets()` or from the user. The enrichment scores will be calculated across all individual cells and **groups** is the n size to break the enrichment by while the **cores** is the number of cores to perform in parallel during the enrichment calculation too. 
 
+`enrichIt()` can utilize two distinct methods for quantification using the **method** parameter - either the *"ssGSEA"* method described by [Barbie et al 2009](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2783335/) or *"UCell"* described by [Andreatta and Carmona 2021](https://pubmed.ncbi.nlm.nih.gov/34285779/).
+
+
 To prevent issues with enrichment calculations for gene sets with a low number of genes represented in the count data of a single-cell object - **min.size** was instituted to remove gene sets with less than the indicated genes. 
 
 **Important Note:** This is computationally intensive and is highly dependent on the number of cells and the number of gene sets included.

@@ -7,23 +7,30 @@
 Single-cell sequencing (SCS) is an emerging technology in the across the diverse array of biological fields. Part of the struggle with the high-resolution approach of SCS, is distilling the data down to meaningful scientific hypotheses. escape was created to bridge SCS results, either from raw counts or from the popular Seurat R package, with gene set enrichment analyses (GSEA), allowing users to simply and easily graph outputs. The package accesses the entire [Molecular Signature Database v7.0](https://www.gsea-msigdb.org/gsea/msigdb/search.jsp) and enables users to select single, multiple gene sets, and even libraries to perform enrichment analysis on. 
 
 ### R Packages Imported
-+  dplyr
-+  ggplots2
-+  ggrepel
-+  ggridges
-+  grDevices
-+  GSEABase
-+  GSVA
-+  msigdbr
-+  limma
-+  pheatmap
-+  rlang
-+  Seurat
-+  SingleCellExperiment
+
++ grDevices 
++ dplyr 
++ ggplot2  
++ GSEABase 
++ GSVA
++ SingleCellExperiment
++ ggridges
++ msigdbr
++ BiocParallel
++ Matrix
++ [UCell](https://github.com/carmonalab/UCell)
++ broom
++ reshape2
++ [patchwork](https://patchwork.data-imaginist.com/)
++ MatrixGenerics
 
 ### Installation
 
 ```devtools::install_github("ncborcherding/escape")```
+
+##### Most up-to-date version
+
+```devtools::install_github("ncborcherding/escape@dev")```
 
 ### Learning To Use escape:
 

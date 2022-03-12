@@ -23,8 +23,7 @@ the names of the list elements correspond to the name of the gene set
 and the elements themselves are simple vectors of gene names representing
 the gene set.}
 
-\item{method}{select the method to calculate enrichment, either "ssGSEA", "UCell" or
-"singscore"}
+\item{method}{select the method to calculate enrichment, either "ssGSEA" or "UCell"}
 
 \item{groups}{The number of cells to separate the enrichment calculation.}
 
