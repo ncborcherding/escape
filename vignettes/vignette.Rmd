@@ -81,7 +81,6 @@ The next step is performing the enrichment on the RNA count data. The function `
 
 `enrichIt()` can utilize two distinct methods for quantification using the **method** parameter - either the *"ssGSEA"* method described by [Barbie et al 2009](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2783335/) or *"UCell"* described by [Andreatta and Carmona 2021](https://pubmed.ncbi.nlm.nih.gov/34285779/).
 
-
 To prevent issues with enrichment calculations for gene sets with a low number of genes represented in the count data of a single-cell object - **min.size** was instituted to remove gene sets with less than the indicated genes. 
 
 **Important Note:** This is computationally intensive and is highly dependent on the number of cells and the number of gene sets included.
@@ -94,6 +93,7 @@ ES.seurat <- enrichIt(obj = pbmc_small,
 
 ES.sce <- enrichIt(obj = sce, 
                    gene.sets = GS.hallmark, 
+                   method = "UCell",
                    groups = 1000, cores = 2, 
                    min.size = 5)
 ```

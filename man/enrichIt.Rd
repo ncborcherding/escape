@@ -11,7 +11,8 @@ enrichIt(
   groups = 1000,
   cores = 2,
   min.size = 5,
-  ssGSEA.norm = FALSE
+  ssGSEA.norm = FALSE,
+  ...
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ calculation}
 \item{ssGSEA.norm}{normalized the enrichment score based on the range of the
 individual gene set. If TRUE, the returned enrichment score is based may change
 with cell composition.}
+
+\item{...}{pass arguments to ssGSEA or UCell call}
 }
 \value{
 Data frame of normalized enrichmenet scores (NES)
