@@ -28,7 +28,12 @@ Imports:
 	reshape2, 
 	patchwork, 
 	MatrixGenerics,
-	utils
+	utils,
+	rlang,
+	stringr,
+	data.table,
+	SummarizedExperiment,
+	methods
 Suggests: 
 	Seurat,
 	SeuratObject,

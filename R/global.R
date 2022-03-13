@@ -15,6 +15,7 @@
     utils::globalVariables ("segmenty2")
     utils::globalVariables ("value")
     utils::globalVariables ("variable")
+    utils::globalVariables (".SD")    
     invisible ()
 
 }

@@ -47,10 +47,16 @@ split_data.matrix <- function(matrix, chunk.size=1000) {
   nchunks <- (ncols-1) %/% chunk.size + 1
   
   split.data <- list()
-  for (i in 1:nchunks) {
-    min <- 1 + (i-1)*chunk.size
-    max <- min(i*chunk.size, ncols)
+  min <- 1
+  for (i in seq_len(nchunks)) {
+    if (i == nchunks-1) {  #make last two chunks of equal size
+      left <- ncols-(i-1)*chunk.size
+      max <- min+round(left/2)-1
+    } else {
+      max <- min(i*chunk.size, ncols)
+    }
     split.data[[i]] <- matrix[,min:max]
+    min <- max+1    #for next chunk
   }
   return(split.data)
 }
@@ -184,4 +190,20 @@ grabMeta <- function(sc) {
     }
   }
   return(meta)
+}
+
+# Add to meta data some of the metrics calculated
+#' @importFrom rlang %||%
+#' @importFrom SummarizedExperiment colData colData<-
+add.meta.data <- function(sc, meta, header) {
+  if (inherits(x=sc, what ="Seurat")) { 
+    col.name <- names(meta) %||% colnames(meta)
+    sc[[col.name]] <- meta
+  } else {
+    rownames <- rownames(colData(sc))
+    colData(sc) <- cbind(colData(sc), 
+                         meta[rownames,])[, union(colnames(colData(sc)),  colnames(meta))]
+    rownames(colData(sc)) <- rownames  
+  }
+  return(sc)
 }

@@ -4,7 +4,7 @@
 #' counts and any gene set pathways either from the stored data or from 
 #' other sources. The enrichment calculation itself 
 #' uses the two methods 1) gsva R package and the poisson distribution for RNA
-#' or the \href{https://github.com/carmonalab/UCell}{UCell package}. 
+#' or 2) the \href{https://github.com/carmonalab/UCell}{UCell package}. 
 #'
 #' @param obj The count matrix, Seurat, or SingleCellExperiment object.
 #' @param gene.sets Gene sets from \code{\link{getGeneSets}} to use 
@@ -20,6 +20,7 @@
 #' @param ssGSEA.norm normalized the enrichment score based on the range of the
 #' individual gene set. If TRUE, the returned enrichment score is based may change
 #' with cell composition.
+#' @param ... pass arguments to ssGSEA or UCell call
 #'
 #' @importFrom GSVA gsva
 #' @importFrom GSEABase GeneSetCollection 
@@ -43,7 +44,8 @@ enrichIt <- function(obj, gene.sets = NULL,
                      groups = 1000, 
                      cores = 2,
                      min.size = 5,
-                     ssGSEA.norm = FALSE) {
+                     ssGSEA.norm = FALSE,
+                     ...) {
     egc <- GS.check(gene.sets)
     cnts <- cntEval(obj)
     if (!is.null(min.size)){
@@ -65,12 +67,14 @@ enrichIt <- function(obj, gene.sets = NULL,
             a <- suppressWarnings(gsva(split.data[[i]], egc, method = 'ssgsea', 
                 ssgsea.norm = FALSE,
                 kcdf = "Poisson", parallel.sz = cores, 
-                BPPARAM = SnowParam()))
+                BPPARAM = SnowParam()),
+                ...)
             scores[[i]] <- a
         }
     } else if (method == "UCell") {
         scores[[1]] <- t(suppressWarnings(ScoreSignatures_UCell(cnts, features=egc, 
-                                        chunk.size = groups, ncores = cores)))
+                                        chunk.size = groups, ncores = cores,
+                                        ...)))
     }
     scores <- do.call(cbind, scores)
     output <- t(as.matrix(scores))
