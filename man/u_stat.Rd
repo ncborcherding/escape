@@ -13,6 +13,9 @@ u_stat(rank_value, maxRank = 1000, sparse = FALSE)
 
 \item{sparse}{Whether the vector of ranks is in sparse format}
 }
+\value{
+Normalized AUC (as U statistic) for the vector
+}
 \description{
 Calculate Mann Whitney U from a vector of ranks
 }

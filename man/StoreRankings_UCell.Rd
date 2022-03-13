@@ -34,6 +34,8 @@ StoreRankings_UCell(
 }
 \value{
 Returns a sparse matrix of pre-calculated ranks that can be used multiple times to evaluate different signatures
+
+Returns a sparse matrix of pre-calculated ranks that can be used multiple times to evaluate different signatures
 }
 \description{
 Calculate and store gene rankings for a single-cell dataset

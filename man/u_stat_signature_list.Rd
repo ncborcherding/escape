@@ -23,6 +23,9 @@ u_stat_signature_list(
 
 \item{w_neg}{Weight on negative signatures}
 }
+\value{
+A matrix of U scores
+}
 \description{
 Calculate U scores for a list of signatures, given a rank matrix
 }

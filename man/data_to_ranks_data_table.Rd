@@ -11,6 +11,9 @@ data_to_ranks_data_table(data, ties.method = "average")
 
 \item{ties.method}{How to break ties (passed on to data.table::frankv)}
 }
+\value{
+A data.table of ranks
+}
 \description{
 Calculate per-cell feature rankings
 }

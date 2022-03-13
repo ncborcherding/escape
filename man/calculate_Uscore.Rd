@@ -38,6 +38,9 @@ calculate_Uscore(
 
 \item{name}{Suffix for metadata columns ("_UCell")}
 }
+\value{
+A list of signature scores
+}
 \description{
 Calculate rankings and scores for query data and given signature set
 }

@@ -29,6 +29,9 @@ rankings2Uscore(
 
 \item{name}{Name suffix for metadata columns ("_UCell")}
 }
+\value{
+A list of signature scores
+}
 \description{
 Get signature scores from pre-computed rank matrix
 }

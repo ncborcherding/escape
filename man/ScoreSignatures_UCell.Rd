@@ -44,6 +44,9 @@ ScoreSignatures_UCell(
 
 \item{seed}{Integer seed}
 }
+\value{
+Returns input SingleCellExperiment object with UCell scores added to altExp
+}
 \description{
 Calculate module enrichment scores from single-cell data
 }

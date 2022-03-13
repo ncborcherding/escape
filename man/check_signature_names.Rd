@@ -9,6 +9,9 @@ check_signature_names(features)
 \arguments{
 \item{features}{List of signatures for scoring}
 }
+\value{
+The input list of signatures, with standard names if provided un-named
+}
 \description{
 Check signature names and add standard names is missing
 }

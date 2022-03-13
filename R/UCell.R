@@ -17,8 +17,6 @@
 #' @param force.gc Explicitly call garbage collector to reduce memory footprint
 #' @param seed Integer seed
 #' @importFrom methods is 
-#' @importFrom  SingleCellExperiment altExp
-#' @importFrom SummarizedExperiment assay SummarizedExperiment
 #' @importFrom stringr str_remove_all
 #' @return Returns input SingleCellExperiment object with UCell scores added to altExp
 ScoreSignatures_UCell <- function(matrix=NULL, features, precalc.ranks=NULL, 
@@ -27,16 +25,9 @@ ScoreSignatures_UCell <- function(matrix=NULL, features, precalc.ranks=NULL,
                                   ties.method="average", force.gc=FALSE, seed=123) {
     
     features <- check_signature_names(features)
-    
-    #Check type of input
-    if (is(matrix, "SingleCellExperiment")) { # sce object
-        if (!assay %in% names(matrix@assays)) {
-            stop(sprintf("Assay %s not found in sce object.", assay))
-        }
-        m <- assay(matrix, assay) 
-    } else if (is(matrix, "matrix") | #matrix or DF
-               is(matrix, "dgCMatrix") |
-               is(matrix, "data.frame")) { 
+    if (is(matrix, "matrix") | #matrix or DF
+        is(matrix, "dgCMatrix") |
+        is(matrix, "data.frame")) { 
         m <- matrix
     } else {
         m <- NULL
@@ -58,14 +49,8 @@ ScoreSignatures_UCell <- function(matrix=NULL, features, precalc.ranks=NULL,
     u.merge <- lapply(u.list,function(x) rbind(x[["cells_AUC"]]))
     u.merge <- Reduce(rbind, u.merge)
     
-    if (is(matrix, "SingleCellExperiment")) {
-        altExp(matrix, "UCell") <- SummarizedExperiment(assays = list("UCell" = t(u.merge)))
-        return(matrix)
-    } else {
-        colnames(u.merge) <- str_remove_all(colnames(u.merge), "_UCell")
-        return(u.merge)
-    }
-    
+    colnames(u.merge) <- str_remove_all(colnames(u.merge), "_UCell")
+    return(u.merge)
 }
 
 #' Calculate and store gene rankings for a single-cell dataset
@@ -79,20 +64,12 @@ ScoreSignatures_UCell <- function(matrix=NULL, features, precalc.ranks=NULL,
 #' @param seed Integer seed
 #' @return Returns a sparse matrix of pre-calculated ranks that can be used multiple times to evaluate different signatures
 #' @importFrom methods is 
-#' @import SingleCellExperiment
-#' @importFrom SummarizedExperiment assay
 #' @return Returns a sparse matrix of pre-calculated ranks that can be used multiple times to evaluate different signatures
 StoreRankings_UCell <- function(matrix, maxRank=1500, chunk.size=1000,
                                 ncores=1, assay='counts', ties.method="average",
                                 force.gc=FALSE, seed=123) {
     
-    #Check type of input
-    if (is(matrix, "SingleCellExperiment")) { # sce object
-        if (!assay %in% names(matrix@assays)) {
-            stop(sprintf("Assay %s not found in sce object.", assay))
-        }
-        m <- assay(matrix, assay)
-    } else if (is(matrix, "matrix") | #matrix or DF
+    if (is(matrix, "matrix") | #matrix or DF
                is(matrix, "dgCMatrix") |
                is(matrix, "data.frame")) { 
         m <- matrix

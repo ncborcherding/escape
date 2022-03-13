@@ -4,7 +4,7 @@
 #' counts and any gene set pathways either from the stored data or from 
 #' other sources. The enrichment calculation itself 
 #' uses the two methods 1) gsva R package and the poisson distribution for RNA
-#' or the \href{https://github.com/carmonalab/UCell}{UCell package}. 
+#' or 2) the \href{https://github.com/carmonalab/UCell}{UCell package}. 
 #'
 #' @param obj The count matrix, Seurat, or SingleCellExperiment object.
 #' @param gene.sets Gene sets from \code{\link{getGeneSets}} to use 

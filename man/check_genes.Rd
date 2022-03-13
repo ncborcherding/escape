@@ -11,6 +11,9 @@ check_genes(matrix, features)
 
 \item{features}{List of genes that must be present (otherwise they are added)}
 }
+\value{
+Same input matrix, extended to comprise any missing genes
+}
 \description{
 Check if all genes in signatures are found in data matrix - otherwise add zero counts in data-matrix to complete it
 }
