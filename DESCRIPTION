@@ -23,7 +23,6 @@ Imports:
 	stats, 
 	BiocParallel, 
 	Matrix,
-	UCell,
 	broom, 
 	reshape2, 
 	patchwork, 
