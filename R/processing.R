@@ -27,13 +27,13 @@
 #' @author Nick Borcherding
 #'
 performPCA <- function(enriched, gene.sets = NULL, groups) {
-    groups <- enriched[,colnames(enriched) %in% c(groups)]
+    groups <- data.frame("groups" = enriched[,colnames(enriched) %in% c(groups)])
     input <- select_if(enriched, is.numeric)
     if (!is.null(gene.sets)) {
       input <- input[,colnames(input) %in% gene.sets]
     }
     PCA <- prcomp(input, scale. = TRUE)
-    merged <- merge(PCA$x, groups, by = "row.names")
+    merged <- cbind(PCA$x, groups)
     rownames(merged) <- merged[,1]
     merged <- merged[,-1]
 
