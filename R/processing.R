@@ -34,9 +34,6 @@ performPCA <- function(enriched, gene.sets = NULL, groups) {
     }
     PCA <- prcomp(input, scale. = TRUE)
     merged <- cbind(PCA$x, groups)
-    rownames(merged) <- merged[,1]
-    merged <- merged[,-1]
-
     return(merged)
 }
 
@@ -158,9 +155,7 @@ GS.check <- function(gene.sets) {
   if(is.null(gene.sets)) {
     stop("Please provide the gene.sets you would like to use for 
             the enrichment analysis")
-  } else {
     egc <- gene.sets
-  }
   if(inherits(egc, what = "GeneSetCollection")){
     egc <- GSEABase::geneIds(egc) # will return a simple list, 
     #which will work if a matrix is supplied to GSVA
