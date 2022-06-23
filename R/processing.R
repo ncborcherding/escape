@@ -155,7 +155,8 @@ GS.check <- function(gene.sets) {
   if(is.null(gene.sets)) {
     stop("Please provide the gene.sets you would like to use for 
             the enrichment analysis")
-    egc <- gene.sets
+  }
+  egc <- gene.sets
   if(inherits(egc, what = "GeneSetCollection")){
     egc <- GSEABase::geneIds(egc) # will return a simple list, 
     #which will work if a matrix is supplied to GSVA
