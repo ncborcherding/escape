@@ -31,7 +31,8 @@
 #'
 #' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return Data frame of test statistics
-getSignificance <- function(enriched, group = NULL,
+getSignificance <- function(enriched, 
+                            group = NULL,
                             gene.sets = NULL,
                             fit = NULL) {
     fit <- match.arg(fit,  choices = c("T.test", "ANOVA", "Wilcoxon", "LR", "KW"))
@@ -116,8 +117,9 @@ get.medians<- function(input, group2) {
     med <- input %>%
         group_by(group2) %>%
         summarise(across(seq_len(all_of(num)), median))
+    new.grouping <- unlist(med[,1])
     med <- as.data.frame(med[,seq_len(num) + 1])
-    rownames(med) <- paste0("median.", unique(group2))
+    rownames(med) <- paste0("median.", new.grouping)
     med <- as.data.frame(t(med))
     return(med)
 }
