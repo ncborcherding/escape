@@ -27,7 +27,7 @@
 #' @author Nick Borcherding
 #'
 performPCA <- function(enriched, gene.sets = NULL, groups) {
-    groups <- data.frame("groups" = enriched[,colnames(enriched) %in% c(groups)])
+    groups <- data.frame(enriched[,colnames(enriched) %in% c(groups)])
     input <- select_if(enriched, is.numeric)
     if (!is.null(gene.sets)) {
       input <- input[,colnames(input) %in% gene.sets]

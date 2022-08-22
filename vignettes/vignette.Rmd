@@ -234,23 +234,36 @@ enrichmentPlot(pbmc_small,
 One frustration of Gene Set Enrichment is trying to make sense of the values. In order to move away from just selecting pathways that may be of interest, escape offers the ability to `performPCA()` on the enrichment scores. Like the other functions, we will need to provide the output of `enrichIt()` to the **enriched** parameter and the **groups** to include for later graphing.
 
 ```{r}
-PCA <- performPCA(enriched = ES2, gene.sets = names(GS.hallmark), groups = c("groups", "cluster"))
+PCA <- performPCA(enriched = ES2, 
+                  gene.sets = names(GS.hallmark), 
+                  groups = c("groups", "cluster"))
 ```
 
 ```{r}
-pcaEnrichment(PCA, PCx = "PC1", PCy = "PC2", contours = TRUE)
+pcaEnrichment(PCA, 
+              PCx = "PC1", 
+              PCy = "PC2", 
+              contours = TRUE)
 ```
 
 We can also look at the `pcaEnrichment()` output separated by categorical factors using the **facet** parameter, for example using the cluster assignment.
 
 ```{r}
-pcaEnrichment(PCA, PCx = "PC1", PCy = "PC2", contours = FALSE, facet = "cluster") 
+pcaEnrichment(PCA, 
+              PCx = "PC1", 
+              PCy = "PC2", 
+              contours = FALSE, 
+              facet = "cluster") 
 ```
 
 We can more closely examine the construction of the PCA by looking at the contribution of each gene set to the respective principal component using `masterPCAPlot()` with the same input as above with the `pcaEnrichment()`. We can also control the number of gene sets plotted with **top.contribution**. 
 
 ```{r}
-masterPCAPlot(ES2, gene.sets = names(GS.hallmark), PCx = "PC1", PCy = "PC2", top.contribution = 10)
+masterPCAPlot(ES2, 
+              gene.sets = names(GS.hallmark), 
+              PCx = "PC1", 
+              PCy = "PC2", 
+              top.contribution = 10)
 ```
 
 
