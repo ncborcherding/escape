@@ -95,7 +95,9 @@ masterPCAPlot <- function(enriched, gene.sets, PCx, PCy, top.contribution = 10) 
     tbl <- data.frame(names = rownames(PCA$rotation), 
             factors.y = PCA$rotation[,PCy]^2/sum(PCA$rotation[,PCy]^2),
             factors.x = PCA$rotation[,PCx]^2/sum(PCA$rotation[,PCx]^2)) 
-    names <- tbl %>% top_n(n = 10, (factors.x + factors.y)/2)
+    names <- tbl %>% 
+      slice_max(n = top.contribution, 
+            order_by = (factors.x + factors.y)/2)
     names <- names$names
     df <- as.data.frame(PCA$rotation)
     df <- df[rownames(df) %in% names,]
