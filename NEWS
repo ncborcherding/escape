@@ -1,3 +1,8 @@
+CHANGES IN VERSION 1.9.0
+* Releveling version for commit to new Bioconductor release
+* Removed UCell internal functions to just import the Bioconductor Ucell package
+
+
 CHANGES IN VERSION 1.4.2
 * Fixed masterPCAPlot top_n() call to slice_max by top.contributions.
 

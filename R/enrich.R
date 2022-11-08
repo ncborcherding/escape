@@ -24,6 +24,7 @@
 #'
 #' @importFrom GSVA gsva
 #' @importFrom GSEABase GeneSetCollection 
+#' @importFrom UCell ScoreSignatures_UCell
 #' @importFrom BiocParallel SnowParam
 #'
 #' 
