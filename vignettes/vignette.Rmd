@@ -8,7 +8,7 @@ author:
   email: jared.andrews07@gmail.com
   affiliation: Washington University in St. Louis, School of Medicine, St. Louis, MO, USA
 
-date: "January 29, 2021"
+date: "November 8th, 2022"
 
 output:
   BiocStyle::html_document:
@@ -139,9 +139,9 @@ A user can also produce a heatmap with select gene sets by providing specific na
 
 ```{r}
 dittoHeatmap(sce, genes = NULL, 
-             metas = c("HALLMARK_IL2_STAT5_SIGNALING", 
-                       "HALLMARK_IL6_JAK_STAT3_SIGNALING", 
-                       "HALLMARK_INFLAMMATORY_RESPONSE"), 
+             metas = c("HALLMARK_IL2_STAT5_SIGNALING_UCell", 
+                       "HALLMARK_IL6_JAK_STAT3_SIGNALING_UCell", 
+                       "HALLMARK_INFLAMMATORY_RESPONSE_UCell"), 
              annot.by = "groups", 
              fontsize = 7,
              heatmap.colors = colors(50))
@@ -152,12 +152,15 @@ dittoHeatmap(sce, genes = NULL,
 Another way to visualize a subset of gene set enrichment would be to graph the distribution of enrichment using violin, jitter, boxplot, or ridgeplots. We can also compare between categorical variables using the **group.by** parameter.
 
 ```{r}
-multi_dittoPlot(sce, vars = c("HALLMARK_IL2_STAT5_SIGNALING", 
-                       "HALLMARK_IL6_JAK_STAT3_SIGNALING", 
-                       "HALLMARK_INFLAMMATORY_RESPONSE"), 
-                group.by = "groups", plots = c("jitter", "vlnplot", "boxplot"), 
+multi_dittoPlot(sce, 
+                vars = c("HALLMARK_IL2_STAT5_SIGNALING_UCell", 
+                       "HALLMARK_IL6_JAK_STAT3_SIGNALING_UCell", 
+                       "HALLMARK_INFLAMMATORY_RESPONSE_UCell"), 
+                group.by = "groups", 
+                plots = c("jitter", "vlnplot", "boxplot"), 
                 ylab = "Enrichment Scores", 
-                theme = theme_classic() + theme(plot.title = element_text(size = 10)))
+                theme = theme_classic() + 
+                theme(plot.title = element_text(size = 10)))
 ```
 
 
@@ -166,8 +169,8 @@ multi_dittoPlot(sce, vars = c("HALLMARK_IL2_STAT5_SIGNALING",
 We can also compare the distribution of enrichment scores of 2 distinct gene sets across all single cells using the `dittoScatterHex()` function. Here, we use our SingleCellExperiment object with results of `enrichIt()` and specify gene sets to the **x.var** and **y.var** parameters to produce a density plot. We can also add contours to the plot, by passing **do.contour = TRUE**. 
 
 ```{r}
-dittoScatterHex(sce, x.var = "HALLMARK_IL2_STAT5_SIGNALING", 
-                    y.var = "HALLMARK_IL6_JAK_STAT3_SIGNALING", 
+dittoScatterHex(sce, x.var = "HALLMARK_IL2_STAT5_SIGNALING_UCell", 
+                    y.var = "HALLMARK_IL6_JAK_STAT3_SIGNALING_UCell", 
                     do.contour = TRUE) + 
         scale_fill_gradientn(colors = colors(11)) 
 ```
@@ -175,8 +178,8 @@ dittoScatterHex(sce, x.var = "HALLMARK_IL2_STAT5_SIGNALING",
 We can also separate the graph using the **split.by** parameter, allowing for the direct comparison of categorical variables.
 
 ```{r}
-dittoScatterHex(sce, x.var = "HALLMARK_IL2_STAT5_SIGNALING", 
-                    y.var = "HALLMARK_IL6_JAK_STAT3_SIGNALING", 
+dittoScatterHex(sce, x.var = "HALLMARK_IL2_STAT5_SIGNALING_UCell", 
+                    y.var = "HALLMARK_IL6_JAK_STAT3_SIGNALING_UCell", 
                 do.contour = TRUE,
                 split.by = "groups")  + 
         scale_fill_gradientn(colors = colors(11)) 
@@ -200,8 +203,11 @@ ridgeEnrichment(ES2, gene.set = "HALLMARK_IL2_STAT5_SIGNALING", group = "cluster
 In addition to the separation of **letter.idents**, we can also use `ridgeEnrichment()` for better granularity of multiple variables. For example, instead of looking at the difference just between "Type", we can set **group = "cluster"** and then **facet = "letter.idents"**. This gives a visualization of the enrichment of DNA Repair by cluster and Type.
 
 ```{r}
-ridgeEnrichment(ES2, gene.set = "HALLMARK_IL2_STAT5_SIGNALING", group = "cluster", 
-                facet = "letter.idents", add.rug = TRUE)
+ridgeEnrichment(ES2, 
+                gene.set = "HALLMARK_IL2_STAT5_SIGNALING", 
+                group = "cluster", 
+                facet = "letter.idents", 
+                add.rug = TRUE)
 ```
 
 ## Split Violin Plots
@@ -211,8 +217,11 @@ Another distribution visualization is a violin plot, which we seperate and direc
 Like above, we can explore the distribution of the **"HALLMARK_DNA_REPAIR"** gene set between groups by calling `splitEnrichment()` with the ES2 object and **split = "groups"**. We can also explore the cluster distribution by assigning the **x-axis = "cluster"**.
 
 ```{r}
-splitEnrichment(ES2, split = "groups", gene.set = "HALLMARK_IL2_STAT5_SIGNALING")
-splitEnrichment(ES2, x.axis = "cluster", split = "groups", gene.set = "HALLMARK_IL2_STAT5_SIGNALING")
+splitEnrichment(ES2, split = "groups", 
+                gene.set = "HALLMARK_IL2_STAT5_SIGNALING")
+splitEnrichment(ES2, x.axis = "cluster", 
+                split = "groups", 
+                gene.set = "HALLMARK_IL2_STAT5_SIGNALING")
 ```
 
 
@@ -234,23 +243,36 @@ enrichmentPlot(pbmc_small,
 One frustration of Gene Set Enrichment is trying to make sense of the values. In order to move away from just selecting pathways that may be of interest, escape offers the ability to `performPCA()` on the enrichment scores. Like the other functions, we will need to provide the output of `enrichIt()` to the **enriched** parameter and the **groups** to include for later graphing.
 
 ```{r}
-PCA <- performPCA(enriched = ES2, gene.sets = names(GS.hallmark), groups = c("groups", "cluster"))
+PCA <- performPCA(enriched = ES2, 
+                  gene.sets = names(GS.hallmark), 
+                  groups = c("groups", "cluster"))
 ```
 
 ```{r}
-pcaEnrichment(PCA, PCx = "PC1", PCy = "PC2", contours = TRUE)
+pcaEnrichment(PCA, 
+              PCx = "PC1", 
+              PCy = "PC2", 
+              contours = TRUE)
 ```
 
 We can also look at the `pcaEnrichment()` output separated by categorical factors using the **facet** parameter, for example using the cluster assignment.
 
 ```{r}
-pcaEnrichment(PCA, PCx = "PC1", PCy = "PC2", contours = FALSE, facet = "cluster") 
+pcaEnrichment(PCA, 
+              PCx = "PC1", 
+              PCy = "PC2", 
+              contours = FALSE, 
+              facet = "cluster") 
 ```
 
 We can more closely examine the construction of the PCA by looking at the contribution of each gene set to the respective principal component using `masterPCAPlot()` with the same input as above with the `pcaEnrichment()`. We can also control the number of gene sets plotted with **top.contribution**. 
 
 ```{r}
-masterPCAPlot(ES2, gene.sets = names(GS.hallmark), PCx = "PC1", PCy = "PC2", top.contribution = 10)
+masterPCAPlot(ES2, 
+              gene.sets = names(GS.hallmark), 
+              PCx = "PC1", 
+              PCy = "PC2", 
+              top.contribution = 10)
 ```
 
 
@@ -259,8 +281,6 @@ masterPCAPlot(ES2, gene.sets = names(GS.hallmark), PCx = "PC1", PCy = "PC2", top
 We can also look for significant differences between groups of variables using `getSignificance()`. For this, we need to assign a **group** parameter and the type of **fit** including: T.test, logistic regression (LR), Wilcoxon Rank Sum Test (Wilcoxon), ANOVA, and Kruskal-Wallis (KW) test. `getSignificance()` will pull any numeric values, to ensure only gene sets, use the **gene.sets** parameter, similar to the PCAplot functions above. 
 
 Returned is a test statistic, raw p value, FDR value , and the median values for each group. In addition, ANOVA and the Kruskal-Wallis test will automatically return the corrected p-values for each comparison in the group. 
-
-
 
 ```{r}
 output <- getSignificance(ES2, 
