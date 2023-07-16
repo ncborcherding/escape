@@ -1,7 +1,6 @@
 Package: escape
 Title: Easy single cell analysis platform for enrichment
 Version: 1.9.0
-Version: 1.5.1
 Date: 2022-3-05
 Authors@R: c(
     person(given = "Nick", family = "Borcherding", role = c("aut", "cre"), email = "ncborch@gmail.com"),
