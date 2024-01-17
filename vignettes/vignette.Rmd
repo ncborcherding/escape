@@ -8,7 +8,7 @@ author:
   email: jared.andrews07@gmail.com
   affiliation: Washington University in St. Louis, School of Medicine, St. Louis, MO, USA
 
-date: "November 8th, 2022"
+date: "January 25, 2024"
 
 output:
   BiocStyle::html_document:
