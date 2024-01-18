@@ -59,6 +59,20 @@
   return(cnts)
 }
 
+#Add the values to single cell object
+#' @importFrom SeuratObject CreateAssayObject
+#' @importFrom SingleCellExperiment reducedDim
+.adding.Enrich <- function(sc, enrichment, enrichment.name) {
+  if (inherits(sc, "Seurat")) {
+    new.assay <- suppressWarnings(CreateAssayObject((
+                                  data = as.matrix(enrichment))
+    sc[[enrichment.name]] <- new.assay
+  } else if (inherits(sc, "SingleCellExperiment")) {
+    assays(sc, enrichment.name) <- enrichment
+  }
+  return(sc)
+}
+
 #' @importFrom GSEABase geneIds
 .GS.check <- function(gene.sets) {
   if(is.null(gene.sets)) {
