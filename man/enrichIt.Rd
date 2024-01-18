@@ -16,7 +16,7 @@ enrichIt(
 )
 }
 \arguments{
-\item{obj}{The count matrix, Seurat, or SingleCellExperiment object.}
+\item{obj}{The count matrix, Seurat, or Single-Cell Experiment object.}
 
 \item{gene.sets}{Gene sets from \code{\link{getGeneSets}} to use 
 for the enrichment analysis. Alternatively a simple base R list where
@@ -24,7 +24,8 @@ the names of the list elements correspond to the name of the gene set
 and the elements themselves are simple vectors of gene names representing
 the gene set.}
 
-\item{method}{select the method to calculate enrichment, either "ssGSEA" or "UCell"}
+\item{method}{select the method to calculate enrichment, 
+\strong{GSVA}, \strong{ssGSEA} or \strong{UCell}}
 
 \item{groups}{The number of cells to separate the enrichment calculation.}
 
@@ -33,11 +34,10 @@ the gene set.}
 \item{min.size}{Minimum number of gene necessary to perform the enrichment
 calculation}
 
-\item{ssGSEA.norm}{normalized the enrichment score based on the range of the
-individual gene set. If TRUE, the returned enrichment score is based may change
-with cell composition.}
+\item{...}{pass arguments to GSVA, ssGSEA or UCell call}
 
-\item{...}{pass arguments to ssGSEA or UCell call}
+\item{norm}{normalized the enrichment score based on the range of the
+individual gene set.}
 }
 \value{
 Data frame of normalized enrichmenet scores (NES)
@@ -46,8 +46,7 @@ Data frame of normalized enrichmenet scores (NES)
 This function allows users to input both the single-cell RNA-sequencing 
 counts and any gene set pathways either from the stored data or from 
 other sources. The enrichment calculation itself 
-uses the two methods 1) gsva R package and the poisson distribution for RNA
-or 2) the \href{https://github.com/carmonalab/UCell}{UCell package}.
+uses  \href{https://github.com/carmonalab/UCell}{UCell package}.
 }
 \examples{
 GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),

@@ -9,7 +9,7 @@ Description: A bridging R package to facilitate gene set enrichment analysis (GS
 License: MIT + file LICENSE 
 Encoding: UTF-8
 LazyData: false
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 biocViews: Software, SingleCell, Classification, Annotation, GeneSetEnrichment, Sequencing, GeneSignaling, Pathways
 Depends: R (>= 4.1)
 Imports: 

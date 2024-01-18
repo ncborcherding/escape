@@ -3,24 +3,23 @@
 #' This function allows users to input both the single-cell RNA-sequencing 
 #' counts and any gene set pathways either from the stored data or from 
 #' other sources. The enrichment calculation itself 
-#' uses the two methods 1) gsva R package and the poisson distribution for RNA
-#' or 2) the \href{https://github.com/carmonalab/UCell}{UCell package}. 
+#' uses  \href{https://github.com/carmonalab/UCell}{UCell package}. 
 #'
-#' @param obj The count matrix, Seurat, or SingleCellExperiment object.
+#' @param obj The count matrix, Seurat, or Single-Cell Experiment object.
 #' @param gene.sets Gene sets from \code{\link{getGeneSets}} to use 
 #' for the enrichment analysis. Alternatively a simple base R list where
 #' the names of the list elements correspond to the name of the gene set
 #' and the elements themselves are simple vectors of gene names representing
 #' the gene set. 
-#' @param method select the method to calculate enrichment, either "ssGSEA" or "UCell" 
+#' @param method select the method to calculate enrichment, 
+#' \strong{GSVA}, \strong{ssGSEA} or \strong{UCell}
 #' @param groups The number of cells to separate the enrichment calculation.
 #' @param cores The number of cores to use for parallelization.
 #' @param min.size Minimum number of gene necessary to perform the enrichment
 #' calculation
-#' @param ssGSEA.norm normalized the enrichment score based on the range of the
-#' individual gene set. If TRUE, the returned enrichment score is based may change
-#' with cell composition.
-#' @param ... pass arguments to ssGSEA or UCell call
+#' @param norm normalized the enrichment score based on the range of the
+#' individual gene set. 
+#' @param ... pass arguments to GSVA, ssGSEA or UCell call
 #'
 #' @importFrom GSVA gsva
 #' @importFrom GSEABase GeneSetCollection 
@@ -44,10 +43,11 @@ enrichIt <- function(obj, gene.sets = NULL,
                      groups = 1000, 
                      cores = 2,
                      min.size = 5,
-                     ssGSEA.norm = FALSE,
+                     norm = FALSE,
                      ...) {
-    egc <- GS.check(gene.sets)
-    cnts <- cntEval(obj)
+  
+    egc <- .GS.check(gene.sets)
+    cnts <- .cntEval(obj)
     if (!is.null(min.size)){
         GS.size <- lapply(egc, function(x) length(which(rownames(cnts) %in% x)))
         remove <- unname(which(GS.size < min.size))

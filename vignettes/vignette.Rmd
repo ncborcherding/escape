@@ -33,7 +33,6 @@ For the demonstration of *escape*, we will use the example "pbmc_small" data fro
 
 ```{r}
 suppressPackageStartupMessages(library(escape))
-suppressPackageStartupMessages(library(dittoSeq))
 suppressPackageStartupMessages(library(SingleCellExperiment))
 suppressPackageStartupMessages(library(Seurat))
 suppressPackageStartupMessages(library(SeuratObject))
@@ -88,13 +87,15 @@ To prevent issues with enrichment calculations for gene sets with a low number o
 ```{r}
 ES.seurat <- enrichIt(obj = pbmc_small, 
                       gene.sets = GS.hallmark, 
-                      groups = 1000, cores = 2, 
+                      groups = 1000, 
+                      cores = 2, 
                       min.size = 5)
 
 ES.sce <- enrichIt(obj = sce, 
                    gene.sets = GS.hallmark, 
                    method = "UCell",
-                   groups = 1000, cores = 2, 
+                   groups = 1000, 
+                   cores = 2, 
                    min.size = 5)
 ```
 
