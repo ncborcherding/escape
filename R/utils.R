@@ -1,14 +1,11 @@
 "%!in%" <- Negate("%in%")
-.is_seurat_object <- function(obj) inherits(obj, "Seurat")
-.is_se_object <- function(obj) inherits(obj, "SummarizedExperiment")
-.is_seurat_or_se_object <- function(obj) {
-  is_seurat_object(obj) || is_se_object(obj)
-}
 
-#Function for normalizing value
-.normalize <- function(x)
-{
-  (x- min(x)) /(max(x)-min(x))
+.checkSingleObject <- function(sc) {
+  if (!inherits(x=sc, what ="Seurat") & 
+      !inherits(x=sc, what ="SummarizedExperiment")){
+    stop("Object indicated is not of class 'Seurat' or 
+            'SummarizedExperiment', make sure you are using
+            the correct data.") }
 }
 
 
@@ -52,10 +49,7 @@
   } else {
     cnts <- obj
   }
-  if (!inherits(cnts, what = "dgCMatrix")) {
-    cnts <- Matrix(as.matrix(cnts),sparse = TRUE)
-  }
-  cnts <- cnts[tabulate(summary(cnts)$i) != 0, , drop = FALSE]
+  cnts <- cnts[rowSums2(cnts) != 0,]
   return(cnts)
 }
 
@@ -64,8 +58,8 @@
 #' @importFrom SingleCellExperiment reducedDim
 .adding.Enrich <- function(sc, enrichment, enrichment.name) {
   if (inherits(sc, "Seurat")) {
-    new.assay <- suppressWarnings(CreateAssayObject((
-                                  data = as.matrix(enrichment))
+    new.assay <- suppressWarnings(CreateAssayObject(
+                                  data = as.matrix(t(enrichment))))
     sc[[enrichment.name]] <- new.assay
   } else if (inherits(sc, "SingleCellExperiment")) {
     assays(sc, enrichment.name) <- enrichment
