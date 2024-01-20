@@ -1,6 +1,4 @@
 #TODO Add AUCell support
-#TODO Test in SCE
-#TODO Add testthat 
 
 #' Calculate gene set enrichment scores 
 #'
@@ -26,12 +24,13 @@
 #' @importFrom UCell ScoreSignatures_UCell
 #' @importFrom BiocParallel SnowParam
 #'
-#' 
 #' @examples 
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
-#'   Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
+#'            Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
 #' pbmc_small <- SeuratObject::pbmc_small
-#' ES <- escape.matrix(obj = pbmc_small, gene.sets = GS, min.size = NULL)
+#' ES <- escape.matrix(pbmc_small, 
+#'                     gene.sets = GS, 
+#'                     min.size = NULL)
 #' 
 #' @export
 #' @author Nick Borcherding, Jared Andrews
@@ -42,7 +41,6 @@ escape.matrix <- function(input.data,
                           gene.sets = NULL, 
                           method = "ssGSEA", 
                           groups = 1000, 
-                          cores = 2,
                           min.size = 5,
                           normalize = FALSE,
                           ...) {
@@ -51,15 +49,16 @@ escape.matrix <- function(input.data,
     cnts <- .cntEval(input.data)
     egc.size <- lapply(egc, function(x) length(which(rownames(cnts) %in% x)))
     if (!is.null(min.size)){
-      remove <- unname(which(GS.size < min.size))
+      remove <- unname(which(egc.size < min.size))
       egc <- egc[-remove]
       egc.size <- egc.size[-remove]
+      
     }
     
     scores <- list()
     splits <- seq(1, ncol(cnts), by=groups)
     print(paste('Using sets of', groups, 'cells. Running', 
-                length(wind), 'times.'))
+                length(splits), 'times.'))
     split.data <- .split_data.matrix(matrix=cnts, chunk.size=groups)
     
     
@@ -102,6 +101,14 @@ escape.matrix <- function(input.data,
 #'
 #' Run the escape-based gene-set enrichment calculation with 
 #' Seurat or SingleCellExperiment pipelines
+#' 
+#' @examples 
+#' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
+#'            Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
+#' pbmc_small <- SeuratObject::pbmc_small
+#' pbmc_small <- runEscape(pbmc_small, 
+#'                         gene.sets = GS, 
+#'                         min.size = NULL)
 #'
 #'
 #' @param input.data The count matrix, Seurat, or Single-Cell Experiment object.
@@ -130,7 +137,7 @@ runEscape <- function(input.data,
                       normalize = FALSE,
                       new.assay.name = "escape",
                       ...) {
-  .checkSingleObject(sc)
+  .checkSingleObject(input.data)
   enrichment <- escape.matrix(input.data = input.data,
                               gene.sets = gene.sets,
                               method = method,
