@@ -3,13 +3,15 @@
 
 ## NEW FEATURES
 
-* Added ```runEscape```
-* Changed enrichIt to ```escape.matrix(```
+* Added ```runEscape()```
+* Changed enrichIt to ```escape.matrix()```
 
 ## UNDERLYING CHANGES
 
 * Updated interaction with gsva package
 * Added support for GSVA calculation
+* Added supporrt for AUCell calculation
+
 
 ## DEPRECATED AND DEFUNCT
 

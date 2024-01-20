@@ -1,5 +1,3 @@
-#TODO Add AUCell support
-
 #' Calculate gene set enrichment scores 
 #'
 #' This function allows users to input both the single-cell RNA-sequencing 
@@ -22,7 +20,8 @@
 #' @importFrom GSVA gsva gsvaParam ssgseaParam
 #' @importFrom GSEABase GeneSetCollection 
 #' @importFrom UCell ScoreSignatures_UCell
-#' @importFrom BiocParallel SnowParam
+#' @importFrom AUCell AUCell_run
+#' @importFrom SummarizedExperiments assay
 #'
 #' @examples 
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
@@ -79,6 +78,13 @@ escape.matrix <- function(input.data,
                                       features=egc,
                                       name = NULL,
                                       ...)))
+          } else if (method == "AUCell") {
+             a <- t(assay(suppressWarnings(
+                           AUCell_run(exprMat = split.data[[i]], 
+                                      geneSets = egc,
+                                      normAUC = FALSE,
+                                      ...))))
+             
           }
           scores[[i]] <- a
     }

@@ -40,7 +40,7 @@
 }
 
 #' @importFrom SingleCellExperiment counts
-#' @importFrom Matrix summary Matrix
+#' @importFrom MatrixGenerics rowSums2
 .cntEval <- function(obj) {
   if (inherits(x = obj, what = "Seurat")) {
     cnts <- obj@assays[["RNA"]]@counts

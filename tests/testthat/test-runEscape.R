@@ -25,12 +25,24 @@ test_that("runEscape works", {
                                gene.sets = GS, 
                                min.size = NULL)
   
+  trial.UCell <- escape.matrix(pbmc_small, 
+                               method = "UCell", 
+                               gene.sets = GS, 
+                               min.size = NULL)
+  
+  trial.AUCell <- escape.matrix(pbmc_small, 
+                                method = "AUCell", 
+                                gene.sets = GS, 
+                                min.size = NULL)
+  
   expect_equal(trial.ssGSEA, 
                getdata("runEscape", "escape.matrix_ssGSEA"))
   expect_equal(trial.GSVA, 
                getdata("runEscape", "escape.matrix_GSVA"))
   expect_equal(trial.UCell, 
                getdata("runEscape", "escape.matrix_UCell"))
+  expect_equal(trial.AUCell, 
+               getdata("runEscape", "escape.matrix_AUCell"))
   
   pbmc_small <- runEscape(pbmc_small,
                           method = "ssGSEA", 

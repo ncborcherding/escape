@@ -13,6 +13,7 @@ RoxygenNote: 7.2.3
 biocViews: Software, SingleCell, Classification, Annotation, GeneSetEnrichment, Sequencing, GeneSignaling, Pathways
 Depends: R (>= 4.1)
 Imports: 
+	AUCell,
 	grDevices,  
 	dplyr, 
 	ggplot2,  
