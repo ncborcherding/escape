@@ -1,5 +1,11 @@
 "%!in%" <- Negate("%in%")
 
+is_seurat_object <- function(obj) inherits(obj, "Seurat")
+is_se_object <- function(obj) inherits(obj, "SummarizedExperiment")
+is_seurat_or_se_object <- function(obj) {
+  is_seurat_object(obj) || is_se_object(obj)
+}
+
 .checkSingleObject <- function(sc) {
   if (!inherits(x=sc, what ="Seurat") & 
       !inherits(x=sc, what ="SummarizedExperiment")){
@@ -39,13 +45,14 @@
   return(split.data)
 }
 
-#' @importFrom SingleCellExperiment counts
+#' @importFrom SummarizedExperiment assays
 #' @importFrom MatrixGenerics rowSums2
-.cntEval <- function(obj) {
+.cntEval <- function(obj, assay = "RNA", type = "counts") {
   if (inherits(x = obj, what = "Seurat")) {
-    cnts <- obj@assays[["RNA"]]@counts
+    cnts <- obj@assays[[assay]][type]
   } else if (inherits(x = obj, what = "SingleCellExperiment")) {
-    cnts <- counts(obj)
+    pos <- ifelse(assay == "RNA", "counts", assay) 
+    cnts <- assay(obj,pos)
   } else {
     cnts <- obj
   }
@@ -55,7 +62,7 @@
 
 #Add the values to single cell object
 #' @importFrom SeuratObject CreateAssayObject
-#' @importFrom SingleCellExperiment reducedDim
+#' @importFrom SummarizedExperiment assays
 .adding.Enrich <- function(sc, enrichment, enrichment.name) {
   if (inherits(sc, "Seurat")) {
     new.assay <- suppressWarnings(CreateAssayObject(

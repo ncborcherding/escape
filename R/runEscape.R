@@ -8,14 +8,14 @@
 #' @param gene.sets Gene sets can be a list, output from 
 #' \code{\link{getGeneSets}}, or the built-in gene sets 
 #' in the escape package \code{\link{escape.gene.sets}}.
-#' @param method select the method to calculate enrichment, 
-#' \strong{GSVA}, \strong{ssGSEA} or \strong{UCell}
+#' @param method Select the method to calculate enrichment, \strong{AUCell},
+#' \strong{GSVA}, \strong{ssGSEA} or \strong{UCell}.
 #' @param groups The number of cells to separate the enrichment calculation.
 #' @param min.size Minimum number of gene necessary to perform the enrichment
 #' calculation
 #' @param normalize Whether to divide the enrichment score by the number 
 #' of genes \strong{TRUE} or report unnormalized \strong{FALSE}
-#' @param ... pass arguments to GSVA, ssGSEA or UCell call
+#' @param ... pass arguments to AUCell GSVA, ssGSEA or UCell call
 #'
 #' @importFrom GSVA gsva gsvaParam ssgseaParam
 #' @importFrom GSEABase GeneSetCollection 
@@ -35,7 +35,7 @@
 #' @author Nick Borcherding, Jared Andrews
 #'
 #' @seealso \code{\link{getGeneSets}} to collect gene sets.
-#' @return Data frame of normalized enrichmenet scores (NES)
+#' @return matrix of enrichment scores
 escape.matrix <- function(input.data, 
                           gene.sets = NULL, 
                           method = "ssGSEA", 
@@ -45,13 +45,15 @@ escape.matrix <- function(input.data,
                           ...) {
   
     egc <- .GS.check(gene.sets)
-    cnts <- .cntEval(input.data)
+    cnts <- .cntEval(input.data, assay = "RNA", type = "counts")
     egc.size <- lapply(egc, function(x) length(which(rownames(cnts) %in% x)))
     if (!is.null(min.size)){
       remove <- unname(which(egc.size < min.size))
       egc <- egc[-remove]
       egc.size <- egc.size[-remove]
-      
+      if(length(egc) == 0) {
+        stop("No gene sets passed the minimum length - please reconsider the 'min.size' parameter")
+      }
     }
     
     scores <- list()
@@ -116,13 +118,12 @@ escape.matrix <- function(input.data,
 #'                         gene.sets = GS, 
 #'                         min.size = NULL)
 #'
-#'
-#' @param input.data The count matrix, Seurat, or Single-Cell Experiment object.
+#' #' @param input.data The count matrix, Seurat, or Single-Cell Experiment object.
 #' @param gene.sets Gene sets can be a list, output from 
 #' \code{\link{getGeneSets}}, or the built-in gene sets 
 #' in the escape package \code{\link{escape.gene.sets}}.
-#' @param method select the method to calculate enrichment, 
-#' \strong{GSVA}, \strong{ssGSEA} or \strong{UCell}
+#' @param method Select the method to calculate enrichment, \strong{AUCell},
+#' \strong{GSVA}, \strong{ssGSEA} or \strong{UCell}.
 #' @param groups The number of cells to separate the enrichment calculation.
 #' @param min.size Minimum number of gene necessary to perform the enrichment
 #' calculation
@@ -130,9 +131,9 @@ escape.matrix <- function(input.data,
 #' of genes \strong{TRUE} or report unnormalized \strong{FALSE}
 #' @param new.assay.nam The new name of the assay to append to 
 #' the single-cell object containing the enrichment scores.
-#' @param ... pass arguments to GSVA, ssGSEA or UCell call
+#' @param ... pass arguments to AUCell GSVA, ssGSEA or UCell call
 #' @export
-#' @return Seurat or SingleCellExperiment object with escape enrichment scores
+#' @return Seurat or Single-Cell Experiment object with escape enrichment scores
 #' in the assay slot. 
 
 runEscape <- function(input.data, 
@@ -144,7 +145,7 @@ runEscape <- function(input.data,
                       new.assay.name = "escape",
                       ...) {
   .checkSingleObject(input.data)
-  enrichment <- escape.matrix(input.data = input.data,
+   enrichment <- escape.matrix(input.data = input.data,
                               gene.sets = gene.sets,
                               method = method,
                               groups = groups,

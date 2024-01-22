@@ -10,7 +10,7 @@
 
 * Updated interaction with gsva package
 * Added support for GSVA calculation
-* Added supporrt for AUCell calculation
+* Added support for AUCell calculation
 
 
 ## DEPRECATED AND DEFUNCT

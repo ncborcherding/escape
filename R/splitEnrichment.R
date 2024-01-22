@@ -47,79 +47,106 @@ geom_split_violin <-
 #' This function allows to the user to examine the distribution of 
 #' enrichment across groups by generating a split violin plot.
 #'
-#' @param enriched The output of \code{\link{enrichIt}}
-#' @param x.axis Optional parameter for seperation.
+#' @param input.data Enrichment output from \code{\link{escape.matrix}} or
+#' \code{\link{runEscape}}
+#' @param assay The name of the assay to plot if data is a single-cell object.
+#' @param split.by The parameter to split, must have 2 levels.
+#' @param group.by Categorical parameter to plot along the x.axis. If input is
+#' a single-cell object the default will be cluster.
 #' @param gene.set The gene set to graph on the y-axis. 
-#' @param scale.bracket This will filter the enrichment scores to remove 
+#' @param scale This will filter the enrichment scores to remove 
 #' extreme outliers. Values entered (1 or 2 numbers) will be the filtering 
 #' parameter using z-scores of the selected gene.set. If only 1 value is given, 
 #' a secondary bracket is automatically selected as the inverse of the number.
-#' @param split The parameter to split, must be binary.
+
 #' @param palette Colors to use in visualization - input any 
 #' \link[grDevices]{hcl.pals}.
 #'
 #' @import ggplot2
 #' 
 #' @examples
-#' ES2 <- readRDS(url(
-#' "https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-#' splitEnrichment(ES2, x.axis = "cluster", split = "Type", 
-#' gene.set = "HALLMARK_DNA_REPAIR")
+#' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
+#'            Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
+#' pbmc_small <- SeuratObject::pbmc_small
+#' pbmc_small <- runEscape(pbmc_small, 
+#'                         gene.sets = GS, 
+#'                         min.size = NULL)
+#'                         
+#' splitEnrichment(pbmc_small, 
+#'                 assay = "escape",
+#'                 split.by = "groups",
+#'                 gene.set = "Tcells")
 #'
 #' @export
 #'
 #' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return ggplot2 object violin-based distributions of selected gene.set
-splitEnrichment <- function(enriched, 
-                            x.axis = NULL, 
-                            scale.bracket = NULL,
-                            split = NULL, 
-                            gene.set = NULL, 
+splitEnrichment <- function(input.data,
+                            assay = NULL,
+                            split.by = NULL,
+                            group.by = NULL, 
+                            gene.set = NULL,
+                            scale = TRUE,
                             palette = "inferno") {
+  if(is.null(split.by)){
+    stop("Please select a variable with 'split.by' to generate the splitEnrichment() plots")
+  } 
   
-  if (length(unique(enriched[,split])) != 2) {
-    message("SplitEnrichment() can only work for binary classification")}
-  
-  if (!is.null(scale.bracket)) {
-    if (length(scale.bracket) != 1 | length(scale.bracket) != 1) {
-      message("Please indicate one or two values for the scale.bracket 
-                parameter, such as scale.bracket = c(-2,2)")
+  if (!inherits(x=input.data, what ="Seurat") & 
+      !inherits(x=input.data, what ="SummarizedExperiment")) {
+    if(is.null(assay)){
+      stop("Please add the assay name in which to plot from")
     }
-    scale.bracket <- order(scale.bracket)
-    if(length(scale.bracket) == 1) {
-      scale.bracket <- c(scale.bracket, -scale.bracket)
-      scale.bracket <- order(scale.bracket)
-    } 
-    tmp <- enriched
-    tmp[,gene.set]<- scale(tmp[,gene.set])
-    rows_selected <- rownames(tmp[tmp[,gene.set] >= scale.bracket[1] & 
-                                    tmp[,gene.set] <= scale.bracket[2],])
-    enriched <- enriched[rownames(enriched) %in% rows_selected,]
+    if(is.null(group.by)) {
+      group.by <- "ident"
+    }
+    cnts <- .cntEval(input.data, assay, type = "data")
+    meta <- .grabMeta(input.data)
+    enriched <- data.frame(cnts[gene.set,], meta[,c(group.by, split.by)])
+    
+  } else if (!is_seurat_or_se_object(input.data)) {
+    enriched <- data.frame(input.data[,c(gene.set,group.by, split.by)])
   }
-  cols <- length(unique(enriched[,split]))
-  if (is.null(x.axis)) {
+  colnames(enriched) <- c(gene.set, group.by, split.by)
+  
+  
+  if (length(unique(enriched[,split.by])) != 2) {
+    message("SplitEnrichment() can only work for binary variables - reselect 'split.by'")
+  }
+  
+  if(scale) {
+    enriched[,gene.set] <- scale(enriched[,gene.set])
+  }
+  
+  col <- length(unique(enriched[,split.by]))
+  if (is.null(group.by)) {
     plot <- ggplot(enriched, aes(x = ".", 
                                  y = enriched[,gene.set], 
-                                 fill = enriched[,split])) 
+                                 fill = enriched[,split.y])) 
     check = 1
   } else {
-    plot <- ggplot(enriched, aes(x = enriched[,x.axis], 
+    plot <- ggplot(enriched, aes(x = enriched[,group.by], 
                                  y = enriched[,gene.set], 
-                                 fill = enriched[,split])) + 
-      xlab(x.axis) 
-    check = NULL}
+                                 fill = enriched[,split.by])) + 
+                  xlab(group.by) 
+    check = NULL
+    }
+  
   plot <- plot + 
-    geom_split_violin(alpha=0.8) +
-    geom_boxplot(width=0.1, fill = "grey", alpha=0.5, 
-                 outlier.alpha = 0)  + 
-    ylab(paste0(gene.set, " (NES)")) +
-    labs(fill = split) + 
-    scale_fill_manual(values = .colorizer(palette, col))+
-    theme_classic() +
+            geom_split_violin(alpha=0.8) +
+            geom_boxplot(width=0.1, 
+                         fill = "grey", 
+                         alpha=0.5, 
+                         outlier.alpha = 0)  + 
+            ylab(paste0(gene.set, " Enrichment Score")) +
+            labs(fill = split.by) + 
+            scale_fill_manual(values = .colorizer(palette, col))+
+            theme_classic() 
     #guides(fill = FALSE)
     if (!is.null(check)) {
-      plot <- plot + theme(axis.title.x = element_blank(),
-                           axis.text.x = element_blank(),
-                           axis.ticks.x = element_blank())}
+      plot <- plot + 
+                theme(axis.title.x = element_blank(),
+                      axis.text.x = element_blank(),
+                      axis.ticks.x = element_blank())}
   return(plot)
 }
