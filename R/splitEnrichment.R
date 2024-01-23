@@ -86,6 +86,7 @@ splitEnrichment <- function(input.data,
                             split.by = NULL,
                             group.by = NULL, 
                             gene.set = NULL,
+                            order.by = NULL,
                             scale = TRUE,
                             palette = "inferno") {
   if(is.null(split.by)){
@@ -116,6 +117,10 @@ splitEnrichment <- function(input.data,
   
   if(scale) {
     enriched[,gene.set] <- scale(enriched[,gene.set])
+  }
+  
+  if(!is.null(order.by) && !is.null(group.by)) {
+    enriched <- .orderFunction(enriched, order.by, group.by)
   }
   
   col <- length(unique(enriched[,split.by]))

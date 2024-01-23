@@ -14,6 +14,26 @@ is_seurat_or_se_object <- function(obj) {
             the correct data.") }
 }
 
+#' @importFrom dplyr group_by summarise_at
+#' @importFrom stringr str_sort
+.orderFunction <- function(dat, order.by, group.by){
+  if(order.by %!in% c("mean", "group.by")) {
+    stop(paste0("Please select either 'mean' or 'group.by' for ordering."))
+  }
+  if(order.by == "mean") {
+    summary <- dat %>%
+                  group_by(dat[,group.by]) %>%
+                  summarise_at(.vars = colnames(.)[1], mean) %>%
+                  as.data.frame()
+    summary <- summary[order(summary[,2], decreasing = TRUE),]
+    dat[,group.by] <- factor(dat[,group.by], levels = summary[,1])
+  }
+  else if (order.by == "group.by") {
+    dat[,group.by] <- factor(dat[,group.by], str_sort(unique(dat[,group.by]), numeric = TRUE))
+  }
+  return(dat)
+}
+
 
 #Pulling a color palette for visualizations
 #' @importFrom grDevices hcl.colors
