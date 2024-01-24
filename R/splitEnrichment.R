@@ -93,8 +93,8 @@ splitEnrichment <- function(input.data,
     stop("Please select a variable with 'split.by' to generate the splitEnrichment() plots")
   } 
   
-  if (!inherits(x=input.data, what ="Seurat") & 
-      !inherits(x=input.data, what ="SummarizedExperiment")) {
+  if (inherits(x=input.data, what ="Seurat") || 
+      inherits(x=input.data, what ="SummarizedExperiment")) {
     if(is.null(assay)){
       stop("Please add the assay name in which to plot from")
     }
