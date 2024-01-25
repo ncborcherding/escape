@@ -34,6 +34,25 @@ is_seurat_or_se_object <- function(obj) {
   return(dat)
 }
 
+.makeDFfromSCO <- function(input.data, 
+                           gene.set = NULL,
+                           assay = "escape", 
+                           group.by = NULL, 
+                           split.by = NULL) {
+  if(is.null(assay)){
+    stop("Please add the assay name in which to plot from")
+  }
+  if(is.null(group.by)) {
+    group.by <- "ident"
+  }
+  cnts <- .cntEval(input.data, 
+                   assay = assay, 
+                   type = "data")
+  meta <- .grabMeta(input.data)
+  enriched <- data.frame(cnts[gene.set,], meta[,c(group.by, split.by)])
+  return(enriched)
+}
+
 
 #Pulling a color palette for visualizations
 #' @importFrom grDevices hcl.colors

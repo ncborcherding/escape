@@ -95,16 +95,7 @@ splitEnrichment <- function(input.data,
   
   if (inherits(x=input.data, what ="Seurat") || 
       inherits(x=input.data, what ="SummarizedExperiment")) {
-    if(is.null(assay)){
-      stop("Please add the assay name in which to plot from")
-    }
-    if(is.null(group.by)) {
-      group.by <- "ident"
-    }
-    cnts <- .cntEval(input.data, assay, type = "data")
-    meta <- .grabMeta(input.data)
-    enriched <- data.frame(cnts[gene.set,], meta[,c(group.by, split.by)])
-    
+    enriched <- .makeDFfromSCO(input.data, assay, group.by, split.by)
   } else if (!is_seurat_or_se_object(input.data)) {
     enriched <- data.frame(input.data[,c(gene.set,group.by, split.by)])
   }

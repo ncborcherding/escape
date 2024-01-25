@@ -16,3 +16,17 @@ test_that(".orderFunction works", {
   expect_equal(enrichment.order2, 
                getdata("utils", "orderFunction_group"))
 })
+
+
+test_that(".makeDFfromSCO works", {
+  seuratObj <- getdata("runEscape", "pbmc_small_ssGSEA")
+  
+  enriched <- .makeDFfromSCO(seuratObj, 
+                             assay = "escape", 
+                             group.by = NULL,
+                             split.by = "groups", 
+                             gene.set = "Tcells")
+  
+  expect_equal(enriched,
+               getdata("utils", "makeDFfromSCO_data.frame"))
+})
