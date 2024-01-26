@@ -92,19 +92,11 @@ splitEnrichment <- function(input.data,
   if(is.null(split.by)){
     stop("Please select a variable with 'split.by' to generate the splitEnrichment() plots")
   } 
-  
-  if (inherits(x=input.data, what ="Seurat") || 
-      inherits(x=input.data, what ="SummarizedExperiment")) {
-    enriched <- .makeDFfromSCO(input.data, assay, group.by, split.by)
-  } else if (!is_seurat_or_se_object(input.data)) {
-    enriched <- data.frame(input.data[,c(gene.set,group.by, split.by)])
-  }
-  colnames(enriched) <- c(gene.set, group.by, split.by)
-  
-  
   if (length(unique(enriched[,split.by])) != 2) {
     message("SplitEnrichment() can only work for binary variables - reselect 'split.by'")
   }
+  
+  enriched <- .prepData(input.data, assay, group.by, split.by) 
   
   if(scale) {
     enriched[,gene.set] <- scale(enriched[,gene.set])

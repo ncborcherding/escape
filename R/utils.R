@@ -53,6 +53,18 @@ is_seurat_or_se_object <- function(obj) {
   return(enriched)
 }
 
+#Prepare Data
+.prepData <- function(input.data, assay, group.by, split.by) {
+  if (inherits(x=input.data, what ="Seurat") || 
+      inherits(x=input.data, what ="SummarizedExperiment")) {
+    enriched <- .makeDFfromSCO(input.data, assay, group.by, split.by)
+  } else if (!is_seurat_or_se_object(input.data)) {
+    enriched <- data.frame(input.data[,c(gene.set,group.by, split.by)])
+  }
+  colnames(enriched) <- c(gene.set, group.by, split.by)
+  return(enriched)
+}
+
 
 #Pulling a color palette for visualizations
 #' @importFrom grDevices hcl.colors
