@@ -29,32 +29,27 @@
 #' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return ggplot2 object with ridge-based distributions of selected gene.set
 ridgeEnrichment <- function(enriched, 
-                            group = "cluster", 
+                            group.by = "cluster", 
                             gene.set = NULL, 
-                            scale.bracket = NULL, 
-                            facet = NULL, 
+                            #color.by = "group.by"
+                            scale = NULL, 
+                            facet.by = NULL, 
                             add.rug = FALSE,
-                            palette = "inferno") 
-{
-  if (!is.null(scale.bracket)) {
-    if (length(scale.bracket) != 1 | length(scale.bracket) != 1) {
-      message("Please indicate one or two values for the scale.bracket 
-                parameter, such as scale.bracket = c(-2,2)")
-    }
-    scale.bracket <- order(scale.bracket)
-    if(length(scale.bracket) == 1) {
-      scale.bracket <- c(scale.bracket, -scale.bracket)
-      scale.bracket <- order(scale.bracket)
-    } 
-    tmp <- enriched
-    tmp[,gene.set] <- scale(tmp[,gene.set])
-    rows_selected <- rownames(tmp[tmp[,gene.set] >= scale.bracket[1] & 
-                                    tmp[,gene.set] <= scale.bracket[2],])
-    enriched <- enriched[rownames(enriched) %in% rows_selected,]
+                            palette = "inferno") {
+
+  enriched <- .prepData(input.data, assay, group.by, split.by, facet.by) 
+  
+  if(scale) {
+    enriched[,gene.set] <- scale(enriched[,gene.set])
   }
-  cols <- length(unique(enriched[,group]))
+  
+  if(!is.null(order.by) && !is.null(group.by)) {
+    enriched <- .orderFunction(enriched, order.by, group.by)
+  }
+  
+  col <- length(unique(enriched[,split.by]))
   plot <- ggplot(enriched, aes(x = enriched[,gene.set], 
-                               y = enriched[,group], 
+                               y = enriched[,group.by], 
                                fill = enriched[,group]))
   
   if (add.rug == TRUE) {
@@ -69,14 +64,15 @@ ridgeEnrichment <- function(enriched,
   }
   
   plot <- plot + ylab(group) +
-    xlab(paste0(gene.set, " (NES)")) +
-    labs(fill = group) + 
+    xlab(paste0(gene.set, " Enrichment Score")) +
+    labs(fill = ) + #############
     scale_fill_manual(values = .colorizer(palette, col))
     theme_classic() +
     guides(fill = "none")
   
-  if (!is.null(facet)) {
-    plot <- plot + facet_grid(as.formula(paste('. ~', facet))) }
+  if (!is.null(facet.by)) {
+    plot <- plot + facet_grid(as.formula(paste('. ~', facet.by))) 
+    }
   
   return(plot)
 }

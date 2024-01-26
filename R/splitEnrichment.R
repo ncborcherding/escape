@@ -87,6 +87,7 @@ splitEnrichment <- function(input.data,
                             group.by = NULL, 
                             gene.set = NULL,
                             order.by = NULL,
+                            facet.by = NULL
                             scale = TRUE,
                             palette = "inferno") {
   if(is.null(split.by)){
@@ -96,7 +97,7 @@ splitEnrichment <- function(input.data,
     message("SplitEnrichment() can only work for binary variables - reselect 'split.by'")
   }
   
-  enriched <- .prepData(input.data, assay, group.by, split.by) 
+  enriched <- .prepData(input.data, assay, group.by, split.by, facet.by) 
   
   if(scale) {
     enriched[,gene.set] <- scale(enriched[,gene.set])
@@ -136,5 +137,8 @@ splitEnrichment <- function(input.data,
                 theme(axis.title.x = element_blank(),
                       axis.text.x = element_blank(),
                       axis.ticks.x = element_blank())}
+  if (!is.null(facet.by)) {
+    plot <- plot + facet_grid(as.formula(paste('. ~', facet.by))) 
+  }
   return(plot)
 }

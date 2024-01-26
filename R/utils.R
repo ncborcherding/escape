@@ -38,7 +38,8 @@ is_seurat_or_se_object <- function(obj) {
                            gene.set = NULL,
                            assay = "escape", 
                            group.by = NULL, 
-                           split.by = NULL) {
+                           split.by = NULL, 
+                           facet.by = NULL) {
   if(is.null(assay)){
     stop("Please add the assay name in which to plot from")
   }
@@ -49,19 +50,19 @@ is_seurat_or_se_object <- function(obj) {
                    assay = assay, 
                    type = "data")
   meta <- .grabMeta(input.data)
-  enriched <- data.frame(cnts[gene.set,], meta[,c(group.by, split.by)])
+  enriched <- data.frame(cnts[gene.set,], meta[,c(group.by, split.by, facet.by)])
   return(enriched)
 }
 
 #Prepare Data
-.prepData <- function(input.data, assay, group.by, split.by) {
+.prepData <- function(input.data, assay, group.by, split.by, facet.by) {
   if (inherits(x=input.data, what ="Seurat") || 
       inherits(x=input.data, what ="SummarizedExperiment")) {
-    enriched <- .makeDFfromSCO(input.data, assay, group.by, split.by)
+    enriched <- .makeDFfromSCO(input.data, assay, group.by, split.by, facet.by)
   } else if (!is_seurat_or_se_object(input.data)) {
-    enriched <- data.frame(input.data[,c(gene.set,group.by, split.by)])
+    enriched <- data.frame(input.data[,c(gene.set,group.by, split.by, facet.by)])
   }
-  colnames(enriched) <- c(gene.set, group.by, split.by)
+  colnames(enriched) <- c(gene.set, group.by, split.by, facet.by)
   return(enriched)
 }
 
