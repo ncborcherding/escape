@@ -6,7 +6,7 @@
 #' @param enriched The output of \code{\link{enrichIt}}
 #' @param group The parameter to group, displayed on the y-axis.
 #' @param gene.set The gene set to graph on the x-axis. 
-#' @param scale.bracket This will filter the enrichment scores to remove 
+#' @param scale This will filter the enrichment scores to remove 
 #' extreme outliers. Values entered (1 or 2 numbers) will be the filtering 
 #' parameter using z-scores of the selected gene.set. If only 1 value is given, 
 #' a seocndary bracket is autommatically selected as the inverse of the number.
@@ -116,7 +116,8 @@ ridgeEnrichment <- function(enriched,
   
   plot <- .colorby(enriched,
                    plot, 
-                   color.by)
+                   color.by,
+                   palette)
   
   if (!is.null(facet.by)) {
     plot <- plot + facet_grid(as.formula(paste('. ~', facet.by))) 

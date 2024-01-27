@@ -67,14 +67,31 @@ is_seurat_or_se_object <- function(obj) {
 
 .colorby <- function(enriched,
                      plot, 
-                     color.by) {
-  if(inherits(enriched[,color.by], "numeric")) {
-    plot <- plot +
-            scale_fill_gradientn(colors = .colorizer(palette, 11))
-  } else {
-    col <- length(unique(enriched[,color.by]))
-    plot <- plot + 
-      scale_fill_manual(values = .colorizer(palette, col)) 
+                     color.by,
+                     palette, 
+                     type = "fill") { 
+  if(type == "fill") {
+    if(inherits(enriched[,color.by], "numeric")) {
+      plot <- plot +
+              scale_fill_gradientn(colors = .colorizer(palette, 11)) + 
+              labs(fill = color.by) 
+    } else {
+      col <- length(unique(enriched[,color.by]))
+      plot <- plot + 
+              scale_fill_manual(values = .colorizer(palette, col)) +
+              labs(fill = color.by) 
+    }
+  } else if (type == "color") {
+    if(inherits(enriched[,color.by], "numeric")) {
+      plot <- plot +
+              scale_color_gradientn(colors = .colorizer(palette, 11)) + 
+              labs(color = color.by) 
+    } else {
+      col <- length(unique(enriched[,color.by]))
+      plot <- plot + 
+              scale_color_manual(values = .colorizer(palette, col)) +
+              labs(color = color.by) 
+    }
   }
   return(plot)
 }
