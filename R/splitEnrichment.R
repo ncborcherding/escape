@@ -87,7 +87,7 @@ splitEnrichment <- function(input.data,
                             group.by = NULL, 
                             gene.set = NULL,
                             order.by = NULL,
-                            facet.by = NULL
+                            facet.by = NULL,
                             scale = TRUE,
                             palette = "inferno") {
   if(is.null(split.by)){
@@ -97,7 +97,11 @@ splitEnrichment <- function(input.data,
     message("SplitEnrichment() can only work for binary variables - reselect 'split.by'")
   }
   
-  enriched <- .prepData(input.data, assay, group.by, split.by, facet.by) 
+  if(is.null(group.by)) {
+    group.by <- "ident"
+  }
+  
+  enriched <- .prepData(input.data, assay, gene.set, group.by, split.by, facet.by) 
   
   if(scale) {
     enriched[,gene.set] <- scale(enriched[,gene.set])
@@ -111,7 +115,7 @@ splitEnrichment <- function(input.data,
   if (is.null(group.by)) {
     plot <- ggplot(enriched, aes(x = ".", 
                                  y = enriched[,gene.set], 
-                                 fill = enriched[,split.y])) 
+                                 fill = enriched[,split.by])) 
     check = 1
   } else {
     plot <- ggplot(enriched, aes(x = enriched[,group.by], 
@@ -122,7 +126,7 @@ splitEnrichment <- function(input.data,
     }
   
   plot <- plot + 
-            geom_split_violin(alpha=0.8) +
+            geom_split_violin(alpha=0.8, lwd= 0.25) +
             geom_boxplot(width=0.1, 
                          fill = "grey", 
                          alpha=0.5, 

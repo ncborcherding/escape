@@ -35,35 +35,48 @@ is_seurat_or_se_object <- function(obj) {
 }
 
 .makeDFfromSCO <- function(input.data, 
-                           gene.set = NULL,
                            assay = "escape", 
+                           gene.set = NULL,
                            group.by = NULL, 
                            split.by = NULL, 
                            facet.by = NULL) {
   if(is.null(assay)){
     stop("Please add the assay name in which to plot from")
   }
-  if(is.null(group.by)) {
-    group.by <- "ident"
-  }
+  columns <- unique(c(group.by, split.by, facet.by))
   cnts <- .cntEval(input.data, 
                    assay = assay, 
                    type = "data")
   meta <- .grabMeta(input.data)
-  enriched <- data.frame(cnts[gene.set,], meta[,c(group.by, split.by, facet.by)])
+  enriched <- data.frame(cnts[gene.set,], meta[,columns])
   return(enriched)
 }
 
 #Prepare Data
-.prepData <- function(input.data, assay, group.by, split.by, facet.by) {
+.prepData <- function(input.data, assay, gene.set, group.by, split.by, facet.by) {
+  
   if (inherits(x=input.data, what ="Seurat") || 
       inherits(x=input.data, what ="SummarizedExperiment")) {
-    enriched <- .makeDFfromSCO(input.data, assay, group.by, split.by, facet.by)
+    enriched <- .makeDFfromSCO(input.data, assay, gene.set, group.by, split.by, facet.by)
   } else if (!is_seurat_or_se_object(input.data)) {
     enriched <- data.frame(input.data[,c(gene.set,group.by, split.by, facet.by)])
   }
   colnames(enriched) <- c(gene.set, group.by, split.by, facet.by)
   return(enriched)
+}
+
+.colorby <- function(enriched,
+                     plot, 
+                     color.by) {
+  if(inherits(enriched[,color.by], "numeric")) {
+    plot <- plot %>%
+            scale_color_gradientn(colors = .colorizer(palette, 11))
+  } else {
+    col <- length(unique(enriched[,color.by]))
+    plot <- plot + 
+      scale_fill_manual(values = .colorizer(palette, col)) 
+  }
+  return(plot)
 }
 
 
