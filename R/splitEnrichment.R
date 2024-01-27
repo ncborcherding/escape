@@ -126,23 +126,24 @@ splitEnrichment <- function(input.data,
     }
   
   plot <- plot + 
-            geom_split_violin(alpha=0.8, lwd= 0.25) +
-            geom_boxplot(width=0.1, 
-                         fill = "grey", 
-                         alpha=0.5, 
-                         outlier.alpha = 0)  + 
-            ylab(paste0(gene.set, " Enrichment Score")) +
-            labs(fill = split.by) + 
-            scale_fill_manual(values = .colorizer(palette, col))+
-            theme_classic() 
-    #guides(fill = FALSE)
+          geom_split_violin(alpha=0.8, lwd= 0.25) +
+          geom_boxplot(width=0.1, 
+                       fill = "grey", 
+                       alpha=0.5, 
+                       outlier.alpha = 0)  + 
+          ylab(paste0(gene.set, " Enrichment Score")) +
+          labs(fill = split.by) + 
+          scale_fill_manual(values = .colorizer(palette, col))+
+          theme_classic() 
+
     if (!is.null(check)) {
       plot <- plot + 
-                theme(axis.title.x = element_blank(),
-                      axis.text.x = element_blank(),
-                      axis.ticks.x = element_blank())}
+              theme(axis.title.x = element_blank(),
+                    axis.text.x = element_blank(),
+                    axis.ticks.x = element_blank())}
   if (!is.null(facet.by)) {
-    plot <- plot + facet_grid(as.formula(paste('. ~', facet.by))) 
+    plot <- plot + 
+            facet_grid(as.formula(paste('. ~', facet.by))) 
   }
   return(plot)
 }

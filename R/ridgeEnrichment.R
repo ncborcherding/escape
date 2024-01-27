@@ -67,8 +67,8 @@ ridgeEnrichment <- function(enriched,
   
   if(gradient.format) {
     plot <- ggplot(enriched, aes(x = enriched[,gene.set], 
-                               y = enriched[,group.by], 
-                               fill = after_stat(x)))
+                                 y = enriched[,group.by], 
+                                 fill = after_stat(x)))
   } else {
     plot <- ggplot(enriched, aes(x = enriched[,gene.set], 
                                  y = enriched[,group.by], 
@@ -78,17 +78,24 @@ ridgeEnrichment <- function(enriched,
   if (add.rug) {
     if(gradient.format) {
       plot <- plot + geom_density_ridges_gradient(jittered_points = TRUE,
-                                   position = position_points_jitter(width = 0.05, height = 0),
-                                   point_shape = '|', point_size = 3, point_alpha = 1, alpha = 0.7,
-                                   quantile_lines = TRUE, quantile_fun = median,
-                                   vline_width = 1)
+                                                  position = position_points_jitter(width = 0.05, height = 0),
+                                                  point_shape = '|', 
+                                                  point_size = 3, 
+                                                  point_alpha = 1, 
+                                                  alpha = 0.7,
+                                                  quantile_lines = TRUE, 
+                                                  quantile_fun = median,
+                                                  vline_width = 1)
     } else {
-      plot <- plot + geom_density_ridges(
-        jittered_points = TRUE,
-        position = position_points_jitter(width = 0.05, height = 0),
-        point_shape = '|', point_size = 3, point_alpha = 1, alpha = 0.7,
-        quantile_lines = TRUE, quantile_fun = median,
-        vline_width = 1) 
+      plot <- plot + geom_density_ridges(jittered_points = TRUE,
+                                         position = position_points_jitter(width = 0.05, height = 0),
+                                         point_shape = '|', 
+                                         point_size = 3, 
+                                         point_alpha = 1, 
+                                         alpha = 0.7,
+                                         quantile_lines = TRUE, 
+                                         quantile_fun = median,
+                                         vline_width = 1) 
     }
     
   } else {
@@ -120,7 +127,8 @@ ridgeEnrichment <- function(enriched,
                    palette)
   
   if (!is.null(facet.by)) {
-    plot <- plot + facet_grid(as.formula(paste('. ~', facet.by))) 
+    plot <- plot + 
+            facet_grid(as.formula(paste('. ~', facet.by))) 
   }
   
   return(plot)

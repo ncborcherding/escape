@@ -66,30 +66,32 @@ geyserEnrichment <- function(enriched,
   }
   
   plot <- ggplot(data = enriched,
-              mapping = aes(x = enriched[,group.by],
-                            y = enriched[,gene.set],
-                            color = enriched[,color.by])) 
-  
-  plot <- plot + geom_jitter(size = 2) + 
-    stat_pointinterval(interval_size_range = c(2, 3),
-                               fatten_point = 1.5,
-                               interval_color = "white",
-                               point_color = "white",
-                               position = ggplot2::position_dodge(width = 1),
-                               na.rm = TRUE,
-                               show.legend = FALSE) +
-    stat_pointinterval(interval_size_range = c(1, 2),
-                               interval_color = "black",
-                               point_color = "black",
-                               position = ggplot2::position_dodge(width = 1),
-                               na.rm = TRUE,
-                               show.legend = FALSE)
+                 mapping = aes(x = enriched[,group.by],
+                               y = enriched[,gene.set],
+                               color = enriched[,color.by])) 
   
   plot <- plot + 
-    xlab(group.by) +
-    ylab(paste0(gene.set, " Enrichment Score")) +
-  theme_classic() +
-    guides(fill = "none")
+          geom_jitter(size = 2,
+                      na.rm = TRUE)) + 
+          stat_pointinterval(interval_size_range = c(2, 3),
+                             fatten_point = 1.5,
+                             interval_color = "white",
+                             point_color = "white",
+                             position = position_dodge(width = 1),
+                             na.rm = TRUE,
+                             show.legend = FALSE) +
+          stat_pointinterval(interval_size_range = c(1, 2),
+                             interval_color = "black",
+                             point_color = "black",
+                             position = position_dodge(width = 1),
+                             na.rm = TRUE,
+                             show.legend = FALSE)
+  
+  plot <- plot + 
+          xlab(group.by) +
+          ylab(paste0(gene.set, " Enrichment Score")) +
+          theme_classic() +
+          guides(fill = "none")
   
   plot <- .colorby(enriched,
                    plot, 
@@ -98,7 +100,8 @@ geyserEnrichment <- function(enriched,
                    type = "color")
   
   if (!is.null(facet.by)) {
-    plot <- plot + facet_grid(as.formula(paste('. ~', facet.by))) 
+    plot <- plot + 
+            facet_grid(as.formula(paste('. ~', facet.by))) 
   }
   return(plot)
 }
