@@ -14,7 +14,7 @@ test_that("ridgeEnrichment works", {
   )
   
   expect_doppelganger(
-    "ridgeEnrichment_default_plot",
+    "ridgeEnrichment_rugadded_plot",
     ridgeEnrichment(
       seuratObj, 
       assay = "escape",
@@ -22,17 +22,57 @@ test_that("ridgeEnrichment works", {
       add.rug = TRUE
     )
   )
+  
+  expect_doppelganger(
+    "ridgeEnrichment_facet_plot",
+    ridgeEnrichment(
+      seuratObj, 
+      assay = "escape",
+      gene.set = "Bcells",
+      facet.by = "groups"
+    )
+  )
 
   expect_doppelganger(
-    "splitEnrichment_mean_plot",
-    splitEnrichment(
+    "ridgeEnrichment_order_plot",
+    ridgeEnrichment(
       seuratObj, 
       order.by = "mean",
-      split.by = "groups",
       assay = "escape",
-      gene.set = "Tcells"
+      gene.set = "Bcells"
     )
   )
   
+  expect_doppelganger(
+    "ridgeEnrichment_gradient_plot",
+    ridgeEnrichment(
+      seuratObj, 
+      assay = "escape",
+      gene.set = "Bcells",
+      color.by = "Bcells"
+    )
+  )
+  
+  expect_doppelganger(
+    "ridgeEnrichment_gradient_reorder_plot",
+    ridgeEnrichment(
+      seuratObj, 
+      assay = "escape",
+      order.by = "mean",
+      gene.set = "Bcells",
+      color.by = "Bcells"
+    )
+  )
+  
+  expect_doppelganger(
+    "ridgeEnrichment_gradient_facet_plot",
+    ridgeEnrichment(
+      seuratObj, 
+      assay = "escape",
+      gene.set = "Bcells",
+      color.by = "Bcells",
+      facet.by = "groups"
+    )
+  )
   
 })

@@ -69,8 +69,8 @@ is_seurat_or_se_object <- function(obj) {
                      plot, 
                      color.by) {
   if(inherits(enriched[,color.by], "numeric")) {
-    plot <- plot %>%
-            scale_color_gradientn(colors = .colorizer(palette, 11))
+    plot <- plot +
+            scale_fill_gradientn(colors = .colorizer(palette, 11))
   } else {
     col <- length(unique(enriched[,color.by]))
     plot <- plot + 

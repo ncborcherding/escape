@@ -29,50 +29,98 @@
 #' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return ggplot2 object with ridge-based distributions of selected gene.set
 ridgeEnrichment <- function(enriched, 
-                            group.by = "cluster", 
+                            assay = NULL,
+                            group.by =NULL, 
                             gene.set = NULL, 
-                            #color.by = "group.by"
-                            scale = NULL, 
+                            color.by = "group",
+                            order.by = NULL,
+                            scale = FALSE, 
                             facet.by = NULL, 
                             add.rug = FALSE,
                             palette = "inferno") {
 
-  enriched <- .prepData(input.data, assay, group.by, split.by, facet.by) 
+  if(is.null(group.by)) {
+    group.by <- "ident"
+  }
+  
+  if(color.by == "group") {
+    color.by <- group.by
+  }
+  
+  enriched <- .prepData(input.data, assay, gene.set, group.by, NULL, facet.by) 
+  
+  if(inherits(enriched[,color.by], "numeric") && gene.set == color.by) {
+    gradient.format <- TRUE
+  } else {
+    gradient.format <- FALSE
+  }
   
   if(scale) {
-    enriched[,gene.set] <- scale(enriched[,gene.set])
+    enriched[,gene.set] <- as.numeric(scale(enriched[,gene.set]))
   }
   
   if(!is.null(order.by) && !is.null(group.by)) {
     enriched <- .orderFunction(enriched, order.by, group.by)
+  } 
+  
+
+  
+  if(gradient.format) {
+    plot <- ggplot(enriched, aes(x = enriched[,gene.set], 
+                               y = enriched[,group.by], 
+                               fill = after_stat(x)))
+  } else {
+    plot <- ggplot(enriched, aes(x = enriched[,gene.set], 
+                                 y = enriched[,group.by], 
+                                 fill = enriched[,group.by]))
   }
   
-  col <- length(unique(enriched[,split.by]))
-  plot <- ggplot(enriched, aes(x = enriched[,gene.set], 
-                               y = enriched[,group.by], 
-                               fill = enriched[,group]))
-  
-  if (add.rug == TRUE) {
-    plot <- plot + geom_density_ridges(
-      jittered_points = TRUE,
-      position = position_points_jitter(width = 0.05, height = 0),
-      point_shape = '|', point_size = 3, point_alpha = 1, alpha = 0.7) 
+  if (add.rug) {
+    if(gradient.format) {
+      plot <- plot + geom_density_ridges_gradient(jittered_points = TRUE,
+                                   position = position_points_jitter(width = 0.05, height = 0),
+                                   point_shape = '|', point_size = 3, point_alpha = 1, alpha = 0.7,
+                                   quantile_lines = TRUE, quantile_fun = median,
+                                   vline_width = 1)
+    } else {
+      plot <- plot + geom_density_ridges(
+        jittered_points = TRUE,
+        position = position_points_jitter(width = 0.05, height = 0),
+        point_shape = '|', point_size = 3, point_alpha = 1, alpha = 0.7,
+        quantile_lines = TRUE, quantile_fun = median,
+        vline_width = 1) 
+    }
     
   } else {
-    plot <- plot + 
-      geom_density_ridges2(alpha = 0.8) 
+    if(gradient.format) {
+      plot <- plot + 
+        geom_density_ridges_gradient(alpha = 0.8, 
+                                     quantile_lines = TRUE, 
+                                     quantile_fun = median,
+                                     vline_width = 1) 
+    } else {
+      plot <- plot + 
+        geom_density_ridges2(alpha = 0.8,
+                             quantile_lines = TRUE, 
+                             quantile_fun = median,
+                             vline_width = 1) 
+    }
   }
   
-  plot <- plot + ylab(group) +
-    xlab(paste0(gene.set, " Enrichment Score")) +
-    labs(fill = ) + #############
-    scale_fill_manual(values = .colorizer(palette, col))
-    theme_classic() +
-    guides(fill = "none")
+  plot <- plot + 
+            ylab(group.by) +
+            xlab(paste0(gene.set, " Enrichment Score")) +
+            labs(fill = color.by) + #############
+            theme_classic() +
+            guides(fill = "none")
+  
+  plot <- .colorby(enriched,
+                   plot, 
+                   color.by)
   
   if (!is.null(facet.by)) {
     plot <- plot + facet_grid(as.formula(paste('. ~', facet.by))) 
-    }
+  }
   
   return(plot)
 }
