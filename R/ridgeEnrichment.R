@@ -6,7 +6,6 @@
 #' @param input.data Enrichment output from \code{\link{escape.matrix}} or
 #' \code{\link{runEscape}}.
 #' @param assay Name of the assay to plot if data is a single-cell object.
-#' @param split.by Variable to form the split violin, must have 2 levels.
 #' @param group.by Categorical parameter to plot along the x.axis. If input is
 #' a single-cell object the default will be cluster.
 #' @param gene.set Gene set to plot (on y-axis).

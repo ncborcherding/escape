@@ -48,7 +48,11 @@ is_seurat_or_se_object <- function(obj) {
                    assay = assay, 
                    type = "data")
   meta <- .grabMeta(input.data)
-  enriched <- data.frame(cnts[gene.set,], meta[,columns])
+  if(length(gene.set) == 1) {
+    enriched <- data.frame(cnts[gene.set,], meta[,columns])
+  } else {
+    enriched <- data.frame(t(cnts[gene.set,]), meta[,columns])
+  }
   return(enriched)
 }
 
