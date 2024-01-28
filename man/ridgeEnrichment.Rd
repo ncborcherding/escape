@@ -2,36 +2,52 @@
 % Please edit documentation in R/ridgeEnrichment.R
 \name{ridgeEnrichment}
 \alias{ridgeEnrichment}
-\title{Generate a ridge plot to examine enrichment distributions}
+\title{Visualize enrichment results with a ridge plot}
 \usage{
 ridgeEnrichment(
   enriched,
-  group = "cluster",
+  assay = NULL,
+  group.by = NULL,
   gene.set = NULL,
-  scale.bracket = NULL,
-  facet = NULL,
+  color.by = "group",
+  order.by = NULL,
+  scale = FALSE,
+  facet.by = NULL,
   add.rug = FALSE,
   palette = "inferno"
 )
 }
 \arguments{
-\item{enriched}{The output of \code{\link{enrichIt}}}
+\item{assay}{Name of the assay to plot if data is a single-cell object.}
 
-\item{group}{The parameter to group, displayed on the y-axis.}
+\item{group.by}{Categorical parameter to plot along the x.axis. If input is
+a single-cell object the default will be cluster.}
 
-\item{gene.set}{The gene set to graph on the x-axis.}
+\item{gene.set}{Gene set to plot (on y-axis).}
 
-\item{scale.bracket}{This will filter the enrichment scores to remove 
-extreme outliers. Values entered (1 or 2 numbers) will be the filtering 
-parameter using z-scores of the selected gene.set. If only 1 value is given, 
-a seocndary bracket is autommatically selected as the inverse of the number.}
+\item{color.by}{How the color palette applies to the graph - can 
+be \strong{"group"} for a categorical color palette based on the 
+\strong{group.by} parameter or use the \strong{gene.set} name if wanting to 
+apply a gradient palette.}
 
-\item{facet}{A parameter to separate the graph.}
+\item{order.by}{Method to organize the x-axis: \strong{"mean"} will arrange
+the x-axis by the mean of the gene.set, while \strong{"group"} will arrange
+the x-axis by in alphanumerical order. Using \strong{NULL} will not reorder
+the x-axis.}
 
-\item{add.rug}{Binary classifier to add a rug plot to the x-axis.}
+\item{scale}{Visualize raw values \strong{FALSE} or Z-transform 
+enrichment values \strong{TRUE}.}
+
+\item{facet.by}{Variable to facet the plot into n distinct graphs.}
+
+\item{add.rug}{Add visualization of the discrete cells along
+the ridge plot (\strong{TRUE}).}
 
 \item{palette}{Colors to use in visualization - input any 
 \link[grDevices]{hcl.pals}.}
+
+\item{input.data}{Enrichment output from \code{\link{escape.matrix}} or
+\code{\link{runEscape}}.}
 }
 \value{
 ggplot2 object with ridge-based distributions of selected gene.set
@@ -39,14 +55,4 @@ ggplot2 object with ridge-based distributions of selected gene.set
 \description{
 This function allows to the user to examine the distribution of 
 enrichment across groups by generating a ridge plot.
-}
-\examples{
-ES2 <- readRDS(url(
-"https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-ridgeEnrichment(ES2, gene.set = "HALLMARK_DNA_REPAIR", group = "cluster", 
-facet = "Type", add.rug = TRUE)
-
-}
-\seealso{
-\code{\link{enrichIt}} for generating enrichment scores.
 }

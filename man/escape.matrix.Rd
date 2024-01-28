@@ -21,8 +21,8 @@ escape.matrix(
 \code{\link{getGeneSets}}, or the built-in gene sets 
 in the escape package \code{\link{escape.gene.sets}}.}
 
-\item{method}{select the method to calculate enrichment, 
-\strong{GSVA}, \strong{ssGSEA} or \strong{UCell}}
+\item{method}{Select the method to calculate enrichment, \strong{AUCell},
+\strong{GSVA}, \strong{ssGSEA} or \strong{UCell}.}
 
 \item{groups}{The number of cells to separate the enrichment calculation.}
 
@@ -32,10 +32,10 @@ calculation}
 \item{normalize}{Whether to divide the enrichment score by the number 
 of genes \strong{TRUE} or report unnormalized \strong{FALSE}}
 
-\item{...}{pass arguments to GSVA, ssGSEA or UCell call}
+\item{...}{pass arguments to AUCell GSVA, ssGSEA or UCell call}
 }
 \value{
-Data frame of normalized enrichmenet scores (NES)
+matrix of enrichment scores
 }
 \description{
 This function allows users to input both the single-cell RNA-sequencing 
