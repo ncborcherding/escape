@@ -42,23 +42,25 @@ geom_split_violin <-
                                                    draw_quantiles = draw_quantiles, na.rm = na.rm, ...))
   }
 
-#' Generate a split violin plot examine enrichment distributions
+#' Visualize enrichment results with a split violin plot
 #' 
 #' This function allows to the user to examine the distribution of 
 #' enrichment across groups by generating a split violin plot.
 #'
 #' @param input.data Enrichment output from \code{\link{escape.matrix}} or
-#' \code{\link{runEscape}}
-#' @param assay The name of the assay to plot if data is a single-cell object.
-#' @param split.by The parameter to split, must have 2 levels.
+#' \code{\link{runEscape}}.
+#' @param assay Name of the assay to plot if data is a single-cell object.
+#' @param split.by Variable to form the split violin, must have 2 levels.
 #' @param group.by Categorical parameter to plot along the x.axis. If input is
 #' a single-cell object the default will be cluster.
-#' @param gene.set The gene set to graph on the y-axis. 
-#' @param scale This will filter the enrichment scores to remove 
-#' extreme outliers. Values entered (1 or 2 numbers) will be the filtering 
-#' parameter using z-scores of the selected gene.set. If only 1 value is given, 
-#' a secondary bracket is automatically selected as the inverse of the number.
-
+#' @param gene.set Gene set to plot (on y-axis).
+#' @param order.by Method to organize the x-axis - \strong{"mean"} will arrange
+#' the x-axis by the mean of the gene.set, while \strong{"group"} will arrange
+#' the x-axis by in alphanumerical order. Using \strong{NULL} will not reorder
+#' the x-axis.
+#' @param facet.by Variable to facet the plot into n distinct graphs.
+#' @param scale Visualize raw values \strong{FALSE} or Z-transform 
+#' enrichment values \strong{TRUE}.
 #' @param palette Colors to use in visualization - input any 
 #' \link[grDevices]{hcl.pals}.
 #'
@@ -79,7 +81,6 @@ geom_split_violin <-
 #'
 #' @export
 #'
-#' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return ggplot2 object violin-based distributions of selected gene.set
 splitEnrichment <- function(input.data,
                             assay = NULL,

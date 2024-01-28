@@ -1,32 +1,52 @@
-#' Generate a ridge plot to examine enrichment distributions
+#' Visualize enrichment results with a ridge plot
 #' 
 #' This function allows to the user to examine the distribution of 
 #' enrichment across groups by generating a ridge plot.
 #'
-#' @param enriched The output of \code{\link{enrichIt}}
-#' @param group The parameter to group, displayed on the y-axis.
-#' @param gene.set The gene set to graph on the x-axis. 
-#' @param scale This will filter the enrichment scores to remove 
-#' extreme outliers. Values entered (1 or 2 numbers) will be the filtering 
-#' parameter using z-scores of the selected gene.set. If only 1 value is given, 
-#' a seocndary bracket is autommatically selected as the inverse of the number.
+#' @param input.data Enrichment output from \code{\link{escape.matrix}} or
+#' \code{\link{runEscape}}.
+#' @param assay Name of the assay to plot if data is a single-cell object.
+#' @param split.by Variable to form the split violin, must have 2 levels.
+#' @param group.by Categorical parameter to plot along the x.axis. If input is
+#' a single-cell object the default will be cluster.
+#' @param gene.set Gene set to plot (on y-axis).
+#' @param color.by How the color palette applies to the graph - can 
+#' be \strong{"group"} for a categorical color palette based on the 
+#' \strong{group.by} parameter or use the \strong{gene.set} name if wanting to 
+#' apply a gradient palette.
+#' @param order.by Method to organize the x-axis: \strong{"mean"} will arrange
+#' the x-axis by the mean of the gene.set, while \strong{"group"} will arrange
+#' the x-axis by in alphanumerical order. Using \strong{NULL} will not reorder
+#' the x-axis.
+#' @param facet.by Variable to facet the plot into n distinct graphs.
+#' @param scale Visualize raw values \strong{FALSE} or Z-transform 
+#' enrichment values \strong{TRUE}.
+#' @param add.rug Add visualization of the discrete cells along
+#' the ridge plot (\strong{TRUE}).
 #' @param palette Colors to use in visualization - input any 
 #' \link[grDevices]{hcl.pals}.
-#' @param facet A parameter to separate the graph.
-#' @param add.rug Binary classifier to add a rug plot to the x-axis.
 #'
 #' @import ggplot2
 #' @importFrom ggridges geom_density_ridges geom_density_ridges2 position_points_jitter
 #' 
-#' @examples
-#' ES2 <- readRDS(url(
-#' "https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-#' ridgeEnrichment(ES2, gene.set = "HALLMARK_DNA_REPAIR", group = "cluster", 
-#' facet = "Type", add.rug = TRUE)
+#' #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
+#'            Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
+#' pbmc_small <- SeuratObject::pbmc_small
+#' pbmc_small <- runEscape(pbmc_small, 
+#'                         gene.sets = GS, 
+#'                         min.size = NULL)
+#'                         
+#' ridgeEnrichment(pbmc_small, 
+#'                 assay = "escape",
+#'                 gene.set = "Tcells")
+#'                 
+#' ridgeEnrichment(pbmc_small, 
+#'                 assay = "escape",
+#'                 gene.set = "Tcells", 
+#'                 color.by = "Tcells")
 #'
 #' @export
 #'
-#' @seealso \code{\link{enrichIt}} for generating enrichment scores.
 #' @return ggplot2 object with ridge-based distributions of selected gene.set
 ridgeEnrichment <- function(enriched, 
                             assay = NULL,
