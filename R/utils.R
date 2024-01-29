@@ -65,7 +65,8 @@ is_seurat_or_se_object <- function(obj) {
   if (inherits(x=input.data, what ="Seurat") || 
       inherits(x=input.data, what ="SummarizedExperiment")) {
     enriched <- .makeDFfromSCO(input.data, assay, gene.set, group.by, split.by, facet.by)
-    gene.set <- colnames(enriched)[!grepl("meta", colnames(enriched))]
+    gene.set <- colnames(enriched)[colnames(enriched) %!in% c(group.by, split.by, facet.by)]
+    gene.set <- gene.set[!grepl("meta", gene.set)]
   } else if (!is_seurat_or_se_object(input.data)) {
     if(length(gene.set) == 1 && gene.set == "all") {
       gene.set <- colnames(input.data)

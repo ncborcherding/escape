@@ -58,7 +58,7 @@ heatmapEnrichment <- function(enriched,
     gene.set <- gene.set[gene.set %!in% c(group.by, facet.by)]
   }
   
-  if(!is.null(facet.by) {
+  if(!is.null(facet.by)) {
     enriched.summary <- enriched %>%
                           group_by(.data[[group.by]], .data[[facet.by]]) %>%
                           summarise(across(which(colnames(enriched) %in% gene.set), mean)) %>%
@@ -85,12 +85,9 @@ heatmapEnrichment <- function(enriched,
     column.order <- unique(enriched.summary[,group.by][hclust(dist(enriched.summary[,gene.set], method = "euclidean"), method = "ward.D2")$order])
     reformated.enriched[,group.by] <- factor(reformated.enriched[,group.by], levels = as.vector(column.order))
   }
-  
-  
-  #TODO Add facet.by functionality
 
-    plot <- ggplot(reformated.enriched,
-                   mapping = aes(x = reformated.enriched[,group.by],
+   plot <- ggplot(reformated.enriched,
+                  mapping = aes(x = reformated.enriched[,group.by],
                                  y = variable,
                                  fill = value)) +
                   geom_tile(color = "black", linewidth = 0.5) +
