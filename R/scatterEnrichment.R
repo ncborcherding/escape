@@ -64,7 +64,7 @@ scatterEnrichment <- function(enriched,
                 scale_color_gradientn(colors = .colorizer(palette, 11)) + 
                 ylab(paste0(y.axis, " Enrichment Score")) +
                 xlab(paste0(x.axis, " Enrichment Score")) +
-                labs(color = "Relative Density") + #############
+                labs(color = "Relative Density") + 
                 theme_classic()
   
   if (!is.null(facet.by)) {
