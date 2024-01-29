@@ -47,6 +47,9 @@ is_seurat_or_se_object <- function(obj) {
   cnts <- .cntEval(input.data, 
                    assay = assay, 
                    type = "data")
+  if(length(gene.set) == 1 && gene.set == "all") {
+    gene.set <- rownames(cnts)
+  }
   meta <- .grabMeta(input.data)
   if(length(gene.set) == 1) {
     enriched <- data.frame(cnts[gene.set,], meta[,columns])
@@ -62,9 +65,15 @@ is_seurat_or_se_object <- function(obj) {
   if (inherits(x=input.data, what ="Seurat") || 
       inherits(x=input.data, what ="SummarizedExperiment")) {
     enriched <- .makeDFfromSCO(input.data, assay, gene.set, group.by, split.by, facet.by)
+    gene.set <- colnames(enriched)[!grepl("meta", colnames(enriched))]
   } else if (!is_seurat_or_se_object(input.data)) {
-    enriched <- data.frame(input.data[,c(gene.set,group.by, split.by, facet.by)])
-  }
+    if(length(gene.set) == 1 && gene.set == "all") {
+      gene.set <- colnames(input.data)
+      gene.set <- gene.set[gene.set %!in% c(group.by, split.by, facet.by)]
+    } 
+      enriched <- data.frame(input.data[,c(gene.set,group.by, split.by, facet.by)])
+    }
+    
   colnames(enriched) <- c(gene.set, group.by, split.by, facet.by)
   return(enriched)
 }

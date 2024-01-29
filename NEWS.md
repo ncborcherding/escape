@@ -4,6 +4,9 @@
 ## NEW FEATURES
 
 * Added ```runEscape()```
+* Added ```geyserEnrichment()```
+* Added ```scatterEnrichment()```
+* Added ```heatmapEnrichment()```
 * Changed enrichIt to ```escape.matrix()```
 
 ## UNDERLYING CHANGES
