@@ -15,11 +15,9 @@
 * Added support for GSVA calculation
 * Added support for AUCell calculation
 
-
 ## DEPRECATED AND DEFUNCT
 
 * Deprecate getSignificance()
-
 
 # CHANGES IN VERSION 1.9.0
 * Releveling version for commit to new Bioconductor release

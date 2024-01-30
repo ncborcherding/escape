@@ -25,57 +25,81 @@
 #' @export
 #'
 #' @return ggplot2 object mean rank gene density
-enrichmentPlot <- function(obj, 
-                           gene.set, 
-                           gene.sets, 
-                           group, 
-                           colors = c("#0D0887FF","#7E03A8FF","#CC4678FF","#F89441FF","#F0F921FF")) {
-  compute.gene.density<-utils::getFromNamespace("compute.gene.density", "GSVA")
-  cnts <- cntEval(obj)
-  cnts.filter <- as.matrix(.filterFeatures.mod(cnts, "ssgsea"))
-  meta <- grabMeta(obj)
-  group <- meta[, group]
-  uniq.grp <- sort(as.character(unique(group)))
-  colpal<- colorRampPalette(colors)(length(uniq.grp))
-  gene.sets <- GS.check(gene.sets)
-  gene.set <- unlist(gene.sets[[gene.set]])
-  mapped.gset.idx.list <- na.omit(match(gene.set, rownames(cnts.filter)))
-  gene.density <- compute.gene.density(cnts.filter, seq_len(ncol(cnts)), TRUE, TRUE)
-  rank.scores <- rep(0, nrow(cnts.filter))
-  sort.sgn.idxs <- apply(gene.density, 2, order, decreasing=TRUE)
-  gsva_rnk2 <- apply(sort.sgn.idxs, 2, compute_rank_score.mod, nrow(cnts))
-  output <- NULL
-  for (i in seq_along(uniq.grp)) {
-    means <- rowMeans(gsva_rnk2[,group == uniq.grp[i]])
-    rank <- round(order(means)/2)
-    output <- cbind(output, rank)
+densityEnrichment <- function(input.data, 
+                              gene.set.use = NULL, 
+                              gene.set.reference = NULL, 
+                              group.by = NULL, 
+                              palette = "inferno") {
+  if (!inherits(x=input.data, what ="Seurat") || 
+      !inherits(x=input.data, what ="SummarizedExperiment")) {
+    stop("Currently this function only support single-cell objects")
   }
-  output <- data.frame(output)
-  colnames(output) <- paste0("Group.", uniq.grp)
-  output$GS <- NA
-  output$GS[mapped.gset.idx.list] <- "yes"
-  mlt <- suppressMessages(melt(output))
-  plot1 <- ggplot(mlt, aes(x = value, color = variable)) + 
-    geom_density(data = subset(mlt, GS == "yes"), linetype="dashed") + 
+  
+  if(is.null(group.by)) {
+    group.by <- "ident"
+  }
+  
+  compute.gene.density<-utils::getFromNamespace("compute.gene.density", "GSVA")
+  
+  
+  
+  cnts <- .cntEval(input.data, 
+                   assay = "RNA", 
+                   type = "counts")
+  cnts.filter <- .filterFeatures(cnts)
+  grouping <- as.vector(.grabMeta(input.data)[,group.by])
+  
+  groups <- unique(grouping)
+  lapply(seq_len(length(groups)), function(x) {
+    tmp <- cnts.filter[,which(grouping == groups[x])]
+    density <- compute.gene.density(tmp, seq_len(ncol(tmp)), TRUE, TRUE)
+    rank.scores <- rep(0, nrow(tmp))
+    sort.sgn.idxs <- apply(density, 2, order, decreasing=TRUE)
+    gsva_rnk2 <- apply(sort.sgn.idxs, 2, compute_rank_score.mod, nrow(cnts))
+    means <- rowMeans(gsva_rnk2)
+    rank <- round(order(means)/2)
+    rank
+  }) -> ranks
+  
+  output <- do.call(cbind, ranks)
+  output <- as.data.frame(output)
+  colnames(output) <- paste0(group.by, ".", groups)
+  rownames(output) <- rownames(cnts.filter)
+  
+  mapped.gset.idx.list <- na.omit(match(gene.set, rownames(cnts.filter)))
+  
+  output$gene.set.query <- NA
+  output$gene.set.query[mapped.gset.idx.list] <- "yes"
+  melted.data.frame <- suppressMessages(melt(output))
+  col <- .colorizer(palette, length(groups))
+  
+  
+  plot1 <- ggplot(melted.data.frame, aes(x = value)) + 
+    geom_density(data = subset(melted.data.frame, gene.set.query == "yes"), 
+                 #linetype="dashed",
+                 aes(fill = variable), 
+                 alpha = 0.4,
+                 color = "black") + 
     theme_classic() + 
-    scale_color_manual(values = colpal) + 
-    labs(color = "Group") + 
+    scale_fill_manual(values = col) + 
+    labs(fill = "Group") + 
     ylab("Rank Density") + 
     theme(axis.title.x = element_blank(),
           axis.ticks.x = element_blank(), 
           axis.text.x = element_blank())
-  mlt$segmenty <- NA
-  mlt$segmenty2 <- NA
+  melted.data.frame$segmenty <- NA
+  melted.data.frame$segmenty2 <- NA
   ymax <- 0.2
-  for (i in seq_along(uniq.grp)) {
-    mlt$segmenty <- ifelse(mlt$variable == paste0("Group.", uniq.grp[i]), -(i*ymax-ymax), mlt$segmenty)
-    mlt$segmenty2 <- ifelse(mlt$variable == paste0("Group.", uniq.grp[i]), -(i*ymax), mlt$segmenty2)   
+  for (i in seq_along(groups)) {
+    melted.data.frame$segmenty <- ifelse(melted.data.frame$variable == paste0(group.by, ".", groups[i]), -(i*ymax-ymax), melted.data.frame$segmenty)
+    melted.data.frame$segmenty2 <- ifelse(melted.data.frame$variable == paste0(group.by, ".", groups[i]), -(i*ymax), melted.data.frame$segmenty2)   
   }
-  plot2 <- ggplot(subset(mlt, GS == "yes")) + 
-    geom_segment(aes(x = value,y=segmenty,yend=segmenty2,xend=value, color = variable)) + 
+  plot2 <- ggplot(subset(melted.data.frame, gene.set.query == "yes")) + 
+    geom_segment(aes(x = value,y=segmenty,yend=segmenty2,xend=value, color = variable),
+                 lwd = 1) + 
     guides(color = "none") +
     xlab("Mean Rank Order") + 
-    scale_color_manual(values = colpal) + 
+    scale_color_manual(values = col) + 
     theme(axis.title.y = element_blank(),
           axis.ticks.y = element_blank(), 
           axis.text.y = element_blank(), 
@@ -91,25 +115,14 @@ compute_rank_score.mod <- function(sort_idx_vec, p){
   return (tmp)
 }
 
-# Internal function from GSVA
+# Modified from GSVA
 #' @importFrom MatrixGenerics rowSds
-.filterFeatures.mod <- function(expr, method) {
-  ## filter out genes with constant expression values
-  ## DelayedMatrixStats::rowSds() works for both base and 
-  ## DelayedArray matrices
+.filterFeatures <- function(expr) {
   sdGenes <- rowSds(expr)
-  ## the following fixes this bug, see issues
-  ## https://github.com/rcastelo/GSVA/issues/54
-  ## https://github.com/HenrikBengtsson/matrixStats/issues/204
   sdGenes[sdGenes < 1e-10] <- 0
   if (any(sdGenes == 0) || any(is.na(sdGenes))) {
-    warning(sum(sdGenes == 0 | is.na(sdGenes)),
-            " genes with constant expression values throuhgout the samples.")
-    if (method != "ssgsea") {
-      warning("Since argument method!=\"ssgsea\", genes with constant expression values are discarded.")
       expr <- expr[sdGenes > 0 & !is.na(sdGenes), ]
-    }
-  } 
+  }
   
   if (nrow(expr) < 2)
     stop("Less than two genes in the input assay object\n")

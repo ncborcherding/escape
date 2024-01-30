@@ -39,7 +39,7 @@
 
 heatmapEnrichment <- function(enriched, 
                               assay = NULL,
-                              group.by =NULL, 
+                              group.by = NULL, 
                               gene.set.use = "all", 
                               cluster.rows = FALSE,
                               cluster.columns = FALSE,
