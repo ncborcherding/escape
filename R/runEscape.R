@@ -21,7 +21,7 @@
 #' @importFrom GSEABase GeneSetCollection 
 #' @importFrom UCell ScoreSignatures_UCell
 #' @importFrom AUCell AUCell_run
-#' @importFrom SummarizedExperiments assay
+#' @importFrom SummarizedExperiment assay
 #'
 #' @examples 
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),

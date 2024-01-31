@@ -1,0 +1,1 @@
+load("/Users/nick/Documents/GitHub/escape/tests/testthat/testdata/runEscape/pbmc_small_ssGSEA.rds")
