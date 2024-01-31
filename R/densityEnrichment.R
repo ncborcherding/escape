@@ -1,36 +1,44 @@
-#' Gene Rank Enrichment Plot
-#' Display the rank order density for individual gene sets 
-#' by group identify. This function will use the group variable 
-#' to take the mean rank order across all individual cells.
-# 
-#' @param obj The Seurat or SingleCellExperiment object.
-#' @param gene.set The name of the specific gene set to visualize
-#' @param gene.sets Gene sets from \code{\link{getGeneSets}} to use 
-# for the enrichment analysis. 
-#' @param group The header in the meta data that will be used for the comparison
-#' @param colors The color palette for the enrichment plot
-#' @examples 
-#'  \dontrun{
-#'  GS <- list(Housekeeping = c("ACTA1", "ACTN1", "GAPDH"),
-#'  Cancer = c("TP53","BRCA2","ERBB2","MYC"))
-#'  pbmc_small <- suppressWarnings(SeuratObject::pbmc_small)
-#'  
-#'  enrichmentPlot(pbmc_small gene.set = "Cancer",
-#'                 gene.sets = GS, group = "groups")
-#'  }
+#' Visualize the mean density ranking of genes across gene set
+#' 
+#' This function allows to the user to examine the mean ranking
+#' within the groups across the gene set. The visualization uses
+#' the density function to display the relative position and distribution
+#' of rank.
+#'
+#' @param input.data The single-cell object to use.
+#' @param gene.set.use Selected individual gene set.
+#' @param gene.set.reference The gene set library to use to extract 
+#' the individual gene set information from.
+#' @param group.by Categorical parameter to plot along the x.axis. If input is
+#' a single-cell object the default will be cluster.
+#' @param palette Colors to use in visualization - input any 
+#' \link[grDevices]{hcl.pals}.
+#' 
+#' 
+#' @examples
+#' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
+#'            Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
+#' pbmc_small <- SeuratObject::pbmc_small
+#'                         
+#' densityEnrichment(pbmc_small, 
+#'                   gene.set.use = "Tcells",
+#'                   gene.set.reference = GS)
+#'
+#' @export
+#'
 #' @import patchwork
 #' @importFrom utils getFromNamespace
 #' @import ggplot2
 #' @importFrom reshape2 melt
 #' @export
 #'
-#' @return ggplot2 object mean rank gene density
+#' @return ggplot2 object mean rank gene density across groups
 densityEnrichment <- function(input.data, 
                               gene.set.use = NULL, 
                               gene.set.reference = NULL, 
                               group.by = NULL, 
                               palette = "inferno") {
-  if (!inherits(x=input.data, what ="Seurat") || 
+  if (!inherits(x=input.data, what ="Seurat") &
       !inherits(x=input.data, what ="SummarizedExperiment")) {
     stop("Currently this function only support single-cell objects")
   }
@@ -41,15 +49,16 @@ densityEnrichment <- function(input.data,
   
   compute.gene.density<-utils::getFromNamespace("compute.gene.density", "GSVA")
   
-  
+  gene.set.reference <- .GS.check(gene.set.reference)
+  gene.set <- gene.set.reference[[gene.set.use]]
   
   cnts <- .cntEval(input.data, 
                    assay = "RNA", 
                    type = "counts")
   cnts.filter <- .filterFeatures(cnts)
   grouping <- as.vector(.grabMeta(input.data)[,group.by])
-  
   groups <- unique(grouping)
+  
   lapply(seq_len(length(groups)), function(x) {
     tmp <- cnts.filter[,which(grouping == groups[x])]
     density <- compute.gene.density(tmp, seq_len(ncol(tmp)), TRUE, TRUE)

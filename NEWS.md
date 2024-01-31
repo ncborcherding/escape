@@ -8,6 +8,7 @@
 * Added ```scatterEnrichment()```
 * Added ```heatmapEnrichment()```
 * Changed enrichIt to ```escape.matrix()```
+* Changed enrichmentPlot to ```densityEnrichment()```
 
 ## UNDERLYING CHANGES
 
