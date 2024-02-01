@@ -4,7 +4,7 @@
 #' gene.sets to form a GeneSetCollection that is a list of gene sets.
 #
 #' @param species The scientific name of the species of interest in 
-#' order to get correcent gene nomenclature
+#' order to get correct gene nomenclature
 #' @param library Individual collection(s) of gene sets, e.g. c("H", "C5").
 #' See \href{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}{msigdbr}for
 #' all MSigDB collections.

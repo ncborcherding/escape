@@ -47,7 +47,7 @@
 #' @export
 #'
 #' @return ggplot2 object with ridge-based distributions of selected gene.set
-ridgeEnrichment <- function(enriched, 
+ridgeEnrichment <- function(input.data, 
                             assay = NULL,
                             group.by =NULL, 
                             gene.set = NULL, 

@@ -56,6 +56,7 @@ is_seurat_or_se_object <- function(obj) {
   } else {
     enriched <- data.frame(t(cnts[gene.set,]), meta[,columns])
   }
+  colnames(enriched) <- c(gene.set, columns)
   return(enriched)
 }
 
@@ -65,8 +66,8 @@ is_seurat_or_se_object <- function(obj) {
   if (inherits(x=input.data, what ="Seurat") || 
       inherits(x=input.data, what ="SummarizedExperiment")) {
     enriched <- .makeDFfromSCO(input.data, assay, gene.set, group.by, split.by, facet.by)
-    gene.set <- colnames(enriched)[colnames(enriched) %!in% c(group.by, split.by, facet.by)]
-    gene.set <- gene.set[!grepl("meta", gene.set)]
+    #gene.set <- colnames(enriched)[colnames(enriched) %!in% c(group.by, split.by, facet.by)]
+    #gene.set <- gene.set[!grepl("meta", gene.set)]
   } else if (!is_seurat_or_se_object(input.data)) {
     if(length(gene.set) == 1 && gene.set == "all") {
       gene.set <- colnames(input.data)
@@ -158,14 +159,14 @@ is_seurat_or_se_object <- function(obj) {
 
 #Add the values to single cell object
 #' @importFrom SeuratObject CreateAssayObject
-#' @importFrom SummarizedExperiment assays
+#' @importFrom SummarizedExperiment assays<-
 .adding.Enrich <- function(sc, enrichment, enrichment.name) {
   if (inherits(sc, "Seurat")) {
     new.assay <- suppressWarnings(CreateAssayObject(
                                   data = as.matrix(t(enrichment))))
     sc[[enrichment.name]] <- new.assay
   } else if (inherits(sc, "SingleCellExperiment")) {
-    assays(sc, enrichment.name) <- enrichment
+    SummarizedExperiment::assays(sc, enrichment.name) <- enrichment
   }
   return(sc)
 }

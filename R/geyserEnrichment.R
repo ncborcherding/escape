@@ -41,7 +41,7 @@
 #' @export
 #'
 #' @return ggplot2 object with geyser-based distributions of selected gene.set
-geyserEnrichment <- function(enriched, 
+geyserEnrichment <- function(input.data, 
                              assay = NULL,
                              group.by =NULL, 
                              gene.set = NULL, 

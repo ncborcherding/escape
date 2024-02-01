@@ -42,7 +42,7 @@
 #' @export
 #' 
 #' @return ggplot2 object with a scatter plot of selected gene.sets
-scatterEnrichment <- function(enriched, 
+scatterEnrichment <- function(input.data, 
                               assay = NULL,
                               x.axis = NULL, 
                               y.axis = NULL,

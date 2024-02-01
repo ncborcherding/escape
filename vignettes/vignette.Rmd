@@ -27,8 +27,7 @@ library(BiocStyle)
 
 # Loading Processed Single-Cell Data
 
-
-For the demonstration of *escape*, we will use the example "pbmc_small" data from *Seurat* and also generate a `SingleCellExperiment` object from it.
+For the demonstration of *escape*, we will use the example **"pbmc_small"** data from *Seurat* and also generate a `SingleCellExperiment` object from it.
 
 
 ```{r}
@@ -36,6 +35,7 @@ suppressPackageStartupMessages(library(escape))
 suppressPackageStartupMessages(library(SingleCellExperiment))
 suppressPackageStartupMessages(library(Seurat))
 suppressPackageStartupMessages(library(SeuratObject))
+
 pbmc_small <- get("pbmc_small")
 sce.pbmc <- as.SingleCellExperiment(pbmc_small, assay = "RNA")
 ```
@@ -48,7 +48,7 @@ The first step in the process of performing gene set enrichment analysis is iden
 
 We can do this for gene set collections from the built-in [Molecular Signature Database](https://www.gsea-msigdb.org/gsea/msigdb/search.jsp) by setting the parameter **library** equal to library/libraries of interest. For multiple libraries, just set **library = c("Library1", "Library2", etc)**. 
 
-In Addition:
+Additional parameters include: 
 
 * **subcategory** Can be used to select subcategories in the larger database.  
 * **gene.sets** Can select individual pathways/gene sets to be isolated.  
@@ -68,17 +68,15 @@ data("escape.gene.sets", package="escape")
 gene.sets <- escape.gene.sets
 ```
 
-
 ## Option 3: Define personal gene sets
 
 ```{r, eval=FALSE, tidy=FALSE}
 gene.sets <- list(Bcells = c("MS4A1","CD79B","CD79A","IGH1","IGH2")
 			            Myeloid = c("SPI1","FCER1G","CSF1R"),
 			            Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
-			            
 ```
 
-# Perfomring Enrichment
+# Perfomring Enrichment Calculation
 
 #TODO Add infor on the methods
 
@@ -107,11 +105,10 @@ escape has 2 major functions - the first being ```escape.matrix()```, which is t
 
 
 ```{r tidy = FALSE}
-enrichment.scores <- escape.matrix(obj = pbmc_small, 
-                                    gene.sets = GS.hallmark[1:2], 
-                                    groups = 1000, 
-                                    cores = 2, 
-                                    min.size = 5)
+enrichment.scores <- escape.matrix(pbmc_small, 
+                                   gene.sets = GS.hallmark[1:5], 
+                                   groups = 1000, 
+                                   min.size = 5)
 
 ggplot(data = as.data.frame(enrichment.scores), 
       mapping = aes(enrichment.scores[,1], enrichment.scores[,2])) + 
@@ -121,36 +118,117 @@ ggplot(data = as.data.frame(enrichment.scores),
 
 ## runEscape
 
-Alternatively, we can use ```runEscape()``` to calculate the enrichment score and directly attach the output to a single-cell object. Th additional parameter for ```runEscape` is **assay.name**, in order to save the enrichment scores as a custom assay in the single-cell object. 
+Alternatively, we can use ```runEscape()``` to calculate the enrichment score and directly attach the output to a single-cell object. Th additional parameter for ```runEscape` is **new.assay.name**, in order to save the enrichment scores as a custom assay in the single-cell object. 
 
 
 ```{r tidy = FALSE}
-pbmc_small <- escape.matrix(obj = pbmc_small, 
-                            method = "ssGSEA",
-                            gene.sets = GS.hallmark, 
-                            groups = 1000, 
-                            min.size = 5,
-                            assay.name = "escape.ssGSEA")
+pbmc_small <- runEscape(pbmc_small, 
+                        method = "ssGSEA",
+                        gene.sets = GS.hallmark, 
+                        groups = 1000, 
+                        min.size = 5,
+                        new.assay.name = "escape.ssGSEA")
 
-sce.pbmc <- escape.matrix(obj = pbmc_small, 
-                          method = "UCell",
-                          gene.sets = GS.hallmark, 
-                          groups = 1000, 
-                          min.size = 5,
-                          assay.name = "escape.UCell")
+sce.pbmc <- runEscape(sce.pbmc, 
+                      method = "UCell",
+                      gene.sets = GS.hallmark, 
+                      groups = 1000, 
+                      min.size = 5,
+                      new.assay.name = "escape.UCell")
 ```
 
 ****
 
 # Visualizations
 
+## heatmapEnrichment
+
+```{r}
+heatmapEnrichment(pbmc_small, 
+                  assay = "escape.ssGSEA")
+```
+
+
+Each visualization has an additional argument called **palette that supplies the coloring scheme to be used - available color palettes can be viewed with ```hcl.pals()```. 
+
+```{r}
+densityEnrichment(pbmc_small, 
+                  gene.set.use = "HALLMARK_IL6_JAK_STAT3_SIGNALING", 
+                  gene.set.reference = GS.hallmark, 
+                  palette = "Hawaii")
+```
+
+## geyserEnrichment
+
+```{r}
+geyserEnrichment(pbmc_small, 
+                 assay = "escape.ssGSEA",
+                 gene.set = "HALLMARK-INTERFERON-GAMMA-RESPONSE")
+```
+
+```{r}
+geyserEnrichment(pbmc_small, 
+                 assay = "escape.ssGSEA",
+                 gene.set = "HALLMARK-INTERFERON-GAMMA-RESPONSE", 
+                 facet.by = "groups")
+```
+```{r}
+geyserEnrichment(pbmc_small, 
+                 assay = "escape.ssGSEA",
+                 gene.set = "HALLMARK-INTERFERON-GAMMA-RESPONSE", 
+                 order.by = "mean")
+```
+```{r}
+geyserEnrichment(pbmc_small, 
+                 assay = "escape.ssGSEA",
+                 gene.set = "HALLMARK-INTERFERON-GAMMA-RESPONSE", 
+                 color.by  = "HALLMARK-INTERFERON-GAMMA-RESPONSE")
+```
+
+
+
+## ridgeEnrichment
+
+```{r}
+ridgeEnrichment(pbmc_small, 
+                 assay = "escape.ssGSEA",
+                 gene.set = "HALLMARK-IL2-STAT5-SIGNALING")
+```
+
+
+## splitEnrichment
+
+
+## densityEnrichment
+
+```densityEnrichment()``` is a method to visualize the mean rank position of the gene set features along the total feature space by group. This is similar to traditional GSEA analysis, but is not calculating the walk-based enrichment score.
+
+**gene.set.use** 
+
+* The selected gene set to visualize
+
+**gene.set.reference**
+
+* The gene set library either any of the 3 options above. 
+
+**group.by**
+
+* The grouping variable for the comparison
+
+```{r}
+densityEnrichment(pbmc_small, 
+                  gene.set.use = "HALLMARK_IL6_JAK_STAT3_SIGNALING", 
+                  gene.set.reference = GS.hallmark)
+```
 
 
 ****
 
 # Statistical Analysis
 
+## PCA
 
+## Differential Enrichment
 
 
 ***

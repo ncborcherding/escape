@@ -47,6 +47,10 @@ densityEnrichment <- function(input.data,
     group.by <- "ident"
   }
   
+  if (inherits(x=input.data, what ="Seurat") {
+    gene.set.use <- str_replace_all(gene.set.use , "-", "_")
+  }
+  
   compute.gene.density<-utils::getFromNamespace("compute.gene.density", "GSVA")
   
   gene.set.reference <- .GS.check(gene.set.reference)
