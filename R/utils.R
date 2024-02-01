@@ -66,8 +66,10 @@ is_seurat_or_se_object <- function(obj) {
   if (inherits(x=input.data, what ="Seurat") || 
       inherits(x=input.data, what ="SummarizedExperiment")) {
     enriched <- .makeDFfromSCO(input.data, assay, gene.set, group.by, split.by, facet.by)
-    #gene.set <- colnames(enriched)[colnames(enriched) %!in% c(group.by, split.by, facet.by)]
-    #gene.set <- gene.set[!grepl("meta", gene.set)]
+    if(gene.set == "all") {
+      gene.set <- colnames(enriched)[colnames(enriched) %!in% c(group.by, split.by, facet.by)]
+      gene.set <- gene.set[!grepl("meta", gene.set)]
+    }
   } else if (!is_seurat_or_se_object(input.data)) {
     if(length(gene.set) == 1 && gene.set == "all") {
       gene.set <- colnames(input.data)
@@ -149,7 +151,11 @@ is_seurat_or_se_object <- function(obj) {
     cnts <- obj@assays[[assay]][type]
   } else if (inherits(x = obj, what = "SingleCellExperiment")) {
     pos <- ifelse(assay == "RNA", "counts", assay) 
-    cnts <- assay(obj,pos)
+    if(assay == "RNA") {
+      cnts <- assay(obj,pos)
+    } else {
+      cnt <- assay(altExp(obj, pos))
+    }
   } else {
     cnts <- obj
   }
@@ -159,14 +165,15 @@ is_seurat_or_se_object <- function(obj) {
 
 #Add the values to single cell object
 #' @importFrom SeuratObject CreateAssayObject
-#' @importFrom SummarizedExperiment assays<-
+#' @importFrom SummarizedExperiment SummarizedExperiment
+#' @importFrom SingleCellExperiment altExps
 .adding.Enrich <- function(sc, enrichment, enrichment.name) {
   if (inherits(sc, "Seurat")) {
     new.assay <- suppressWarnings(CreateAssayObject(
                                   data = as.matrix(t(enrichment))))
     sc[[enrichment.name]] <- new.assay
   } else if (inherits(sc, "SingleCellExperiment")) {
-    SummarizedExperiment::assays(sc, enrichment.name) <- enrichment
+    altExp(sc, enrichment.name) <- SummarizedExperiment(t(enrichment))
   }
   return(sc)
 }

@@ -37,7 +37,7 @@
 #'
 #' @return ggplot2 object with heatmap of mean enrichment values
 
-heatmapEnrichment <- function(enriched, 
+heatmapEnrichment <- function(input.data, 
                               assay = NULL,
                               group.by = NULL, 
                               gene.set.use = "all", 
