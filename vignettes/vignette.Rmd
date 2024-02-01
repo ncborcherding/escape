@@ -1,5 +1,5 @@
 ---
-title: Using escape to perform ssGSEA analyses on single-cell RNA-seq data
+title: Using escape to perform gene set enrichment analyses on single-cell RNA-seq data
 author: 
 - name: Nick Borcherding
   email: ncborch@gmail.com
@@ -141,6 +141,8 @@ sce.pbmc <- runEscape(sce.pbmc,
 
 # Visualizations
 
+There are a number of ways to look at the enrichment values downstream of ```runEscape()``` with the myriad plotting and visualizations functions/packages for single-cell data. *escape* include several additional plotting functions to assist in the analysis.
+
 ## heatmapEnrichment
 
 We can examine the enrichment values across our gene sets by using ```heatmapEnrichment()```. This visualization will return the mean of the **group.by** variable. 
@@ -171,6 +173,7 @@ In addition, ```heatmapEnrichment()``` allows for the reclustering of rows and c
 heatmapEnrichment(sce.pbmc, 
                   group.by = "ident",
                   assay = "escape.UCell",
+                  scale = TRUE,
                   cluster.rows = TRUE,
                   cluster.columns = TRUE)
 ```
@@ -181,7 +184,6 @@ Each visualization has an additional argument called **palette that supplies the
 hcl.pals()
 ```
 
-
 ```{r}
 heatmapEnrichment(pbmc_small, 
                   assay = "escape.ssGSEA",
@@ -189,7 +191,7 @@ heatmapEnrichment(pbmc_small,
 ```
 
 
-Alternatively, we can add an additional layer to the ggplot object that is returned by the visualizations.
+Alternatively, we can add an additional layer to the ggplot object that is returned by the visualizations using something like ```scale_fill_gradientn()``` for continuous values or ```scale_fill_manual()``` for the categorical variables.
 
 ```{r}
 heatmapEnrichment(pbmc_small, 
@@ -199,11 +201,24 @@ heatmapEnrichment(pbmc_small,
 
 ## geyserEnrichment
 
+We can also focus on individual gene sets - one approach is to use ```geyserEnrichment()```. Here individual cells are plotted along the Y-axis with graphical summary where the central dot refers to the median enrichment value and the thicker/thinner lines demonstrate the interval summaries refering the 66% and 95%.
+
 ```{r}
 geyserEnrichment(pbmc_small, 
                  assay = "escape.ssGSEA",
                  gene.set = "HALLMARK-INTERFERON-GAMMA-RESPONSE")
 ```
+
+To show the additional parameters that appear in visualizations of individual enrichment gene sets - we can reorder the groups by the mean of the gene set using **order.by** = "mean".
+
+```{r}
+geyserEnrichment(pbmc_small, 
+                 assay = "escape.ssGSEA",
+                 gene.set = "HALLMARK-INTERFERON-GAMMA-RESPONSE", 
+                 order.by = "mean")
+```
+
+What if we had 2 separate samples or groups within the data? Another parameter we can use is **facet.by** to allow for direct visualization of an additional variable. 
 
 ```{r}
 geyserEnrichment(pbmc_small, 
@@ -211,12 +226,8 @@ geyserEnrichment(pbmc_small,
                  gene.set = "HALLMARK-INTERFERON-GAMMA-RESPONSE", 
                  facet.by = "groups")
 ```
-```{r}
-geyserEnrichment(pbmc_small, 
-                 assay = "escape.ssGSEA",
-                 gene.set = "HALLMARK-INTERFERON-GAMMA-RESPONSE", 
-                 order.by = "mean")
-```
+Lastly, we can select the way the color is applied to the plot using the **color.by** parameter. Here we can set it to the gene set of interest *"HALLMARK-INTERFERON-GAMMA-RESPONSE"*.
+
 ```{r}
 geyserEnrichment(pbmc_small, 
                  assay = "escape.ssGSEA",
@@ -224,9 +235,16 @@ geyserEnrichment(pbmc_small,
                  color.by  = "HALLMARK-INTERFERON-GAMMA-RESPONSE")
 ```
 
-
-
 ## ridgeEnrichment
+
+Similar to the ```geyserEnrichment()``` the ```ridgeEnrichment()``` can display the distribution of enrichment values across the selected gene set. The central line is at the median value for the respective grouping. 
+
+```{r}
+ridgeEnrichment(pbmc_small, 
+                 assay = "escape.ssGSEA",
+                 gene.set = "HALLMARK-IL2-STAT5-SIGNALING")
+```
+We can get the relative position of individual cells along the x-axis using the **add.rug** parameter.
 
 ```{r}
 ridgeEnrichment(pbmc_small, 
@@ -234,8 +252,16 @@ ridgeEnrichment(pbmc_small,
                  gene.set = "HALLMARK-IL2-STAT5-SIGNALING")
 ```
 
-
 ## splitEnrichment
+
+Another distribution visualization is a violin plot, which we separate and directly compare using a binary classification. Like ```ridgeEnrichment()```, this allows for greater use of categorical variables. For ```splitEnrichment()```, the output will be two halves of a violin plot based on the **split.by** parameter with a central boxplot with the relative distribution across all samples.
+
+```{r}
+splitEnrichment(pbmc_small, 
+                assay = "escape.ssGSEA",
+                gene.set = "HALLMARK-IL2-STAT5-SIGNALING", 
+                split.by = "groups")
+```
 
 
 ## densityEnrichment
