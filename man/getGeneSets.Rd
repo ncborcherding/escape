@@ -13,7 +13,7 @@ getGeneSets(
 }
 \arguments{
 \item{species}{The scientific name of the species of interest in 
-order to get correcent gene nomenclature}
+order to get correct gene nomenclature}
 
 \item{library}{Individual collection(s) of gene sets, e.g. c("H", "C5").
 See \href{https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp}{msigdbr}for

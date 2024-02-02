@@ -66,7 +66,7 @@ is_seurat_or_se_object <- function(obj) {
   if (inherits(x=input.data, what ="Seurat") || 
       inherits(x=input.data, what ="SummarizedExperiment")) {
     enriched <- .makeDFfromSCO(input.data, assay, gene.set, group.by, split.by, facet.by)
-    if(gene.set == "all") {
+    if(length(gene.set) == 1 && gene.set == "all") {
       gene.set <- colnames(enriched)[colnames(enriched) %!in% c(group.by, split.by, facet.by)]
       gene.set <- gene.set[!grepl("meta", gene.set)]
     }
@@ -173,9 +173,20 @@ is_seurat_or_se_object <- function(obj) {
                                   data = as.matrix(t(enrichment))))
     sc[[enrichment.name]] <- new.assay
   } else if (inherits(sc, "SingleCellExperiment")) {
-    altExp(sc, enrichment.name) <- SummarizedExperiment(t(enrichment))
+    altExp(sc, enrichment.name) <- SummarizedExperiment(assay = t(enrichment))
+    names(assays(altExp(sc, enrichment.name))) <- "data"
   }
   return(sc)
+}
+
+#' @importFrom SummarizedExperiment assay
+#' @importFrom SingleCellExperiment altExps
+.pull.Enrich <- function(sc, enrichment.name) {
+  if (inherits(sc, "Seurat")) {
+    values <- t(sc[[enrichment.name]]["data"])
+  } else if (inherits(sc, "SingleCellExperiment")) {
+    values <- t(assay(altExps(sc)[[enrichment.name]], "data"))
+  }
 }
 
 #' @importFrom GSEABase geneIds

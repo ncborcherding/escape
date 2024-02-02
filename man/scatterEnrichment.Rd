@@ -5,16 +5,20 @@
 \title{Generate a density-based scatter plot}
 \usage{
 scatterEnrichment(
-  enriched,
+  input.data,
   assay = NULL,
   x.axis = NULL,
   y.axis = NULL,
   scale = FALSE,
   facet.by = NULL,
+  style = "point",
   palette = "inferno"
 )
 }
 \arguments{
+\item{input.data}{Enrichment output from \code{\link{escape.matrix}} or
+\code{\link{runEscape}}.}
+
 \item{assay}{Name of the assay to plot if data is a single-cell object.}
 
 \item{x.axis}{Gene set to plot on the x.axis.}
@@ -28,11 +32,10 @@ enrichment values \strong{TRUE}.}
 
 \item{facet.by}{Variable to facet the plot into n distinct graphs.}
 
+\item{style}{Return a \strong{"hex"} bin plot or a \strong{"point"}-based plot.}
+
 \item{palette}{Colors to use in visualization - input any 
 \link[grDevices]{hcl.pals}.}
-
-\item{input.data}{Enrichment output from \code{\link{escape.matrix}} or
-\code{\link{runEscape}}.}
 
 \item{order.by}{Method to organize the x-axis: \strong{"mean"} will arrange
 the x-axis by the mean of the gene.set, while \strong{"group"} will arrange

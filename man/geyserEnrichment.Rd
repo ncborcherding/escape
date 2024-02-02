@@ -5,7 +5,7 @@
 \title{Generate a ridge plot to examine enrichment distributions}
 \usage{
 geyserEnrichment(
-  enriched,
+  input.data,
   assay = NULL,
   group.by = NULL,
   gene.set = NULL,
@@ -17,6 +17,9 @@ geyserEnrichment(
 )
 }
 \arguments{
+\item{input.data}{Enrichment output from \code{\link{escape.matrix}} or
+\code{\link{runEscape}}.}
+
 \item{assay}{Name of the assay to plot if data is a single-cell object.}
 
 \item{group.by}{Categorical parameter to plot along the x.axis. If input is
@@ -41,9 +44,6 @@ enrichment values \strong{TRUE}.}
 
 \item{palette}{Colors to use in visualization - input any 
 \link[grDevices]{hcl.pals}.}
-
-\item{input.data}{Enrichment output from \code{\link{escape.matrix}} or
-\code{\link{runEscape}}.}
 }
 \value{
 ggplot2 object with geyser-based distributions of selected gene.set

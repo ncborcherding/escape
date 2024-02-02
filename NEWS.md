@@ -9,16 +9,20 @@
 * Added ```heatmapEnrichment()```
 * Changed enrichIt to ```escape.matrix()```
 * Changed enrichmentPlot to ```densityEnrichment()```
+* ```performPCA()``` now works with a matrix or single-cell object
+* ```pcaEnrichment()``` combines biplot-like functions
 
 ## UNDERLYING CHANGES
 
 * Updated interaction with gsva package
 * Added support for GSVA calculation
 * Added support for AUCell calculation
+* Added support of visualizations and calculations for single-cell objects
 
 ## DEPRECATED AND DEFUNCT
 
 * Deprecate getSignificance()
+* Deprecate masterPCAPlot()
 
 # CHANGES IN VERSION 1.9.0
 * Releveling version for commit to new Bioconductor release

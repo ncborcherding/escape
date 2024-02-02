@@ -33,8 +33,11 @@ For the demonstration of *escape*, we will use the example **"pbmc_small"** data
 ```{r}
 suppressPackageStartupMessages(library(escape))
 suppressPackageStartupMessages(library(SingleCellExperiment))
+suppressPackageStartupMessages(library(scran))
 suppressPackageStartupMessages(library(Seurat))
 suppressPackageStartupMessages(library(SeuratObject))
+suppressPackageStartupMessages(library(RColorBrewer))
+
 
 pbmc_small <- get("pbmc_small")
 sce.pbmc <- as.SingleCellExperiment(pbmc_small, assay = "RNA")
@@ -106,14 +109,15 @@ escape has 2 major functions - the first being ```escape.matrix()```, which is t
 
 ```{r tidy = FALSE}
 enrichment.scores <- escape.matrix(pbmc_small, 
-                                   gene.sets = GS.hallmark[1:5], 
+                                   gene.sets = GS.hallmark, 
                                    groups = 1000, 
                                    min.size = 5)
 
 ggplot(data = as.data.frame(enrichment.scores), 
       mapping = aes(enrichment.scores[,1], enrichment.scores[,2])) + 
   geom_point() + 
-  theme_classic()
+  theme_classic() + 
+  theme(axis.title = element_blank())
 ```
 
 ## runEscape
@@ -145,11 +149,12 @@ There are a number of ways to look at the enrichment values downstream of ```run
 
 ## heatmapEnrichment
 
-We can examine the enrichment values across our gene sets by using ```heatmapEnrichment()```. This visualization will return the mean of the **group.by** variable. 
+We can examine the enrichment values across our gene sets by using ```heatmapEnrichment()```. This visualization will return the mean of the **group.by** variable. As a default - all visualizations of single-cell objects will use the cluster assignment or active identity as a default for visualizations.
 
 ```{r}
 heatmapEnrichment(pbmc_small, 
                   group.by = "ident",
+                  gene.set.use = "all",
                   assay = "escape.ssGSEA")
 ```
 Most of the visualizations in *escape* have a defined set of parameters.
@@ -187,15 +192,15 @@ hcl.pals()
 ```{r}
 heatmapEnrichment(pbmc_small, 
                   assay = "escape.ssGSEA",
-                  palette = "Spectral")
+                  palette = "Spectral") 
 ```
-
 
 Alternatively, we can add an additional layer to the ggplot object that is returned by the visualizations using something like ```scale_fill_gradientn()``` for continuous values or ```scale_fill_manual()``` for the categorical variables.
 
 ```{r}
-heatmapEnrichment(pbmc_small, 
-                  assay = "escape.ssGSEA") + 
+heatmapEnrichment(sce.pbmc, 
+                  group.by = "ident",
+                  assay = "escape.UCell") + 
   scale_fill_gradientn(colors = rev(brewer.pal(11, "RdYlBu"))) 
 ```
 
@@ -240,16 +245,17 @@ geyserEnrichment(pbmc_small,
 Similar to the ```geyserEnrichment()``` the ```ridgeEnrichment()``` can display the distribution of enrichment values across the selected gene set. The central line is at the median value for the respective grouping. 
 
 ```{r}
-ridgeEnrichment(pbmc_small, 
-                 assay = "escape.ssGSEA",
-                 gene.set = "HALLMARK-IL2-STAT5-SIGNALING")
+ridgeEnrichment(sce.pbmc, 
+                assay = "escape.UCell",
+                gene.set = "HALLMARK-IL2-STAT5-SIGNALING")
 ```
 We can get the relative position of individual cells along the x-axis using the **add.rug** parameter.
 
 ```{r}
-ridgeEnrichment(pbmc_small, 
-                 assay = "escape.ssGSEA",
-                 gene.set = "HALLMARK-IL2-STAT5-SIGNALING")
+ridgeEnrichment(sce.pbmc, 
+                assay = "escape.UCell",
+                gene.set = "HALLMARK-IL2-STAT5-SIGNALING",
+                add.rug = TRUE)
 ```
 
 ## splitEnrichment
@@ -274,22 +280,51 @@ splitEnrichment(pbmc_small,
 
 **gene.set.reference**
 
-* The gene set library either any of the 3 options above. 
-
-
+* The gene set library from either any of the 3 options in the first section of the vignette.
 
 ```{r}
 densityEnrichment(pbmc_small, 
                   gene.set.use = "HALLMARK_IL6_JAK_STAT3_SIGNALING", 
                   gene.set.reference = GS.hallmark)
 ```
+## scatterEnrichment
 
+It may be advantageous to look at the distribution of multiple gene sets - here we can use ```scatterEnrichment()``` for a 2 gene set comparison. The color values are based on the density of points determine by the number of neighbors, similar to the [Nebulosa R package](https://www.bioconductor.org/packages/release/bioc/html/Nebulosa.html). We just need to define which gene set to plot on the **x.axis** and which to plot on the **y.axis**.
+
+
+```{r}
+scatterEnrichment(sce.pbmc, 
+                  assay = "escape.UCell",
+                  x.axis = "HALLMARK-INTERFERON-GAMMA-RESPONSE",
+                  y.axis = "HALLMARK-IL6-JAK-STAT3-SIGNALING")
+```
+The scatter plot can also be converted into a hexbin, another method for summarizing the individual cell distributions along the x and y axis, by setting **style** = "hex". 
+
+```{r}
+scatterEnrichment(sce.pbmc, 
+                  assay = "escape.UCell",
+                  x.axis = "HALLMARK-INTERFERON-GAMMA-RESPONSE",
+                  y.axis = "HALLMARK-IL6-JAK-STAT3-SIGNALING", 
+                  style = "hex")
+```
 
 ****
 
 # Statistical Analysis
 
-## PCA
+## Pricipal Component Analysis (PCA)
+
+escape has its own PCA function ```performPCA()``` which will work on a single-cell object or a matrix of enrichment values. This is specifically useful for downstream visualizations as it stores the eigen values and rotations. If we want to look at the the relative contribution to overall variance of each component or a Biplot-like overlay of the individual features, use ```performPCA()```.
+
+Alternatively, other PCA-based functions like Seurat's ```RunPCA()``` or scater's ```runPCA()` can be used. These functions are likely faster and would be ideal if we have a larger number of cells and/or gene sets.
+
+```{r}
+pbmc_small <- performPCA(pbmc_small, 
+                         assay = "escape.ssGSEA",
+                         n.dim = 1:10)
+```
+
+
 
 ## Differential Enrichment
 

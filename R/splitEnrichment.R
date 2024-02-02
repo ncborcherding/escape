@@ -94,15 +94,16 @@ splitEnrichment <- function(input.data,
   if(is.null(split.by)){
     stop("Please select a variable with 'split.by' to generate the splitEnrichment() plots")
   } 
-  if (length(unique(enriched[,split.by])) != 2) {
-    message("SplitEnrichment() can only work for binary variables - reselect 'split.by'")
-  }
   
   if(is.null(group.by)) {
     group.by <- "ident"
   }
   
   enriched <- .prepData(input.data, assay, gene.set, group.by, split.by, facet.by) 
+  
+  if (length(unique(enriched[,split.by])) != 2) {
+    message("SplitEnrichment() can only work for binary variables - reselect 'split.by'")
+  }
   
   if(scale) {
     enriched[,gene.set] <- scale(enriched[,gene.set])

@@ -30,6 +30,7 @@
 #' @importFrom utils getFromNamespace
 #' @import ggplot2
 #' @importFrom reshape2 melt
+#' @importFrom stringr str_replace_all
 #' @export
 #'
 #' @return ggplot2 object mean rank gene density across groups
@@ -47,7 +48,7 @@ densityEnrichment <- function(input.data,
     group.by <- "ident"
   }
   
-  if (inherits(x=input.data, what ="Seurat") {
+  if (inherits(x=input.data, what ="Seurat")) {
     gene.set.use <- str_replace_all(gene.set.use , "-", "_")
   }
   

@@ -20,6 +20,7 @@
 #' @param facet.by Variable to facet the plot into n distinct graphs.
 #' @param scale Visualize raw values \strong{FALSE} or Z-transform 
 #' enrichment values \strong{TRUE}.
+#' @param style Return a \strong{"hex"} bin plot or a \strong{"point"}-based plot.
 #' @param palette Colors to use in visualization - input any 
 #' \link[grDevices]{hcl.pals}.
 #'
@@ -48,24 +49,38 @@ scatterEnrichment <- function(input.data,
                               y.axis = NULL,
                               scale = FALSE, 
                               facet.by = NULL, 
+                              style = "point",
                               palette = "inferno") {
   
   gene.set <- c(x.axis, y.axis)
+  if(style %!in% c("point", "hex")) {
+    stop("Please select either 'point' or 'hex' for the style parameter.")
+  }
   
-  enriched <- .prepData(input.data, assay, gene.set, group.by, NULL, facet.by) 
+  enriched <- .prepData(input.data, assay, gene.set, NULL, NULL, facet.by) 
   
   if(scale) {
     enriched[,gene.set] <- apply(enriched[,gene.set], 2, scale)
   }
   
   plot <- ggplot(data = enriched, aes(x = enriched[,x.axis], 
-                              y = enriched[,y.axis])) +
-                geom_pointdensity() +
-                scale_color_gradientn(colors = .colorizer(palette, 11)) + 
-                ylab(paste0(y.axis, " Enrichment Score")) +
-                xlab(paste0(x.axis, " Enrichment Score")) +
-                labs(color = "Relative Density") + 
-                theme_classic()
+                              y = enriched[,y.axis]))
+    
+  if(style == "point") {
+    plot <- plot + 
+            geom_pointdensity() + 
+            scale_color_gradientn(colors = .colorizer(palette, 11)) + 
+            labs(color = "Relative Density")
+  } else if (style == "hex") {
+    plot <- plot + 
+            stat_binhex() +
+            scale_fill_gradientn(colors = .colorizer(palette, 11))
+            labs(fill = "Relative Density")
+  }
+    plot <- plot + 
+            ylab(paste0(y.axis, " Enrichment Score")) +
+            xlab(paste0(x.axis, " Enrichment Score")) +
+            theme_classic()
   
   if (!is.null(facet.by)) {
     plot <- plot + 

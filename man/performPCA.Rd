@@ -2,34 +2,53 @@
 % Please edit documentation in R/performPCA.R
 \name{performPCA}
 \alias{performPCA}
-\title{Calculate Principal Components for the Enrichment Scores}
+\title{Perform Principal Component Analysis on Enrichment Data}
 \usage{
-performPCA(enriched, gene.sets = NULL, groups)
+performPCA(
+  input.data,
+  assay = NULL,
+  scale = TRUE,
+  n.dim = 1:10,
+  reduction.name = "escape.PCA",
+  reduction.key = "PCA"
+)
 }
 \arguments{
-\item{enriched}{The output of \code{\link{enrichIt}}.}
+\item{input.data}{Enrichment output from \code{\link{escape.matrix}} or
+\code{\link{runEscape}}.}
 
-\item{gene.sets}{Names of gene sets to include in the PCA}
+\item{assay}{Name of the assay to plot if data is a single-cell object.}
 
-\item{groups}{The column headers to use in future graphing functions.}
+\item{scale}{Standardize the enrichment value (\link{TRUE}) or 
+not (\link{FALSE})}
+
+\item{n.dim}{The number of components to calculate.}
+
+\item{reduction.name}{Name of the reduced dimensions object to add if 
+data is a single-cell object.}
+
+\item{reduction.key}{Name of the key to use with the components.}
 }
 \value{
-Data frame of principal components
+single-cell object or list with PCA components to plot.
 }
 \description{
-Using all or selected enrichment scores of individual 
-single-cells, this function will calculate 
-principal components using scaled values and attach 
-to the output columns to use to graph later.
+This function allows users to calculate the principal components 
+for the gene set enrichment values. For single-cell data, the PCA
+will be stored with the dimensional reductions. If a matrix is used
+as input, the output is a list for further plotting. Alternatively,
+users can use functions for PCA calculations based on their desired
+workflow in lieu of using \code{\link{performPCA}}
 }
 \examples{
-ES2 <- readRDS(url(
-"https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
+GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
+           Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
+pbmc_small <- SeuratObject::pbmc_small
+pbmc_small <- runEscape(pbmc_small, 
+                        gene.sets = GS, 
+                        min.size = NULL)
+                        
+pbmc_small <- performPCA(pbmc_small, 
+                         assay = "escape")
 
-PCA <- performPCA(enriched = ES2, groups = c("Type", "Cluster"), 
-gene.sets = colnames(ES2))
-
-}
-\author{
-Nick Borcherding
 }

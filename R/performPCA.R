@@ -1,36 +1,87 @@
-#' Calculate Principal Components for the Enrichment Scores
+#' Perform Principal Component Analysis on Enrichment Data
+#' 
+#' This function allows users to calculate the principal components 
+#' for the gene set enrichment values. For single-cell data, the PCA
+#' will be stored with the dimensional reductions. If a matrix is used
+#' as input, the output is a list for further plotting. Alternatively,
+#' users can use functions for PCA calculations based on their desired
+#' workflow in lieu of using \code{\link{performPCA}}
 #'
-#' Using all or selected enrichment scores of individual 
-#' single-cells, this function will calculate 
-#' principal components using scaled values and attach 
-#' to the output columns to use to graph later.
+#' @param input.data Enrichment output from \code{\link{escape.matrix}} or
+#' \code{\link{runEscape}}.
+#' @param assay Name of the assay to plot if data is a single-cell object.
+#' @param scale Standardize the enrichment value (\link{TRUE}) or 
+#' not (\link{FALSE})
+#' @param n.dim The number of components to calculate.
+#' @param reduction.name Name of the reduced dimensions object to add if 
+#' data is a single-cell object.
+#' @param reduction.key Name of the key to use with the components.
 #'
-#' @param enriched The output of \code{\link{enrichIt}}.
-#' @param gene.sets Names of gene sets to include in the PCA
-#' @param groups The column headers to use in future graphing functions.
-#'
-#' @importFrom dplyr select_if
 #' @importFrom stats prcomp
+#' @importFrom SeuratObject CreateDimReducObject
+#' @importFrom SingleCellExperiment reducedDim
 #' 
-#' @examples 
-#' ES2 <- readRDS(url(
-#' "https://ncborcherding.github.io/vignettes/escape_enrichment_results.rds"))
-#' 
-#' PCA <- performPCA(enriched = ES2, groups = c("Type", "Cluster"), 
-#' gene.sets = colnames(ES2))
+#' @examples
+#' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
+#'            Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
+#' pbmc_small <- SeuratObject::pbmc_small
+#' pbmc_small <- runEscape(pbmc_small, 
+#'                         gene.sets = GS, 
+#'                         min.size = NULL)
+#'                         
+#' pbmc_small <- performPCA(pbmc_small, 
+#'                          assay = "escape")
 #'
 #' @export
-#' @return Data frame of principal components
-#'
-#' @author Nick Borcherding
-#'
-performPCA <- function(enriched, gene.sets = NULL, groups) {
-  groups <- data.frame(enriched[,colnames(enriched) %in% c(groups)])
-  input <- select_if(enriched, is.numeric)
-  if (!is.null(gene.sets)) {
-    input <- input[,colnames(input) %in% gene.sets]
+#' 
+#' @return single-cell object or list with PCA components to plot.
+performPCA <- function(input.data,
+                       assay = NULL,
+                       scale = TRUE,
+                       n.dim = 1:10,
+                       reduction.name = "escape.PCA",
+                       reduction.key = "PCA") {
+  
+
+  enriched <- .pull.Enrich(input.data, assay)
+  
+  PCA <- prcomp(enriched, 
+                scale. = scale,
+                rank. = max(n.dim))
+  rotation <- PCA$rotation
+  eigen.values <- PCA$sdev^2
+  percent.contribution <- round((eigen.values/sum(eigen.values))*100,1)
+  PCA <- PCA$x
+  colnames(PCA) <- paste0(reduction.key, "_", seq_len(ncol(PCA)))
+  
+  additional.data <- list(eigen_values = eigen.values,
+                          contribution = percent.contribution, 
+                          rotation = rotation)
+  if(is_seurat_or_se_object(input.data)) {
+    if (inherits(input.data, "Seurat")) {
+      DR <- suppressWarnings(CreateDimReducObject(
+                            embeddings = PCA,
+                            stdev = rep(0, ncol(PCA)),
+                            key = reduction.key,
+                            jackstraw = NULL,
+                            misc = additional.data))
+      input.data[[reduction.name]] <- DR
+    } else if (inherits(input.data, "SingleCellExperiment")) {
+      reducedDim(input.data, reduction.name) <- PCA
+      if(length(input.data@metadata) == 0) {
+        input.data@metadata <- additional.data
+      } else {
+        input.data@metadata <- c(input.data@metadata, additional.data)
+      }
+    
+    } 
+    return(input.data)
+  } else {
+    PCA.results <- list(PCA = PCA,
+                        eigen_values = eigen.values,
+                        contribution = percent.contribution,
+                        otation = rotation)
+    return(PCA.results)
   }
-  PCA <- prcomp(input, scale. = TRUE)
-  merged <- cbind(PCA$x, groups)
-  return(merged)
+  
 }
