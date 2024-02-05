@@ -42,8 +42,11 @@ performPCA <- function(input.data,
                        reduction.name = "escape.PCA",
                        reduction.key = "PCA") {
   
-
-  enriched <- .pull.Enrich(input.data, assay)
+  if(is_seurat_or_se_object(input.data)) {
+    enriched <- .pull.Enrich(input.data, assay)
+  } else {
+    enriched <- input.data
+  }
   
   PCA <- prcomp(enriched, 
                 scale. = scale,
@@ -80,7 +83,7 @@ performPCA <- function(input.data,
     PCA.results <- list(PCA = PCA,
                         eigen_values = eigen.values,
                         contribution = percent.contribution,
-                        otation = rotation)
+                        rotation = rotation)
     return(PCA.results)
   }
   

@@ -4,6 +4,7 @@ test_that("ridgeEnrichment works", {
   
   seuratObj <- getdata("runEscape", "pbmc_small_ssGSEA")
   
+  set.seed(42)
   expect_doppelganger(
     "ridgeEnrichment_default_plot",
     ridgeEnrichment(
@@ -13,6 +14,7 @@ test_that("ridgeEnrichment works", {
     )
   )
   
+  set.seed(42)
   expect_doppelganger(
     "ridgeEnrichment_rugadded_plot",
     ridgeEnrichment(
@@ -23,6 +25,7 @@ test_that("ridgeEnrichment works", {
     )
   )
   
+  set.seed(42)
   expect_doppelganger(
     "ridgeEnrichment_facet_plot",
     ridgeEnrichment(
@@ -33,6 +36,7 @@ test_that("ridgeEnrichment works", {
     )
   )
 
+  set.seed(42)
   expect_doppelganger(
     "ridgeEnrichment_order_plot",
     ridgeEnrichment(
@@ -43,6 +47,7 @@ test_that("ridgeEnrichment works", {
     )
   )
   
+  set.seed(42)
   expect_doppelganger(
     "ridgeEnrichment_gradient_plot",
     ridgeEnrichment(
@@ -53,6 +58,7 @@ test_that("ridgeEnrichment works", {
     )
   )
   
+  set.seed(42)
   expect_doppelganger(
     "ridgeEnrichment_gradient_reorder_plot",
     ridgeEnrichment(
@@ -64,6 +70,7 @@ test_that("ridgeEnrichment works", {
     )
   )
   
+  set.seed(42)
   expect_doppelganger(
     "ridgeEnrichment_gradient_facet_plot",
     ridgeEnrichment(

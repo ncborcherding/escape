@@ -4,6 +4,7 @@ test_that("geyserEnrichment works", {
   
   seuratObj <- getdata("runEscape", "pbmc_small_ssGSEA")
   
+  set.seed(42)
   expect_doppelganger(
     "geyserEnrichment_default_plot",
     geyserEnrichment(
@@ -13,6 +14,7 @@ test_that("geyserEnrichment works", {
     )
   )
   
+  set.seed(42)
   expect_doppelganger(
     "geyserEnrichment_scale_plot",
     geyserEnrichment(
@@ -23,7 +25,7 @@ test_that("geyserEnrichment works", {
     )
   )
   
-  
+  set.seed(42)
   expect_doppelganger(
     "geyserEnrichment_facet_plot",
     geyserEnrichment(
@@ -34,6 +36,7 @@ test_that("geyserEnrichment works", {
     )
   )
 
+  set.seed(42)
   expect_doppelganger(
     "geyserEnrichment_order_plot",
     geyserEnrichment(
@@ -44,6 +47,7 @@ test_that("geyserEnrichment works", {
     )
   )
   
+  set.seed(42)
   expect_doppelganger(
     "geyserEnrichment_gradient_plot",
     geyserEnrichment(
@@ -54,6 +58,7 @@ test_that("geyserEnrichment works", {
     )
   )
   
+  set.seed(42)
   expect_doppelganger(
     "geyserEnrichment_gradient_reorder_plot",
     geyserEnrichment(
@@ -65,6 +70,7 @@ test_that("geyserEnrichment works", {
     )
   )
   
+  set.seed(42)
   expect_doppelganger(
     "geyserEnrichment_gradient_facet_plot",
     geyserEnrichment(

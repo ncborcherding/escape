@@ -146,7 +146,9 @@ is_seurat_or_se_object <- function(obj) {
 
 #' @importFrom SummarizedExperiment assays
 #' @importFrom MatrixGenerics rowSums2
-.cntEval <- function(obj, assay = "RNA", type = "counts") {
+.cntEval <- function(obj, 
+                     assay = "RNA", 
+                     type = "counts") {
   if (inherits(x = obj, what = "Seurat")) {
     cnts <- obj@assays[[assay]][type]
   } else if (inherits(x = obj, what = "SingleCellExperiment")) {
@@ -154,7 +156,7 @@ is_seurat_or_se_object <- function(obj) {
     if(assay == "RNA") {
       cnts <- assay(obj,pos)
     } else {
-      cnt <- assay(altExp(obj), pos)
+      cnts <- assay(altExp(obj), pos)
     }
   } else {
     cnts <- obj
