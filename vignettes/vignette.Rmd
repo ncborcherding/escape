@@ -206,7 +206,7 @@ heatmapEnrichment(sce.pbmc,
 
 ## geyserEnrichment
 
-We can also focus on individual gene sets - one approach is to use ```geyserEnrichment()```. Here individual cells are plotted along the Y-axis with graphical summary where the central dot refers to the median enrichment value and the thicker/thinner lines demonstrate the interval summaries refering the 66% and 95%.
+We can also focus on individual gene sets - one approach is to use ```geyserEnrichment()```. Here individual cells are plotted along the Y-axis with graphical summary where the central dot refers to the median enrichment value and the thicker/thinner lines demonstrate the interval summaries referring the 66% and 95%.
 
 ```{r}
 geyserEnrichment(pbmc_small, 
@@ -268,7 +268,6 @@ splitEnrichment(pbmc_small,
                 gene.set = "HALLMARK-IL2-STAT5-SIGNALING", 
                 split.by = "groups")
 ```
-
 
 ## densityEnrichment
 

@@ -154,7 +154,7 @@ is_seurat_or_se_object <- function(obj) {
     if(assay == "RNA") {
       cnts <- assay(obj,pos)
     } else {
-      cnt <- assay(altExp(obj, pos))
+      cnt <- assay(altExp(obj), pos)
     }
   } else {
     cnts <- obj
@@ -174,7 +174,7 @@ is_seurat_or_se_object <- function(obj) {
     sc[[enrichment.name]] <- new.assay
   } else if (inherits(sc, "SingleCellExperiment")) {
     altExp(sc, enrichment.name) <- SummarizedExperiment(assay = t(enrichment))
-    names(assays(altExp(sc, enrichment.name))) <- "data"
+    names(assays(altExp(sc, enrichment.name))) <- enrichment.name
   }
   return(sc)
 }
