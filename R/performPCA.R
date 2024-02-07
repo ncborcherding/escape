@@ -5,7 +5,7 @@
 #' will be stored with the dimensional reductions. If a matrix is used
 #' as input, the output is a list for further plotting. Alternatively,
 #' users can use functions for PCA calculations based on their desired
-#' workflow in lieu of using \code{\link{performPCA}}
+#' workflow in lieu of using \code{\link{performPCA}}.
 #'
 #' @param input.data Enrichment output from \code{\link{escape.matrix}} or
 #' \code{\link{runEscape}}.

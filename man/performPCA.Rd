@@ -38,7 +38,7 @@ for the gene set enrichment values. For single-cell data, the PCA
 will be stored with the dimensional reductions. If a matrix is used
 as input, the output is a list for further plotting. Alternatively,
 users can use functions for PCA calculations based on their desired
-workflow in lieu of using \code{\link{performPCA}}
+workflow in lieu of using \code{\link{performPCA}}.
 }
 \examples{
 GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),

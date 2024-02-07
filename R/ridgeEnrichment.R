@@ -28,7 +28,8 @@
 #' @import ggplot2
 #' @importFrom ggridges geom_density_ridges geom_density_ridges2 position_points_jitter
 #' 
-#' #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
+#' @examples 
+#' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
 #'            Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
 #' pbmc_small <- SeuratObject::pbmc_small
 #' pbmc_small <- runEscape(pbmc_small, 
