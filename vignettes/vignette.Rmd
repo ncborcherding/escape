@@ -340,7 +340,10 @@ pbmc_small <- performPCA(pbmc_small,
 
 
 ```{r}
-performNormalization <- function
+pbmc_small <- performNormalization(pbmc_small, 
+                                   assay = "escape.ssGSEA", 
+                                   gene.set.reference = GS.hallmark,
+                                   make.positive = FALSE)
 
 all.markers <- FindAllMarkers(pbmc_small, 
                               assay = "escape.ssGSEA", 

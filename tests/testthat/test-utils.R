@@ -24,7 +24,7 @@ test_that(".makeDFfromSCO works", {
   enriched <- .makeDFfromSCO(seuratObj, 
                              assay = "escape", 
                              group.by = NULL,
-                             split.by = "groups", 
+                             split.by = "groups",
                              gene.set = "Tcells")
   
   expect_equal(enriched,

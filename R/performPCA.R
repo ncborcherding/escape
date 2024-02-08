@@ -10,8 +10,8 @@
 #' @param input.data Enrichment output from \code{\link{escape.matrix}} or
 #' \code{\link{runEscape}}.
 #' @param assay Name of the assay to plot if data is a single-cell object.
-#' @param scale Standardize the enrichment value (\link{TRUE}) or 
-#' not (\link{FALSE})
+#' @param scale Standardize the enrichment value (\strong{TRUE}) or 
+#' not (\strong{FALSE})
 #' @param n.dim The number of components to calculate.
 #' @param reduction.name Name of the reduced dimensions object to add if 
 #' data is a single-cell object.

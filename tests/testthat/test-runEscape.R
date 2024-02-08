@@ -30,6 +30,7 @@ test_that("runEscape works", {
                                gene.sets = GS, 
                                min.size = NULL)
   
+  set.seed(42)
   trial.AUCell <- escape.matrix(pbmc_small, 
                                 method = "AUCell", 
                                 gene.sets = GS, 
