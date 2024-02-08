@@ -11,9 +11,37 @@ performNormalization(
   make.positive = TRUE
 )
 }
+\arguments{
+\item{input.data}{Enrichment output from \code{\link{escape.matrix}} or
+\code{\link{runEscape}}.}
+
+\item{assay}{Name of the assay to plot if data is a single-cell object.}
+
+\item{gene.set.reference}{The gene set library to use to extract 
+the individual gene set information from.}
+
+\item{make.positve}{Shift enrichment values to a positive range \strong{TRUE}}
+
+\item{reduction.key}{Name of the key to use with the components.}
+}
+\value{
+single-cell object or list with PCA components to plot.
+}
 \description{
 This function allows users to normalize the enrichment
 calculations by accounting for single-cell dropout and
 producing positive values for downstream differential 
 enrichment analyses.
+}
+\examples{
+GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
+           Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
+pbmc_small <- SeuratObject::pbmc_small
+pbmc_small <- runEscape(pbmc_small, 
+                        gene.sets = GS, 
+                        min.size = NULL)
+                        
+pbmc_small <- performNormalization(pbmc_small, 
+                                   assay = "escape")
+
 }

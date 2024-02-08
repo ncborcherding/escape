@@ -19,8 +19,8 @@ performPCA(
 
 \item{assay}{Name of the assay to plot if data is a single-cell object.}
 
-\item{scale}{Standardize the enrichment value (\link{TRUE}) or 
-not (\link{FALSE})}
+\item{scale}{Standardize the enrichment value (\strong{TRUE}) or 
+not (\strong{FALSE})}
 
 \item{n.dim}{The number of components to calculate.}
 

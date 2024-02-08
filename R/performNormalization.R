@@ -10,8 +10,23 @@
 #' @param assay Name of the assay to plot if data is a single-cell object.
 #' @param gene.set.reference The gene set library to use to extract 
 #' the individual gene set information from.
-#' @make.positve Shift enrichment values to a positive range \strong{TRUE}
+#' @param make.positve Shift enrichment values to a positive range \strong{TRUE}
 #' @param reduction.key Name of the key to use with the components.
+#' 
+#' @examples
+#' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
+#'            Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
+#' pbmc_small <- SeuratObject::pbmc_small
+#' pbmc_small <- runEscape(pbmc_small, 
+#'                         gene.sets = GS, 
+#'                         min.size = NULL)
+#'                         
+#' pbmc_small <- performNormalization(pbmc_small, 
+#'                                    assay = "escape")
+#'
+#' @export
+#' 
+#' @return single-cell object or list with PCA components to plot.
 
 performNormalization <- function(input.data,
                                  assay = NULL,
