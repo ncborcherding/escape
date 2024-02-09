@@ -11,6 +11,7 @@ runEscape(
   groups = 1000,
   min.size = 5,
   normalize = FALSE,
+  make.positive = FALSE,
   new.assay.name = "escape",
   ...
 )
@@ -29,9 +30,13 @@ in the escape package \code{\link{escape.gene.sets}}.}
 calculation}
 
 \item{normalize}{Whether to divide the enrichment score by the number 
-of genes \strong{TRUE} or report unnormalized \strong{FALSE}}
+of genes \strong{TRUE} or report unnormalized \strong{FALSE}.}
 
 \item{...}{pass arguments to AUCell GSVA, ssGSEA or UCell call}
+
+\item{make.positve}{During normalization shift enrichment values to a 
+positive range \strong{TRUE} for downstream analysis or not 
+\strong{TRUE} (default).}
 
 \item{new.assay.nam}{The new name of the assay to append to 
 the single-cell object containing the enrichment scores.}

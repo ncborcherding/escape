@@ -1,17 +1,19 @@
 #' Perform Normalization on Enrichment Data
 #' 
-#' This function allows users to normalize the enrichment
-#' calculations by accounting for single-cell dropout and
-#' producing positive values for downstream differential 
-#' enrichment analyses. 
+#' This function allows users to normalize the enrichment calculations 
+#' by accounting for single-cell dropout and producing positive 
+#' values for downstream differential enrichment analyses. A positive range
+#' values is useful for several downstream analyses, like differential 
+#' evaluation for log2-fold change, but will alter the original 
+#' enrichment values.
 #' 
 #' @param input.data Enrichment output from \code{\link{escape.matrix}} or
 #' \code{\link{runEscape}}.
 #' @param assay Name of the assay to plot if data is a single-cell object.
-#' @param gene.set.reference The gene set library to use to extract 
+#' @param gene.sets The gene set library to use to extract 
 #' the individual gene set information from.
 #' @param make.positve Shift enrichment values to a positive range \strong{TRUE}
-#' @param reduction.key Name of the key to use with the components.
+#' for downstream analysis or not \strong{TRUE} (default).
 #' 
 #' @examples
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
@@ -26,12 +28,12 @@
 #'
 #' @export
 #' 
-#' @return single-cell object or list with PCA components to plot.
+#' @return Single-cell object or matrix of normalized enrichment scores
 
 performNormalization <- function(input.data,
                                  assay = NULL,
-                                 gene.set.reference = NULL,
-                                 make.positive = TRUE) {
+                                 gene.sets = NULL,
+                                 make.positive = FALSE) {
   
   
   if(is_seurat_or_se_object(input.data)) {
@@ -41,7 +43,7 @@ performNormalization <- function(input.data,
   }
   
   #Getting the gene sets that passed filters
-  egc <- .GS.check(gene.set.reference)
+  egc <- .GS.check(gene.sets)
   names(egc) <- str_replace_all(names(egc), "_", "-")
   egc <- egc[names(egc) %in% colnames(enriched)]
   
@@ -60,7 +62,7 @@ performNormalization <- function(input.data,
     if(any(gene.set == 0)) {
       gene.set[which(gene.set == 0)] <- 1
     }
-    enriched[,x]/gene.set
+    enriched[,x] <- enriched[,x]/gene.set
     if(any(enriched[,x] < 0) & make.positive) {
       enriched[,x] <- enriched[,x] + abs(min(enriched[,x]))
     }
@@ -70,12 +72,11 @@ performNormalization <- function(input.data,
   normalized.enriched <- do.call(cbind, normalized.values)
   colnames(normalized.enriched) <- colnames(enriched)
   
-  #TODO add ammended enrichment values to single-cell object or return matrix
-  
   if(is_seurat_or_se_object(input.data)) {
-    input.data <- .adding.Enrich(input.data, normalized.enriched, assay)
+    input.data <- .adding.Enrich(input.data, normalized.enriched, paste0(assay, "_normalized"))
     return(input.data)
+  } else {
+    return(normalized.enriched)
   }
-  return(normalized.enriched)
   
 }

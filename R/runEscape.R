@@ -14,8 +14,11 @@
 #' @param min.size Minimum number of gene necessary to perform the enrichment
 #' calculation
 #' @param normalize Whether to divide the enrichment score by the number 
-#' of genes \strong{TRUE} or report unnormalized \strong{FALSE}
-#' @param ... pass arguments to AUCell GSVA, ssGSEA or UCell call
+#' of genes \strong{TRUE} or report unnormalized \strong{FALSE}.
+#' @param make.positve During normalization shift enrichment values to a 
+#' positive range \strong{TRUE} for downstream analysis or not 
+#' \strong{TRUE} (default).
+#' @param ... pass arguments to AUCell GSVA, ssGSEA, or UCell call
 #'
 #' @importFrom GSVA gsva gsvaParam ssgseaParam
 #' @importFrom GSEABase GeneSetCollection 
@@ -42,6 +45,7 @@ escape.matrix <- function(input.data,
                           groups = 1000, 
                           min.size = 5,
                           normalize = FALSE,
+                          make.positive = FALSE,
                           ...) {
   
     egc <- .GS.check(gene.sets)
@@ -92,11 +96,13 @@ escape.matrix <- function(input.data,
     }
     scores <- do.call(cbind, scores)
     output <- t(as.matrix(scores))
-    #Normalizing ssGSEA by number of genes in gene sets present
+    
+    #Normalize based on dropout
     if(normalize) {
-        for(i in seq_len(ncol(output))) {
-          output[,i] <- output[,i]/egc.size[[i]]
-        }
+      output <- performNormalization(output,
+                                     assay = NULL,
+                                     gene.sets = gene.sets,
+                                     make.positive = make.positive)
     }
     return(output)
 }
@@ -124,7 +130,10 @@ escape.matrix <- function(input.data,
 #' @param min.size Minimum number of gene necessary to perform the enrichment
 #' calculation
 #' @param normalize Whether to divide the enrichment score by the number 
-#' of genes \strong{TRUE} or report unnormalized \strong{FALSE}
+#' of genes \strong{TRUE} or report unnormalized \strong{FALSE}.
+#' @param make.positve During normalization shift enrichment values to a 
+#' positive range \strong{TRUE} for downstream analysis or not 
+#' \strong{TRUE} (default).
 #' @param new.assay.nam The new name of the assay to append to 
 #' the single-cell object containing the enrichment scores.
 #' @param ... pass arguments to AUCell GSVA, ssGSEA or UCell call
@@ -138,6 +147,7 @@ runEscape <- function(input.data,
                       groups = 1000, 
                       min.size = 5,
                       normalize = FALSE,
+                      make.positive = FALSE,
                       new.assay.name = "escape",
                       ...) {
   .checkSingleObject(input.data)

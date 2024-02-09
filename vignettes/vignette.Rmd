@@ -104,7 +104,11 @@ escape has 2 major functions - the first being ```escape.matrix()```, which is t
 
 **normalize**
 
-* Use the number of genes from the gene sets in data to normalize the enrichment scores. The default value is **FALSE**.
+* Use the number of genes from the gene sets in each cell to normalize the enrichment scores. The default value is **FALSE**.
+
+**make.positive**
+
+* During normalization, whether to shift the enrichment values to a positive range (**TRUE**) or not (**FALSE**). The default value is **FALSE**.
 
 
 ```{r tidy = FALSE}
@@ -140,8 +144,9 @@ sce.pbmc <- runEscape(sce.pbmc,
                       min.size = 5,
                       new.assay.name = "escape.UCell")
 ```
-We can quickly examing the attached enrichment scores using the visualization/workflow we prefer - here we will use just `FeaturePlot()' from the Seurat R package. 
-```{r}
+We can quickly examining the attached enrichment scores using the visualization/workflow we prefer - here we will use just `FeaturePlot()' from the Seurat R package. 
+
+```{r tidy = FALSE}
 #Define color palette 
 colorblind_vector <- hcl.colors(n=7, palette = "inferno", fixup = TRUE)
 
@@ -149,6 +154,22 @@ FeaturePlot(pbmc_small, "HALLMARK-APOPTOSIS") +
   scale_color_gradientn(colors = colorblind_vector) + 
   theme(plot.title = element_blank())
 ```
+## performNormalization
+
+Although we glossed over the normalization that can be used in ```escape.matrix()``` and ```runEscape()```, it is worth mentioning here as normalization can effect all downstream analyses. 
+
+There can be inherit bias in enrichment values due to drop out in single-cell expression data. Cells with larger number of feature and counts will likely have higher enrichment values. ```performNormalization()``` will normalize the enrichment values through calculate the number of genes expressed in each gene set and cell. This is similar to the normalization in classic GSEA and it will be stored in a new assay. 
+
+
+```{r}
+pbmc_small <- performNormalization(pbmc_small, 
+                                   assay = "escape.ssGSEA", 
+                                   gene.sets = GS.hallmark)
+
+#TODO Figure out visualization - should normalization just modify the seurat assay clot?
+```
+
+```performNormalization()``` has an additional parameter **make.positive**. Across the individual gene sets, if negative normalized enrichment scores are seen, the minimum value is added to all values. For example if the normalized enrichment scores (after the above accounting for drop out) ranges from -50 to 50, **make.positive** will adjust the range to 0 to 100 (by adding 50). This allows for compatible log2-fold change downstream, but can alter the enrichment score interpretation.
 
 ****
 
@@ -343,10 +364,10 @@ pbmc_small <- performPCA(pbmc_small,
 pbmc_small <- performNormalization(pbmc_small, 
                                    assay = "escape.ssGSEA", 
                                    gene.set.reference = GS.hallmark,
-                                   make.positive = FALSE)
+                                   make.positive = TRUE)
 
 all.markers <- FindAllMarkers(pbmc_small, 
-                              assay = "escape.ssGSEA", 
+                              assay = "escape.ssGSEA_normalized", 
                               min.pct = 0,
                               logfc.threshold = 0)
 ```

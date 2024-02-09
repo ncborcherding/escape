@@ -7,8 +7,8 @@
 performNormalization(
   input.data,
   assay = NULL,
-  gene.set.reference = NULL,
-  make.positive = TRUE
+  gene.sets = NULL,
+  make.positive = FALSE
 )
 }
 \arguments{
@@ -17,21 +17,22 @@ performNormalization(
 
 \item{assay}{Name of the assay to plot if data is a single-cell object.}
 
-\item{gene.set.reference}{The gene set library to use to extract 
+\item{gene.sets}{The gene set library to use to extract 
 the individual gene set information from.}
 
-\item{make.positve}{Shift enrichment values to a positive range \strong{TRUE}}
-
-\item{reduction.key}{Name of the key to use with the components.}
+\item{make.positve}{Shift enrichment values to a positive range \strong{TRUE}
+for downstream analysis or not \strong{TRUE} (default).}
 }
 \value{
-single-cell object or list with PCA components to plot.
+Single-cell object or matrix of normalized enrichment scores
 }
 \description{
-This function allows users to normalize the enrichment
-calculations by accounting for single-cell dropout and
-producing positive values for downstream differential 
-enrichment analyses.
+This function allows users to normalize the enrichment calculations 
+by accounting for single-cell dropout and producing positive 
+values for downstream differential enrichment analyses. A positive range
+values is useful for several downstream analyses, like differential 
+evaluation for log2-fold change, but will alter the original 
+enrichment values.
 }
 \examples{
 GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
