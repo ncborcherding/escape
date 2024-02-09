@@ -26,7 +26,7 @@
 #' \link[grDevices]{hcl.pals}.
 #'
 #' @import ggplot2
-#' @importFrom ggridges geom_density_ridges geom_density_ridges2 position_points_jitter
+#' @importFrom ggridges geom_density_ridges geom_density_ridges2 position_points_jitter geom_density_ridges_gradient
 #' 
 #' @examples 
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),

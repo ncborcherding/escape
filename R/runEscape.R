@@ -101,10 +101,6 @@ escape.matrix <- function(input.data,
     return(output)
 }
 
-#' Ibex single cell calculation
-#'
-#' Run Ibex algorithm with Seurat or SingleCellExperiment pipelines
-
 #' Enrichment calculation for single-cell workflows
 #'
 #' Run the escape-based gene-set enrichment calculation with 

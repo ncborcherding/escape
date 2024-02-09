@@ -21,6 +21,8 @@
 #' 
 #' @import ggplot2
 #' @importFrom stats dist hclust
+#' @importFrom dplyr %>% group_by summarise
+#' @importFrom reshape2 melt
 #' 
 #' @examples
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),

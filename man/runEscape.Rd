@@ -2,7 +2,7 @@
 % Please edit documentation in R/runEscape.R
 \name{runEscape}
 \alias{runEscape}
-\title{Ibex single cell calculation}
+\title{Enrichment calculation for single-cell workflows}
 \usage{
 runEscape(
   input.data,
@@ -41,10 +41,6 @@ Seurat or Single-Cell Experiment object with escape enrichment scores
 in the assay slot.
 }
 \description{
-Run Ibex algorithm with Seurat or SingleCellExperiment pipelines
-Enrichment calculation for single-cell workflows
-}
-\details{
 Run the escape-based gene-set enrichment calculation with 
 Seurat or SingleCellExperiment pipelines
 }
