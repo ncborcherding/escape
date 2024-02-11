@@ -20,9 +20,10 @@
 #' 
 #' @importFrom GSEABase GeneSet GeneSetCollection
 #' @importFrom msigdbr msigdbr msigdbr_species
+#' @importFrom stringr str_replace_all
 #' 
 #' @author Nick Borcherding, Jared Andrews
-#' @return A \code{GeneSetCollection} object containing the requested \code{GeneSet} objects.
+#' @return A list of gene sets from msigdbr.
 getGeneSets <- function(species = "Homo sapiens", 
                         library = NULL, 
                         subcategory = NULL,
@@ -64,5 +65,9 @@ getGeneSets <- function(species = "Homo sapiens",
     ls[[i]] <- tmp
   }
   gsc <- GeneSetCollection(ls)
+  mod.names <- str_replace_all(names(gsc) , "_", "-")
+  gsc <- GSEABase::geneIds(gsc)
+  names(gsc) <- mod.names
+  
   return(gsc)
 }

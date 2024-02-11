@@ -18,6 +18,7 @@
 * Added support for GSVA calculation
 * Added support for AUCell calculation
 * Added support of visualizations and calculations for single-cell objects
+* Modified ```getGeneSets()``` to output a list of gene set objects with reformatted names following the Seurat "-" conention
 
 ## DEPRECATED AND DEFUNCT
 

@@ -277,14 +277,14 @@ Similar to the ```geyserEnrichment()``` the ```ridgeEnrichment()``` can display 
 ```{r}
 ridgeEnrichment(sce.pbmc, 
                 assay = "escape.UCell",
-                gene.set = "HALLMARK_IL2_STAT5_SIGNALING")
+                gene.set = "HALLMARK-IL2-STAT5-SIGNALING")
 ```
 We can get the relative position of individual cells along the x-axis using the **add.rug** parameter.
 
 ```{r}
 ridgeEnrichment(sce.pbmc, 
                 assay = "escape.UCell",
-                gene.set = "HALLMARK_IL2_STAT5_SIGNALING",
+                gene.set = "HALLMARK-IL2-STAT5-SIGNALING",
                 add.rug = TRUE)
 ```
 
@@ -313,7 +313,7 @@ splitEnrichment(pbmc_small,
 
 ```{r}
 densityEnrichment(pbmc_small, 
-                  gene.set.use = "HALLMARK_IL6_JAK_STAT3_SIGNALING", 
+                  gene.set.use = "HALLMARK-IL6-JAK-STAT3-SIGNALING", 
                   gene.set.reference = GS.hallmark)
 ```
 ## scatterEnrichment
