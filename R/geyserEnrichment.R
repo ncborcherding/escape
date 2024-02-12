@@ -99,7 +99,7 @@ geyserEnrichment <- function(input.data,
   
   plot <- plot + 
           xlab(group.by) +
-          ylab(paste0(gene.set, " Enrichment Score")) +
+          ylab(paste0(gene.set, "\n Enrichment Score")) +
           theme_classic() +
           guides(fill = "none")
   
@@ -113,5 +113,8 @@ geyserEnrichment <- function(input.data,
     plot <- plot + 
             facet_grid(as.formula(paste('. ~', facet.by))) 
   }
+  plot <- plot + 
+    theme(legend.direction = "horizontal", 
+          legend.position = "bottom")
   return(plot)
 }

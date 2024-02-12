@@ -133,7 +133,7 @@ splitEnrichment <- function(input.data,
                        fill = "grey", 
                        alpha=0.5, 
                        outlier.alpha = 0)  + 
-          ylab(paste0(gene.set, " Enrichment Score")) +
+          ylab(paste0(gene.set, "\n Enrichment Score")) +
           labs(fill = split.by) + 
           scale_fill_manual(values = .colorizer(palette, col))+
           theme_classic() 

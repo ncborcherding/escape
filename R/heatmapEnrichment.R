@@ -95,7 +95,7 @@ heatmapEnrichment <- function(input.data,
                   geom_tile(color = "black", linewidth = 0.5) +
                   scale_y_discrete(expand = c(0, 0)) +
                   scale_x_discrete(expand = c(0, 0)) +
-                  labs(fill = "Enrichment Scoure") +
+                  labs(fill = "Enrichment Score") +
                   guides(fill = guide_colorbar(title.position = "top",
                                                 title.hjust = 0.5)) + 
                   coord_equal() + 

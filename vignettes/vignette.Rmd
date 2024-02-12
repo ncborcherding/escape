@@ -150,9 +150,9 @@ We can quickly examining the attached enrichment scores using the visualization/
 #Define color palette 
 colorblind_vector <- hcl.colors(n=7, palette = "inferno", fixup = TRUE)
 
-FeaturePlot(pbmc_small, "HALLMARK-APOPTOSIS") + 
-  scale_color_gradientn(colors = colorblind_vector) + 
-  theme(plot.title = element_blank())
+#FeaturePlot(pbmc_small, "HALLMARK-APOPTOSIS") + 
+#  scale_color_gradientn(colors = colorblind_vector) + 
+#  theme(plot.title = element_blank())
 ```
 ## performNormalization
 

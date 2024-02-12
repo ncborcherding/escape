@@ -78,8 +78,8 @@ scatterEnrichment <- function(input.data,
             labs(fill = "Relative Density")
   }
     plot <- plot + 
-            ylab(paste0(y.axis, " Enrichment Score")) +
-            xlab(paste0(x.axis, " Enrichment Score")) +
+            ylab(paste0(y.axis, "\n Enrichment Score")) +
+            xlab(paste0(x.axis, "\n Enrichment Score")) +
             theme_classic()
   
   if (!is.null(facet.by)) {

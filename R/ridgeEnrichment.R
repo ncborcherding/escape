@@ -50,7 +50,7 @@
 #' @return ggplot2 object with ridge-based distributions of selected gene.set
 ridgeEnrichment <- function(input.data, 
                             assay = NULL,
-                            group.by =NULL, 
+                            group.by = NULL, 
                             gene.set = NULL, 
                             color.by = "group",
                             order.by = NULL,
@@ -136,7 +136,7 @@ ridgeEnrichment <- function(input.data,
   
   plot <- plot + 
             ylab(group.by) +
-            xlab(paste0(gene.set, " Enrichment Score")) +
+            xlab(paste0(gene.set, "\n Enrichment Score")) +
             labs(fill = color.by) + #############
             theme_classic() +
             guides(fill = "none")
