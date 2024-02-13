@@ -132,7 +132,8 @@ splitEnrichment <- function(input.data,
           geom_boxplot(width=0.1, 
                        fill = "grey", 
                        alpha=0.5, 
-                       outlier.alpha = 0)  + 
+                       outlier.alpha = 0,
+                       notch = TRUE)  + 
           ylab(paste0(gene.set, "\n Enrichment Score")) +
           labs(fill = split.by) + 
           scale_fill_manual(values = .colorizer(palette, col))+

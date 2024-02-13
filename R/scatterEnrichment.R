@@ -63,8 +63,9 @@ scatterEnrichment <- function(input.data,
     enriched[,gene.set] <- apply(enriched[,gene.set], 2, scale)
   }
   
-  plot <- ggplot(data = enriched, aes(x = enriched[,x.axis], 
-                              y = enriched[,y.axis]))
+  plot <- ggplot(data = enriched, 
+                 aes(x = enriched[,x.axis], 
+                     y = enriched[,y.axis]))
     
   if(style == "point") {
     plot <- plot + 

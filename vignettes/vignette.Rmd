@@ -154,11 +154,12 @@ colorblind_vector <- hcl.colors(n=7, palette = "inferno", fixup = TRUE)
 #  scale_color_gradientn(colors = colorblind_vector) + 
 #  theme(plot.title = element_blank())
 ```
+
 ## performNormalization
 
 Although we glossed over the normalization that can be used in ```escape.matrix()``` and ```runEscape()```, it is worth mentioning here as normalization can effect all downstream analyses. 
 
-There can be inherit bias in enrichment values due to drop out in single-cell expression data. Cells with larger number of feature and counts will likely have higher enrichment values. ```performNormalization()``` will normalize the enrichment values through calculate the number of genes expressed in each gene set and cell. This is similar to the normalization in classic GSEA and it will be stored in a new assay. 
+There can be inherit bias in enrichment values due to drop out in single-cell expression data. Cells with larger number of feature and counts will likely have higher enrichment values. ```performNormalization()``` will normalize the enrichment values by calculating the number of genes expressed in each gene set and cell. This is similar to the normalization in classic GSEA and it will be stored in a new assay. 
 
 
 ```{r}
@@ -285,7 +286,8 @@ We can get the relative position of individual cells along the x-axis using the 
 ridgeEnrichment(sce.pbmc, 
                 assay = "escape.UCell",
                 gene.set = "HALLMARK-IL2-STAT5-SIGNALING",
-                add.rug = TRUE)
+                add.rug = TRUE,
+                scale = TRUE)
 ```
 
 ## splitEnrichment
@@ -322,11 +324,12 @@ It may be advantageous to look at the distribution of multiple gene sets - here 
 
 
 ```{r}
-scatterEnrichment(sce.pbmc, 
-                  assay = "escape.UCell",
+scatterEnrichment(pbmc_small, 
+                  assay = "escape.ssGSEA",
                   x.axis = "HALLMARK-INTERFERON-GAMMA-RESPONSE",
                   y.axis = "HALLMARK-IL6-JAK-STAT3-SIGNALING")
 ```
+
 The scatter plot can also be converted into a hexbin, another method for summarizing the individual cell distributions along the x and y axis, by setting **style** = "hex". 
 
 ```{r}
