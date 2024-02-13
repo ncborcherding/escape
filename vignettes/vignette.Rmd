@@ -356,12 +356,32 @@ pbmc_small <- performPCA(pbmc_small,
                          n.dim = 1:10)
 ```
 
+*escape* has a built in method for plotting PCA ```pcaEnrichment()``` that functions similarly to the ```scatterEnrichment()``` function where **x.axis** and **y.axis** are the components to plot.
 
+```{r}
+pcaEnrichment(pbmc_small, 
+              dimRed = "escape.PCA",
+              x.axis = "PC1",
+              y.axis = "PC2")
+```
 
+```pcaEnrichment()``` can plot additional information on the principal component analysis.
+
+**add.percent.contribution** will add the relative percent contribution of the x and y.axis to total variability observed in the PCA.
+
+**display.factors** will overlay the magnitude and direction that the features/gene sets contribute to the selected components. The number of gene sets is determined by **number.of.factors**. This can assist in understanding the underlying differences in enrichment across different cells.
+
+```{r}
+pcaEnrichment(pbmc_small, 
+              dimRed = "escape.PCA",
+              x.axis = "PC1",
+              y.axis = "PC2",
+              add.percent.contribution = TRUE,
+              display.factors = TRUE,
+              number.of.factors = 10)
+```
 
 ## Differential Enrichment
-
-
 
 ```{r}
 pbmc_small <- performNormalization(pbmc_small, 

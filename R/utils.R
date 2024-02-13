@@ -188,7 +188,9 @@ is_seurat_or_se_object <- function(obj) {
   if (inherits(sc, "Seurat")) {
     values <- t(sc[[enrichment.name]]["data"])
   } else if (inherits(sc, "SingleCellExperiment")) {
-    values <- t(assay(altExps(sc)[[enrichment.name]], "data"))
+    if(length(assays(altExp(sc))) == 1) {
+      values <- t(assay(altExps(sc)[[enrichment.name]]))
+    }
   }
 }
 
@@ -229,18 +231,16 @@ is_seurat_or_se_object <- function(obj) {
   return(meta)
 }
 
-# Add to meta data some of the metrics calculated
-#' @importFrom rlang %||%
-#' @importFrom SummarizedExperiment colData colData<-
-.add.meta.data <- function(sc, meta, header) {
-  if (inherits(x=sc, what ="Seurat")) { 
-    col.name <- names(meta) %||% colnames(meta)
-    sc[[col.name]] <- meta
-  } else {
-    rownames <- rownames(colData(sc))
-    colData(sc) <- cbind(colData(sc), 
-                         meta[rownames,])[, union(colnames(colData(sc)),  colnames(meta))]
-    rownames(colData(sc)) <- rownames  
+#' @importFrom SingleCellExperiment reducedDim 
+.grabDimRed <- function(sc, dimRed) {
+  if (is_seurat_object(sc)) {
+    values <- c(list(PCA = sc[[dimRed]]@cell.embeddings),
+                            sc[[dimRed]]@misc)
+    
+  } else if (is_se_object(sc)){
+    values <- c(list(PCA = reducedDim(sc, dimRed)),
+                   sc@metadata[c("eigen_values","contribution","rotation")])
+    
   }
-  return(sc)
+  return(values)
 }

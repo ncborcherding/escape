@@ -89,3 +89,5 @@ scatterEnrichment <- function(input.data,
   }
   return(plot)
 }
+
+#TODO Add color.by option
