@@ -81,7 +81,45 @@ gene.sets <- list(Bcells = c("MS4A1","CD79B","CD79A","IGH1","IGH2")
 
 # Perfomring Enrichment Calculation
 
-#TODO Add infor on the methods
+Several popular methods exist for Gene Set Enrichment Analysis (GSEA). These methods can vary in the underlying assumptions. *escape* incorporates several methods that are particularly advantageous for single-cell RNA values:
+
+### **ssGSEA**
+
+This method calculates the enrichment score using a rank-normalized approach and generating an empirical cumulative distribution function for each individual cell. The enrichment score is defined for a gene set (*G*) using the number of genes in the gene set (*NG*) and total number of genes (*N*).
+
+$$
+ES(G,S) \sum_{i = 1}^{n} [P_W^G(G,S,i)-P_{NG}(G,S,i)]
+$$
+Please see the following [citation](https://pubmed.ncbi.nlm.nih.gov/19847166/) for more information.
+
+### **GSVA**
+
+GSVA varies slightly by estimating a Poisson-based kernal cumulative density function. But like ssGSEA, the ultimate enrichment score reported is based on the maximum value of the random walk statistic. GSVA appears to have better overall consistency and runs faster than ssGSEA.
+
+$$
+ES_{jk}^{max} = V_{jk} [max_{l=1,...,p}|v_{jk}(l)]
+$$
+Please see the following [citation](https://pubmed.ncbi.nlm.nih.gov/23323831/) for more information.
+
+### **AUCell**
+
+In contrast to ssGSEA and GSVA, AUCell takes the gene rankings for each cell and step-wise plots the position of each gene in the gene set along the y-axis. The outputted score is is the area under the curve for this approach.
+
+Please see the following [citation](https://pubmed.ncbi.nlm.nih.gov/28991892/) for more information.
+
+### UCell
+
+UCell calculates a Mann-Whitney U statistic based on the gene rank list. **Importantly**, UCell has a cut-off for ranked genes ($$r_{max}$$) at 1500 - this is per design as drop-out in single-cell can alter enrichment results. This also substantially speeds the calculations up.
+
+The enrichment score output is then calculating using the complement of the U statistic scaled by the gene set size and cut-off.
+
+$$
+U_j^` = 1-\frac{U_j}{n \bullet r_{max}}
+$$
+
+
+Please see the following [citation](https://pubmed.ncbi.nlm.nih.gov/34285779/) for more information.
+
 
 ## escape.matrix
 
