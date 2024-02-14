@@ -22,7 +22,7 @@
 #' with cell composition.
 #' @param ... pass arguments to ssGSEA or UCell call
 #'
-#' @importFrom GSVA gsva
+#' @importFrom GSVA gsva ssgseaParam
 #' @importFrom GSEABase GeneSetCollection 
 #' @importFrom UCell ScoreSignatures_UCell
 #' @importFrom BiocParallel SnowParam
@@ -64,11 +64,13 @@ enrichIt <- function(obj, gene.sets = NULL,
         split.data <- split_data.matrix(matrix=cnts, chunk.size=groups)
         for (i in seq_along(wind)) {
             last <- min(ncol(cnts), i+groups-1)
-            a <- suppressWarnings(gsva(split.data[[i]], egc, method = 'ssgsea', 
-                ssgsea.norm = FALSE,
-                kcdf = "Poisson", parallel.sz = cores, 
-                BPPARAM = SnowParam()),
-                ...)
+            parameters <- ssgseaParam(exprData = split.data[[i]],
+                                         geneSets = egc,
+                                         normalize = FALSE)
+            
+            a <- suppressWarnings(gsva(param = parameters, 
+                                       verbose = FALSE,
+                                       ...))
             scores[[i]] <- a
         }
     } else if (method == "UCell") {
