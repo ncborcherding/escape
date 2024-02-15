@@ -21,7 +21,7 @@
 #' 
 #' @import ggplot2
 #' @importFrom stats dist hclust
-#' @importFrom dplyr %>% group_by summarise
+#' @importFrom dplyr %>% group_by summarise across
 #' @importFrom reshape2 melt
 #' 
 #' @examples

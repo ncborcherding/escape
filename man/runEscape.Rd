@@ -17,6 +17,8 @@ runEscape(
 )
 }
 \arguments{
+\item{input.data}{The count matrix, Seurat, or Single-Cell Experiment object.}
+
 \item{gene.sets}{Gene sets can be a list, output from 
 \code{\link{getGeneSets}}, or the built-in gene sets 
 in the escape package \code{\link{escape.gene.sets}}.}
@@ -32,14 +34,14 @@ calculation}
 \item{normalize}{Whether to divide the enrichment score by the number 
 of genes \strong{TRUE} or report unnormalized \strong{FALSE}.}
 
-\item{...}{pass arguments to AUCell GSVA, ssGSEA or UCell call}
-
-\item{make.positve}{During normalization shift enrichment values to a 
+\item{make.positive}{During normalization shift enrichment values to a 
 positive range \strong{TRUE} for downstream analysis or not 
 \strong{TRUE} (default).}
 
-\item{new.assay.nam}{The new name of the assay to append to 
+\item{new.assay.name}{The new name of the assay to append to 
 the single-cell object containing the enrichment scores.}
+
+\item{...}{pass arguments to AUCell GSVA, ssGSEA or UCell call}
 }
 \value{
 Seurat or Single-Cell Experiment object with escape enrichment scores
@@ -57,5 +59,4 @@ pbmc_small <- runEscape(pbmc_small,
                         gene.sets = GS, 
                         min.size = NULL)
 
-#' @param input.data The count matrix, Seurat, or Single-Cell Experiment object.
 }

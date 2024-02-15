@@ -16,6 +16,10 @@
     utils::globalVariables ("value")
     utils::globalVariables ("variable")
     utils::globalVariables (".SD")    
+    utils::globalVariables ("gene.set.query") 
+    utils::globalVariables (".") 
+    utils::globalVariables ("x") 
+    utils::globalVariables ("median") 
     invisible ()
 
 }

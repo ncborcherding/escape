@@ -11,7 +11,7 @@ test_that("densityEnrichment works", {
     densityEnrichment(
       seuratObj, 
       gene.set.use = "Tcells",
-      gene.set.reference = GS)
+      gene.sets = GS)
   )
   
   expect_doppelganger(
@@ -19,7 +19,7 @@ test_that("densityEnrichment works", {
     densityEnrichment(
       seuratObj, 
       gene.set.use = "Bcells",
-      gene.set.reference = GS,
+      gene.sets = GS,
       group.by = "groups")
   )
   

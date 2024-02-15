@@ -144,7 +144,7 @@ is_seurat_or_se_object <- function(obj) {
   return(split.data)
 }
 
-#' @importFrom SummarizedExperiment assays
+#' @importFrom SummarizedExperiment assays assays<-
 #' @importFrom MatrixGenerics rowSums2
 .cntEval <- function(obj, 
                      assay = "RNA", 
@@ -167,8 +167,8 @@ is_seurat_or_se_object <- function(obj) {
 
 #Add the values to single cell object
 #' @importFrom SeuratObject CreateAssayObject
-#' @importFrom SummarizedExperiment SummarizedExperiment
-#' @importFrom SingleCellExperiment altExps
+#' @importFrom SummarizedExperiment SummarizedExperiment assays<-
+#' @importFrom SingleCellExperiment altExps altExp<- 
 .adding.Enrich <- function(sc, enrichment, enrichment.name) {
   if (inherits(sc, "Seurat")) {
     new.assay <- suppressWarnings(CreateAssayObject(
@@ -176,14 +176,14 @@ is_seurat_or_se_object <- function(obj) {
     
     sc[[enrichment.name]] <- new.assay
   } else if (inherits(sc, "SingleCellExperiment")) {
-    altExp(sc, enrichment.name) <- SummarizedExperiment(assay = t(enrichment))
+    altExp(sc, enrichment.name) <- SummarizedExperiment(assays = t(enrichment))
     names(assays(altExp(sc, enrichment.name))) <- enrichment.name
   }
   return(sc)
 }
 
 #' @importFrom SummarizedExperiment assay
-#' @importFrom SingleCellExperiment altExps
+#' @importFrom SingleCellExperiment altExp
 .pull.Enrich <- function(sc, enrichment.name) {
   if (inherits(sc, "Seurat")) {
     values <- t(sc[[enrichment.name]]["data"])

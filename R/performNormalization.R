@@ -12,7 +12,7 @@
 #' @param assay Name of the assay to plot if data is a single-cell object.
 #' @param gene.sets The gene set library to use to extract 
 #' the individual gene set information from.
-#' @param make.positve Shift enrichment values to a positive range \strong{TRUE}
+#' @param make.positive Shift enrichment values to a positive range \strong{TRUE}
 #' for downstream analysis or not \strong{TRUE} (default).
 #' 
 #' @examples
@@ -24,7 +24,8 @@
 #'                         min.size = NULL)
 #'                         
 #' pbmc_small <- performNormalization(pbmc_small, 
-#'                                    assay = "escape")
+#'                                    assay = "escape", 
+#'                                    gene.sets = GS)
 #'
 #' @export
 #' 

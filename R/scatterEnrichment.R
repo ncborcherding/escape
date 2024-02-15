@@ -13,10 +13,6 @@
 #' @param y.axis Gene set to plot on the y.axis.
 #' \strong{group.by} parameter or use the \strong{gene.set} name if wanting to 
 #' apply a gradient palette.
-#' @param order.by Method to organize the x-axis: \strong{"mean"} will arrange
-#' the x-axis by the mean of the gene.set, while \strong{"group"} will arrange
-#' the x-axis by in alphanumerical order. Using \strong{NULL} will not reorder
-#' the x-axis.
 #' @param facet.by Variable to facet the plot into n distinct graphs.
 #' @param scale Visualize raw values \strong{FALSE} or Z-transform 
 #' enrichment values \strong{TRUE}.

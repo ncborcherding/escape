@@ -8,7 +8,7 @@ test_that("performNormalization works", {
   
   seuratObj.p <- performNormalization(seuratObj, 
                                       assay = "escape.ssGSEA", 
-                                      gene.set.reference = GS.hallmark,
+                                      gene.sets = GS.hallmark,
                                       make.positive = TRUE)
   
   expect_equal(seuratObj.p@assays$escape.ssGSEA, 
@@ -16,7 +16,7 @@ test_that("performNormalization works", {
   
   seuratObj.n <- performNormalization(seuratObj, 
                                       assay = "escape.ssGSEA", 
-                                      gene.set.reference = GS.hallmark,
+                                      gene.sets = GS.hallmark,
                                       make.positive = FALSE)
   
   expect_equal(seuratObj.n@assays$escape.ssGSEA, 

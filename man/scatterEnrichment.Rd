@@ -36,11 +36,6 @@ enrichment values \strong{TRUE}.}
 
 \item{palette}{Colors to use in visualization - input any 
 \link[grDevices]{hcl.pals}.}
-
-\item{order.by}{Method to organize the x-axis: \strong{"mean"} will arrange
-the x-axis by the mean of the gene.set, while \strong{"group"} will arrange
-the x-axis by in alphanumerical order. Using \strong{NULL} will not reorder
-the x-axis.}
 }
 \value{
 ggplot2 object with a scatter plot of selected gene.sets

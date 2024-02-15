@@ -7,7 +7,7 @@
 densityEnrichment(
   input.data,
   gene.set.use = NULL,
-  gene.set.reference = NULL,
+  gene.sets = NULL,
   group.by = NULL,
   palette = "inferno"
 )
@@ -17,7 +17,7 @@ densityEnrichment(
 
 \item{gene.set.use}{Selected individual gene set.}
 
-\item{gene.set.reference}{The gene set library to use to extract 
+\item{gene.sets}{The gene set library to use to extract 
 the individual gene set information from.}
 
 \item{group.by}{Categorical parameter to plot along the x.axis. If input is
@@ -42,6 +42,6 @@ pbmc_small <- SeuratObject::pbmc_small
                         
 densityEnrichment(pbmc_small, 
                   gene.set.use = "Tcells",
-                  gene.set.reference = GS)
+                  gene.sets = GS)
 
 }

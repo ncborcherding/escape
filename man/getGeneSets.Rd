@@ -26,7 +26,7 @@ example: pathways = c("HALLMARK_TNFA_SIGNALING_VIA_NFKB"). Will only be
 honored if library is set, too.}
 }
 \value{
-A \code{GeneSetCollection} object containing the requested \code{GeneSet} objects.
+A list of gene sets from msigdbr.
 }
 \description{
 This function allows users to select libraries and specific 

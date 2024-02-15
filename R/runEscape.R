@@ -15,7 +15,7 @@
 #' calculation
 #' @param normalize Whether to divide the enrichment score by the number 
 #' of genes \strong{TRUE} or report unnormalized \strong{FALSE}.
-#' @param make.positve During normalization shift enrichment values to a 
+#' @param make.positive During normalization shift enrichment values to a 
 #' positive range \strong{TRUE} for downstream analysis or not 
 #' \strong{TRUE} (default).
 #' @param ... pass arguments to AUCell GSVA, ssGSEA, or UCell call
@@ -120,7 +120,7 @@ escape.matrix <- function(input.data,
 #'                         gene.sets = GS, 
 #'                         min.size = NULL)
 #'
-#' #' @param input.data The count matrix, Seurat, or Single-Cell Experiment object.
+#' @param input.data The count matrix, Seurat, or Single-Cell Experiment object.
 #' @param gene.sets Gene sets can be a list, output from 
 #' \code{\link{getGeneSets}}, or the built-in gene sets 
 #' in the escape package \code{\link{escape.gene.sets}}.
@@ -131,10 +131,10 @@ escape.matrix <- function(input.data,
 #' calculation
 #' @param normalize Whether to divide the enrichment score by the number 
 #' of genes \strong{TRUE} or report unnormalized \strong{FALSE}.
-#' @param make.positve During normalization shift enrichment values to a 
+#' @param make.positive During normalization shift enrichment values to a 
 #' positive range \strong{TRUE} for downstream analysis or not 
 #' \strong{TRUE} (default).
-#' @param new.assay.nam The new name of the assay to append to 
+#' @param new.assay.name The new name of the assay to append to 
 #' the single-cell object containing the enrichment scores.
 #' @param ... pass arguments to AUCell GSVA, ssGSEA or UCell call
 #' @export

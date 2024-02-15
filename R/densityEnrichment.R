@@ -7,7 +7,7 @@
 #'
 #' @param input.data The single-cell object to use.
 #' @param gene.set.use Selected individual gene set.
-#' @param gene.set.reference The gene set library to use to extract 
+#' @param gene.sets The gene set library to use to extract 
 #' the individual gene set information from.
 #' @param group.by Categorical parameter to plot along the x.axis. If input is
 #' a single-cell object the default will be cluster.
@@ -22,7 +22,7 @@
 #'                         
 #' densityEnrichment(pbmc_small, 
 #'                   gene.set.use = "Tcells",
-#'                   gene.set.reference = GS)
+#'                   gene.sets = GS)
 #'
 #' @export
 #'
@@ -36,7 +36,7 @@
 #' @return ggplot2 object mean rank gene density across groups
 densityEnrichment <- function(input.data, 
                               gene.set.use = NULL, 
-                              gene.set.reference = NULL, 
+                              gene.sets = NULL, 
                               group.by = NULL, 
                               palette = "inferno") {
   if (!inherits(x=input.data, what ="Seurat") &
@@ -50,8 +50,8 @@ densityEnrichment <- function(input.data,
   
   compute.gene.density<-utils::getFromNamespace("compute.gene.density", "GSVA")
   
-  gene.set.reference <- .GS.check(gene.set.reference)
-  gene.set <- gene.set.reference[[gene.set.use]]
+  gene.sets <- .GS.check(gene.sets)
+  gene.set <- gene.sets[[gene.set.use]]
   
   cnts <- .cntEval(input.data, 
                    assay = "RNA", 

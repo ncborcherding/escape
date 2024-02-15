@@ -37,6 +37,7 @@ suppressPackageStartupMessages(library(scran))
 suppressPackageStartupMessages(library(Seurat))
 suppressPackageStartupMessages(library(SeuratObject))
 suppressPackageStartupMessages(library(RColorBrewer))
+suppressPackageStartupMessages(library(ggplot2))
 
 
 pbmc_small <- get("pbmc_small")
@@ -182,7 +183,7 @@ sce.pbmc <- runEscape(sce.pbmc,
                       min.size = 5,
                       new.assay.name = "escape.UCell")
 ```
-We can quickly examining the attached enrichment scores using the visualization/workflow we prefer - here we will use just `FeaturePlot()' from the Seurat R package. 
+We can quickly examining the attached enrichment scores using the visualization/workflow we prefer - here we will use just `FeaturePlot()` from the Seurat R package. 
 
 ```{r tidy = FALSE}
 #Define color palette 
@@ -347,14 +348,14 @@ splitEnrichment(pbmc_small,
 
 * The selected gene set to visualize
 
-**gene.set.reference**
+**gene.sets**
 
 * The gene set library from either any of the 3 options in the first section of the vignette.
 
 ```{r}
 densityEnrichment(pbmc_small, 
                   gene.set.use = "HALLMARK-IL6-JAK-STAT3-SIGNALING", 
-                  gene.set.reference = GS.hallmark)
+                  gene.sets = GS.hallmark)
 ```
 ## scatterEnrichment
 
@@ -424,7 +425,7 @@ pcaEnrichment(pbmc_small,
 ```{r}
 pbmc_small <- performNormalization(pbmc_small, 
                                    assay = "escape.ssGSEA", 
-                                   gene.set.reference = GS.hallmark,
+                                   gene.sets = GS.hallmark,
                                    make.positive = TRUE)
 
 all.markers <- FindAllMarkers(pbmc_small, 

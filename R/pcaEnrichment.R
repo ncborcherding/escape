@@ -18,7 +18,7 @@
 #' \link[grDevices]{hcl.pals}.
 #'
 #' @import ggplot2
-#' @importFrom ggridges geom_density_ridges geom_density_ridges2 position_points_jitter geom_density_ridges_gradient
+#' @importFrom dplyr slice_max %>%
 #' 
 #' @examples 
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
@@ -32,8 +32,9 @@
 #'                          assay = "escape")
 #'                          
 #' pcaEnrichment(pbmc_small,
-#'               x.axis = "PC1,
-#'               y.axis = "PC2)
+#'               x.axis = "PC1",
+#'               y.axis = "PC2",
+#'               dimRed = "escape.PCA)
 #'
 #' @export
 #'

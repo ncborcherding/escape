@@ -9,38 +9,42 @@ Description: A bridging R package to facilitate gene set enrichment analysis (GS
 License: MIT + file LICENSE 
 Encoding: UTF-8
 LazyData: false
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 biocViews: Software, SingleCell, Classification, Annotation, GeneSetEnrichment, Sequencing, GeneSignaling, Pathways
 Depends: R (>= 4.1)
 Imports: 
-	AUCell,
-	grDevices,  
-	dplyr, 
-	ggdist,
-	ggplot2,  
-	ggpointdensity,
-	GSEABase, 
-	GSVA,
-	SingleCellExperiment,
-	ggridges,
-	msigdbr,
-	stats, 
-	BiocParallel, 
-	Matrix,
-	broom, 
-	reshape2, 
-	patchwork, 
-	MatrixGenerics,
-	utils,
-	rlang,
-	SummarizedExperiment,
-	UCell
+    AUCell,
+    grDevices,
+    dplyr,
+    ggdist,
+    ggplot2,
+    ggpointdensity,
+    GSEABase,
+    GSVA,
+    SingleCellExperiment,
+    ggridges,
+    msigdbr,
+    stats,
+    reshape2,
+    patchwork,
+    MatrixGenerics,
+    utils,
+    SummarizedExperiment,
+    UCell,
+    stringr,
+    methods,
+    SeuratObject
 Suggests: 
-	Seurat,
-	SeuratObject,
-	knitr, 
-	rmarkdown,
-	markdown, 
-	BiocStyle,
-	testthat
+    Seurat,
+    scran,
+    knitr,
+    rmarkdown,
+    markdown,
+    BiocStyle,
+    RColorBrewer,
+    rlang,
+    spelling,
+    testthat (>= 3.0.0),
+    vdiffr
 VignetteBuilder: knitr
+Language: en-US

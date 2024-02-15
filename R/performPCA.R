@@ -19,7 +19,7 @@
 #'
 #' @importFrom stats prcomp
 #' @importFrom SeuratObject CreateDimReducObject
-#' @importFrom SingleCellExperiment reducedDim
+#' @importFrom SingleCellExperiment reducedDim reducedDim<-
 #' 
 #' @examples
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),

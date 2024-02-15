@@ -20,7 +20,7 @@ performNormalization(
 \item{gene.sets}{The gene set library to use to extract 
 the individual gene set information from.}
 
-\item{make.positve}{Shift enrichment values to a positive range \strong{TRUE}
+\item{make.positive}{Shift enrichment values to a positive range \strong{TRUE}
 for downstream analysis or not \strong{TRUE} (default).}
 }
 \value{
