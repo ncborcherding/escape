@@ -54,6 +54,9 @@ pcaEnrichment <- function(input.data,
     pca.values <- .grabDimRed(input.data, dimRed) 
   } else if (inherits(input.data, "list") & length(input.data) == 4) {
     pca.values <- input.data
+    if(!is.null(facet.by)) {
+      stop("group.by parameter requires input.data to be a single-cell object.")
+    }
   } else {
     stop("input.data does not seem to be a single-cell object or a product of performPCA().")
   }
@@ -71,8 +74,19 @@ pcaEnrichment <- function(input.data,
   
   plot.df <- as.data.frame(pca.values[[1]])
   
-  plot <- ggplot(mapping = aes(x = plot.df[,x.axis.dim], 
-                       y = plot.df[,y.axis.dim])) 
+  if(!is.null(facet.by)) {
+    meta <- .grabMeta(input.data)
+    if(facet.by %!in% colnames(meta)) {
+      stop("Please select a variable in your meta data to use for facet.by.")
+    }
+    col.pos <- ncol(plot.df)
+    plot.df <- cbind.data.frame(plot.df, meta[,facet.by])
+    colnames(plot.df)[col.pos+1] <- facet.by
+  }
+  
+  plot <- ggplot(data = plot.df,
+                 mapping = aes(x = plot.df[,x.axis.dim], 
+                               y = plot.df[,y.axis.dim])) 
   
   if(style == "point") {
     plot <- plot + 
@@ -91,6 +105,11 @@ pcaEnrichment <- function(input.data,
     xlab(x.axis.title) +
     theme_classic()
   
+  if (!is.null(facet.by)) {
+    plot <- plot + 
+      facet_grid(as.formula(paste('. ~', facet.by))) 
+  }
+  
   if(display.factors) {
     x.range <- range(plot.df[,x.axis.dim])
     
@@ -106,8 +125,10 @@ pcaEnrichment <- function(input.data,
     df <- as.data.frame(pca.values[[4]])
     df <- df[rownames(df) %in% names,]
     df$names <- rownames(df)
-    
-    range(df[,x.axis.dim])
+    if(!is.null(facet.by)) {
+      facets <- sort(unique(plot.df[,facet.by]))
+      df[,facet.by] <- facets[1]
+    }
     
     plot <- plot + 
             geom_hline(yintercept = 0, lty=2) + 
@@ -126,9 +147,9 @@ pcaEnrichment <- function(input.data,
                     nudge_y = -0.01,
                     label.padding = unit(0.1, "lines")) 
   }
+  
+  
   return(plot)
-      
-  #TODO Add facet.by/color.by options
 }
 
 # Function to scale the new variable
