@@ -147,7 +147,9 @@ escape has 2 major functions - the first being ```escape.matrix()```, which is t
 
 **make.positive**
 
-* During normalization, whether to shift the enrichment values to a positive range (**TRUE**) or not (**FALSE**). The default value is **FALSE**.
+* During normalization, whether to shift the enrichment values to a positive range (**TRUE**) or not (**FALSE**). The default value is **FALSE**. 
+
+*Cautionary note:* **make.positive** was added to allow for differential analysis downstream of enrichment as some methods may produce negative values. It preserves log-fold change, but ultimately modifies the enrichment values and should be used with caution.
 
 
 ```{r tidy = FALSE}
@@ -239,7 +241,7 @@ Most of the visualizations in *escape* have a defined set of parameters.
 
 **scale**
 
-* **TRUE** - z-trasnform the enrichment values.
+* **TRUE** - z-tranform the enrichment values.
 * **FALSE** - leave raw values (**DEFAULT**).
 
 In addition, ```heatmapEnrichment()``` allows for the reclustering of rows and columns using Euclidean distance of the enrichment scores and the Ward2 methods for clustering using **cluster.rows** and **cluster.columns**.
@@ -422,6 +424,8 @@ pcaEnrichment(pbmc_small,
 
 ## Differential Enrichment
 
+Differential enrichment analysis can be performed similar to differential gene expression analysis. For the purposes of finding the differential enrichment values, we can first normalize the enrichment values for the ssGSEA calculations. Notice here, we are using **make.positive** = TRUE in order to adjust any negative values. This is a particular issue when it comes to ssGSEA and GSVA enrichment scores.
+
 ```{r}
 pbmc_small <- performNormalization(pbmc_small, 
                                    assay = "escape.ssGSEA", 
@@ -432,6 +436,8 @@ all.markers <- FindAllMarkers(pbmc_small,
                               assay = "escape.ssGSEA_normalized", 
                               min.pct = 0,
                               logfc.threshold = 0)
+
+head(all.markers)
 ```
 
 ***
