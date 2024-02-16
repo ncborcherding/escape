@@ -75,9 +75,9 @@ escape.matrix <- function(input.data,
               parameters <- .ssGSEA.setup(split.data[[i]], egc)
           }
           if(method %in% c("ssGSEA", "GSVA")) {
-              a <- gsva(param = parameters, 
+              a <- suppressWarnings(gsva(param = parameters, 
                         verbose = FALSE,
-                        ...)
+                        ...))
           } else if(method == "UCell") {
               a <- t(suppressWarnings(
                 ScoreSignatures_UCell(matrix = split.data[[i]], 

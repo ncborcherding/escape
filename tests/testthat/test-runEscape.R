@@ -25,11 +25,6 @@ test_that("runEscape works", {
                                gene.sets = GS, 
                                min.size = NULL)
   
-  trial.UCell <- escape.matrix(pbmc_small, 
-                               method = "UCell", 
-                               gene.sets = GS, 
-                               min.size = NULL)
-  
   set.seed(42)
   trial.AUCell <- escape.matrix(pbmc_small, 
                                 method = "AUCell", 

@@ -48,3 +48,20 @@ ggplot2 object with PCA distribution
 This function allows to the user to examine the distribution
 of principal compoenents run on the enrichment values.
 }
+\examples{
+GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
+           Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
+pbmc_small <- SeuratObject::pbmc_small
+pbmc_small <- runEscape(pbmc_small, 
+                        gene.sets = GS, 
+                        min.size = NULL)
+                        
+pbmc_small <- performPCA(pbmc_small, 
+                         assay = "escape")
+                         
+pcaEnrichment(pbmc_small,
+              x.axis = "PC1",
+              y.axis = "PC2",
+              dimRed = "escape.PCA")
+
+}

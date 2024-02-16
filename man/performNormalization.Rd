@@ -43,6 +43,7 @@ pbmc_small <- runEscape(pbmc_small,
                         min.size = NULL)
                         
 pbmc_small <- performNormalization(pbmc_small, 
-                                   assay = "escape")
+                                   assay = "escape", 
+                                   gene.sets = GS)
 
 }

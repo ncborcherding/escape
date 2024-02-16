@@ -46,7 +46,7 @@ sce.pbmc <- as.SingleCellExperiment(pbmc_small, assay = "RNA")
 
 # Getting Gene Sets
 
-## Option 1: Molecular Signture Database
+## Option 1: Molecular Signature Database
 
 The first step in the process of performing gene set enrichment analysis is identifying the gene sets we would like to use. The function `getGeneSets()` allows users to isolate a whole or multiple libraries from a list of GSEABase GeneSetCollection objects. 
 
@@ -65,8 +65,6 @@ GS.hallmark <- getGeneSets(library = "H")
 
 ## Option 2: Built-In gene sets
 
-#TODO Add more details here
-
 ```{r, eval = FALSE}
 data("escape.gene.sets", package="escape")
 gene.sets <- escape.gene.sets
@@ -80,7 +78,7 @@ gene.sets <- list(Bcells = c("MS4A1","CD79B","CD79A","IGH1","IGH2")
 			            Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
 ```
 
-# Perfomring Enrichment Calculation
+# Performing Enrichment Calculation
 
 Several popular methods exist for Gene Set Enrichment Analysis (GSEA). These methods can vary in the underlying assumptions. *escape* incorporates several methods that are particularly advantageous for single-cell RNA values:
 
@@ -131,7 +129,7 @@ escape has 2 major functions - the first being ```escape.matrix()```, which is t
 * AUCell 
 * GSVA 
 * ssGSEA
-* Ucell
+* UCell
 
 **groups**  
 
@@ -237,11 +235,11 @@ Most of the visualizations in *escape* have a defined set of parameters.
 
 **facet.by**
 
-* Using a variable to facet the graph into seperate visualizations.
+* Using a variable to facet the graph into separate visualizations.
 
 **scale**
 
-* **TRUE** - z-tranform the enrichment values.
+* **TRUE** - z-transform the enrichment values.
 * **FALSE** - leave raw values (**DEFAULT**).
 
 In addition, ```heatmapEnrichment()``` allows for the reclustering of rows and columns using Euclidean distance of the enrichment scores and the Ward2 methods for clustering using **cluster.rows** and **cluster.columns**.
@@ -385,7 +383,7 @@ scatterEnrichment(sce.pbmc,
 
 # Statistical Analysis
 
-## Pricipal Component Analysis (PCA)
+## Principal Component Analysis (PCA)
 
 escape has its own PCA function ```performPCA()``` which will work on a single-cell object or a matrix of enrichment values. This is specifically useful for downstream visualizations as it stores the eigen values and rotations. If we want to look at the the relative contribution to overall variance of each component or a Biplot-like overlay of the individual features, use ```performPCA()```.
 

@@ -18,7 +18,7 @@
 * Added support for GSVA calculation
 * Added support for AUCell calculation
 * Added support of visualizations and calculations for single-cell objects
-* Modified ```getGeneSets()``` to output a list of gene set objects with reformatted names following the Seurat "-" conention
+* Modified ```getGeneSets()``` to output a list of gene set objects with reformatted names following the Seurat "-" convention
 
 ## DEPRECATED AND DEFUNCT
 
@@ -27,7 +27,7 @@
 
 # CHANGES IN VERSION 1.9.0
 * Releveling version for commit to new Bioconductor release
-* Removed UCell internal functions to just import the Bioconductor Ucell package
+* Removed UCell internal functions to just import the Bioconductor UCell package
 
 
 # CHANGES IN VERSION 1.4.2
@@ -59,7 +59,7 @@
 
 # CHANGES IN VERSION 1.3.2
 * Added removal of gene sets with less than x features parameter in enrichIt - min.size
-* Added Ucell and singScore support
+* Added UCell and singScore support
 * new parameter gene.sets in MasterPCAPlot() and performPCA() to allow for selecting specific columns and prevent using other numeric vectors in meta data. 
 
 

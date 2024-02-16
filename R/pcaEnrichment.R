@@ -1,7 +1,7 @@
 #' Visualize the PCA of enrichment values
 #' 
 #' This function allows to the user to examine the distribution
-#' of principal compoenents run on the enrichment values.
+#' of principal components run on the enrichment values.
 #'
 #' @param input.data PCA from \code{\link{performPCA}}.
 #' @param dimRed Name of the dimensional reduction to plot if data is a single-cell object.
@@ -34,7 +34,7 @@
 #' pcaEnrichment(pbmc_small,
 #'               x.axis = "PC1",
 #'               y.axis = "PC2",
-#'               dimRed = "escape.PCA)
+#'               dimRed = "escape.PCA")
 #'
 #' @export
 #'
