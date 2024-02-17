@@ -53,10 +53,12 @@ escape.matrix <- function(input.data,
     egc.size <- lapply(egc, function(x) length(which(rownames(cnts) %in% x)))
     if (!is.null(min.size)){
       remove <- unname(which(egc.size < min.size))
-      egc <- egc[-remove]
-      egc.size <- egc.size[-remove]
-      if(length(egc) == 0) {
-        stop("No gene sets passed the minimum length - please reconsider the 'min.size' parameter")
+      if(length(remove) > 0) {
+        egc <- egc[-remove]
+        egc.size <- egc.size[-remove]
+        if(length(egc) == 0) {
+          stop("No gene sets passed the minimum length - please reconsider the 'min.size' parameter")
+        }
       }
     }
     
