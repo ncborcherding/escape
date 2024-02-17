@@ -93,7 +93,7 @@ Please see the following [citation](https://pubmed.ncbi.nlm.nih.gov/19847166/) f
 
 ### **GSVA**
 
-GSVA varies slightly by estimating a Poisson-based kernal cumulative density function. But like ssGSEA, the ultimate enrichment score reported is based on the maximum value of the random walk statistic. GSVA appears to have better overall consistency and runs faster than ssGSEA.
+GSVA varies slightly by estimating a Poisson-based kernel cumulative density function. But like ssGSEA, the ultimate enrichment score reported is based on the maximum value of the random walk statistic. GSVA appears to have better overall consistency and runs faster than ssGSEA.
 
 $$
 ES_{jk}^{max} = V_{jk} [max_{l=1,...,p}|v_{jk}(l)]
@@ -102,7 +102,7 @@ Please see the following [citation](https://pubmed.ncbi.nlm.nih.gov/23323831/) f
 
 ### **AUCell**
 
-In contrast to ssGSEA and GSVA, AUCell takes the gene rankings for each cell and step-wise plots the position of each gene in the gene set along the y-axis. The outputted score is is the area under the curve for this approach.
+In contrast to ssGSEA and GSVA, AUCell takes the gene rankings for each cell and step-wise plots the position of each gene in the gene set along the y-axis. The output score is the area under the curve for this approach.
 
 Please see the following [citation](https://pubmed.ncbi.nlm.nih.gov/28991892/) for more information.
 
@@ -110,7 +110,7 @@ Please see the following [citation](https://pubmed.ncbi.nlm.nih.gov/28991892/) f
 
 UCell calculates a Mann-Whitney U statistic based on the gene rank list. **Importantly**, UCell has a cut-off for ranked genes ($$r_{max}$$) at 1500 - this is per design as drop-out in single-cell can alter enrichment results. This also substantially speeds the calculations up.
 
-The enrichment score output is then calculating using the complement of the U statistic scaled by the gene set size and cut-off.
+The enrichment score output is then calculated using the complement of the U statistic scaled by the gene set size and cut-off.
 
 $$
 U_j^` = 1-\frac{U_j}{n \bullet r_{max}}
@@ -122,7 +122,7 @@ Please see the following [citation](https://pubmed.ncbi.nlm.nih.gov/34285779/) f
 
 ## escape.matrix
 
-escape has 2 major functions - the first being ```escape.matrix()```, which is the serves as the backbone of enrichment calculations. Using count-level data supplied from a single-cell object or matrix, ```escape.matrix()``` will produce enrichment score for the individual cells with the gene sets selected and output the values as a matrix.
+escape has 2 major functions - the first being ```escape.matrix()```, which serves as the backbone of enrichment calculations. Using count-level data supplied from a single-cell object or matrix, ```escape.matrix()``` will produce an enrichment score for the individual cells with the gene sets selected and output the values as a matrix.
 
 **method** 
 
@@ -165,7 +165,7 @@ ggplot(data = as.data.frame(enrichment.scores),
 
 ## runEscape
 
-Alternatively, we can use ```runEscape()``` to calculate the enrichment score and directly attach the output to a single-cell object. Th additional parameter for ```runEscape` is **new.assay.name**, in order to save the enrichment scores as a custom assay in the single-cell object. 
+Alternatively, we can use ```runEscape()``` to calculate the enrichment score and directly attach the output to a single-cell object. The additional parameter for ```runEscape` is **new.assay.name**, in order to save the enrichment scores as a custom assay in the single-cell object. 
 
 
 ```{r tidy = FALSE}
@@ -183,30 +183,28 @@ sce.pbmc <- runEscape(sce.pbmc,
                       min.size = 5,
                       new.assay.name = "escape.UCell")
 ```
-We can quickly examining the attached enrichment scores using the visualization/workflow we prefer - here we will use just `FeaturePlot()` from the Seurat R package. 
+We can quickly examine the attached enrichment scores using the visualization/workflow we prefer - here we will use just `FeaturePlot()` from the Seurat R package. 
 
 ```{r tidy = FALSE}
 #Define color palette 
 colorblind_vector <- hcl.colors(n=7, palette = "inferno", fixup = TRUE)
 
-#FeaturePlot(pbmc_small, "HALLMARK-APOPTOSIS") + 
-#  scale_color_gradientn(colors = colorblind_vector) + 
-#  theme(plot.title = element_blank())
+FeaturePlot(pbmc_small, "HALLMARK-APOPTOSIS") + 
+  scale_color_gradientn(colors = colorblind_vector) + 
+  theme(plot.title = element_blank())
 ```
 
 ## performNormalization
 
-Although we glossed over the normalization that can be used in ```escape.matrix()``` and ```runEscape()```, it is worth mentioning here as normalization can effect all downstream analyses. 
+Although we glossed over the normalization that can be used in ```escape.matrix()``` and ```runEscape()```, it is worth mentioning here as normalization can affect all downstream analyses. 
 
-There can be inherit bias in enrichment values due to drop out in single-cell expression data. Cells with larger number of feature and counts will likely have higher enrichment values. ```performNormalization()``` will normalize the enrichment values by calculating the number of genes expressed in each gene set and cell. This is similar to the normalization in classic GSEA and it will be stored in a new assay. 
+There can be inherent bias in enrichment values due to drop out in single-cell expression data. Cells with larger numbers of features and counts will likely have higher enrichment values. ```performNormalization()``` will normalize the enrichment values by calculating the number of genes expressed in each gene set and cell. This is similar to the normalization in classic GSEA and it will be stored in a new assay. 
 
 
 ```{r}
 pbmc_small <- performNormalization(pbmc_small, 
                                    assay = "escape.ssGSEA", 
                                    gene.sets = GS.hallmark)
-
-#TODO Figure out visualization - should normalization just modify the seurat assay clot?
 ```
 
 ```performNormalization()``` has an additional parameter **make.positive**. Across the individual gene sets, if negative normalized enrichment scores are seen, the minimum value is added to all values. For example if the normalized enrichment scores (after the above accounting for drop out) ranges from -50 to 50, **make.positive** will adjust the range to 0 to 100 (by adding 50). This allows for compatible log2-fold change downstream, but can alter the enrichment score interpretation.
@@ -276,7 +274,7 @@ heatmapEnrichment(sce.pbmc,
 
 ## geyserEnrichment
 
-We can also focus on individual gene sets - one approach is to use ```geyserEnrichment()```. Here individual cells are plotted along the Y-axis with graphical summary where the central dot refers to the median enrichment value and the thicker/thinner lines demonstrate the interval summaries referring the 66% and 95%.
+We can also focus on individual gene sets - one approach is to use ```geyserEnrichment()```. Here individual cells are plotted along the Y-axis with graphical summary where the central dot refers to the median enrichment value and the thicker/thinner lines demonstrate the interval summaries referring to the 66% and 95%.
 
 ```{r}
 geyserEnrichment(pbmc_small, 
@@ -350,7 +348,7 @@ splitEnrichment(pbmc_small,
 
 **gene.sets**
 
-* The gene set library from either any of the 3 options in the first section of the vignette.
+* The gene set library from either of the 3 options in the first section of the vignette.
 
 ```{r}
 densityEnrichment(pbmc_small, 
@@ -359,7 +357,7 @@ densityEnrichment(pbmc_small,
 ```
 ## scatterEnrichment
 
-It may be advantageous to look at the distribution of multiple gene sets - here we can use ```scatterEnrichment()``` for a 2 gene set comparison. The color values are based on the density of points determine by the number of neighbors, similar to the [Nebulosa R package](https://www.bioconductor.org/packages/release/bioc/html/Nebulosa.html). We just need to define which gene set to plot on the **x.axis** and which to plot on the **y.axis**.
+It may be advantageous to look at the distribution of multiple gene sets - here we can use ```scatterEnrichment()``` for a 2 gene set comparison. The color values are based on the density of points determined by the number of neighbors, similar to the [Nebulosa R package](https://www.bioconductor.org/packages/release/bioc/html/Nebulosa.html). We just need to define which gene set to plot on the **x.axis** and which to plot on the **y.axis**.
 
 
 ```{r}
@@ -385,7 +383,7 @@ scatterEnrichment(sce.pbmc,
 
 ## Principal Component Analysis (PCA)
 
-escape has its own PCA function ```performPCA()``` which will work on a single-cell object or a matrix of enrichment values. This is specifically useful for downstream visualizations as it stores the eigen values and rotations. If we want to look at the the relative contribution to overall variance of each component or a Biplot-like overlay of the individual features, use ```performPCA()```.
+escape has its own PCA function ```performPCA()``` which will work on a single-cell object or a matrix of enrichment values. This is specifically useful for downstream visualizations as it stores the eigenvalues and rotations. If we want to look at the relative contribution to overall variance of each component or a Biplot-like overlay of the individual features, use ```performPCA()```.
 
 Alternatively, other PCA-based functions like Seurat's ```RunPCA()``` or scater's ```runPCA()` can be used. These functions are likely faster and would be ideal if we have a larger number of cells and/or gene sets.
 
