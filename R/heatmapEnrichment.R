@@ -58,6 +58,8 @@ heatmapEnrichment <- function(input.data,
   
   if(length(gene.set.use) == 1 && gene.set.use == "all") {
     gene.set <- colnames(enriched)[colnames(enriched) %!in% c(group.by, facet.by)]
+  } else {
+    gene.set <- gene.set.use
   }
   
   if(!is.null(facet.by)) {
