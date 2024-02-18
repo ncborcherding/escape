@@ -46,7 +46,7 @@ ggplot2 object with PCA distribution
 }
 \description{
 This function allows to the user to examine the distribution
-of principal compoenents run on the enrichment values.
+of principal components run on the enrichment values.
 }
 \examples{
 GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
