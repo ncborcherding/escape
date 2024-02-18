@@ -1,5 +1,5 @@
 ---
-title: Using escape to perform ssGSEA analyses on single-cell RNA-seq data
+title: Using escape to perform gene set enrichment analyses on single-cell RNA-seq data
 author: 
 - name: Nick Borcherding
   email: ncborch@gmail.com
@@ -8,7 +8,7 @@ author:
   email: jared.andrews07@gmail.com
   affiliation: Washington University in St. Louis, School of Medicine, St. Louis, MO, USA
 
-date: "November 8th, 2022"
+date: 'Compiled: `r format(Sys.Date(), "%B %d, %Y")`'
 
 output:
   BiocStyle::html_document:
@@ -27,32 +27,35 @@ library(BiocStyle)
 
 # Loading Processed Single-Cell Data
 
-
-For the demonstration of *escape*, we will use the example "pbmc_small" data from *Seurat* and also generate a `SingleCellExperiment` object from it.
+For the demonstration of *escape*, we will use the example **"pbmc_small"** data from *Seurat* and also generate a `SingleCellExperiment` object from it.
 
 
 ```{r}
 suppressPackageStartupMessages(library(escape))
-suppressPackageStartupMessages(library(dittoSeq))
 suppressPackageStartupMessages(library(SingleCellExperiment))
+suppressPackageStartupMessages(library(scran))
 suppressPackageStartupMessages(library(Seurat))
 suppressPackageStartupMessages(library(SeuratObject))
+suppressPackageStartupMessages(library(RColorBrewer))
+suppressPackageStartupMessages(library(ggplot2))
+
+
 pbmc_small <- get("pbmc_small")
-pbmc_small <- DietSeurat(suppressMessages(UpdateSeuratObject(pbmc_small)))
-sce <- as.SingleCellExperiment(pbmc_small, assay = "RNA")
+sce.pbmc <- as.SingleCellExperiment(pbmc_small, assay = "RNA")
 ```
 
 # Getting Gene Sets
 
-# Getting Gene Sets
+## Option 1: Molecular Signature Database
 
-## Option 1: Molecular Signture Database
+The first step in the process of performing gene set enrichment analysis is identifying the gene sets we would like to use. The function `getGeneSets()` allows users to isolate a whole or multiple libraries from a list of GSEABase GeneSetCollection objects. 
 
-The first step in the process of performing gene set enrichment analysis is identifying the gene sets we would like to use. The function `getGeneSets()` allows users to isolate a whole or multiple libraries from a list of GSEABase GeneSetCollection objects. We can do this for gene set collections from the built-in [Molecular Signature Database](https://www.gsea-msigdb.org/gsea/msigdb/search.jsp) by setting the parameter **library** equal to library/libraries of interest. For multiple libraries, just set **library = c("Library1", "Library2", etc)**. 
+We can do this for gene set collections from the built-in [Molecular Signature Database](https://www.gsea-msigdb.org/gsea/msigdb/search.jsp) by setting the parameter **library** equal to library/libraries of interest. For multiple libraries, just set **library = c("Library1", "Library2", etc)**. 
 
-In Addition:    
-- Individual pathways/gene sets can be isolated from the libraries selected, by setting **gene.sets** = the name(s) of the gene sets of interest.   
-- Subcategories of the invidual libaries can be selected using the **subcategory** parameter.   
+Additional parameters include: 
+
+* **subcategory** Can be used to select subcategories in the larger database.  
+* **gene.sets** Can select individual pathways/gene sets to be isolated.  
 
 If the sequencing of the single-cell data is performed on a species other than "Homo sapiens", make sure to use the **species** parameter in `getGeneSets()` in order to get the correct gene nomenclature.
 
@@ -67,231 +70,375 @@ data("escape.gene.sets", package="escape")
 gene.sets <- escape.gene.sets
 ```
 
-
 ## Option 3: Define personal gene sets
 
-```{r, eval=FALSE}
-gene.sets <- list(Tcell_signature = c("CD2","CD3E","CD3D"),
-			Myeloid_signature = c("SPI1","FCER1G","CSF1R"))
+```{r, eval=FALSE, tidy=FALSE}
+gene.sets <- list(Bcells = c("MS4A1","CD79B","CD79A","IGH1","IGH2")
+			            Myeloid = c("SPI1","FCER1G","CSF1R"),
+			            Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
 ```
 
-# Enrichment
+# Performing Enrichment Calculation
 
-The next step is performing the enrichment on the RNA count data. The function `enrichIt()` can handle either a matrix of raw count data or will pull that data directly from a SingleCellExperiment or Seurat object. The **gene.sets** parameter in the function is the GeneSets, either generated from `getGeneSets()` or from the user. The enrichment scores will be calculated across all individual cells and **groups** is the n size to break the enrichment by while the **cores** is the number of cores to perform in parallel during the enrichment calculation too. 
+Several popular methods exist for Gene Set Enrichment Analysis (GSEA). These methods can vary in the underlying assumptions. *escape* incorporates several methods that are particularly advantageous for single-cell RNA values:
 
-`enrichIt()` can utilize two distinct methods for quantification using the **method** parameter - either the *"ssGSEA"* method described by [Barbie et al 2009](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2783335/) or *"UCell"* described by [Andreatta and Carmona 2021](https://pubmed.ncbi.nlm.nih.gov/34285779/).
+### **ssGSEA**
 
-To prevent issues with enrichment calculations for gene sets with a low number of genes represented in the count data of a single-cell object - **min.size** was instituted to remove gene sets with less than the indicated genes. 
+This method calculates the enrichment score using a rank-normalized approach and generating an empirical cumulative distribution function for each individual cell. The enrichment score is defined for a gene set (*G*) using the number of genes in the gene set (*NG*) and total number of genes (*N*).
 
-**Important Note:** This is computationally intensive and is highly dependent on the number of cells and the number of gene sets included.
+$$
+ES(G,S) \sum_{i = 1}^{n} [P_W^G(G,S,i)-P_{NG}(G,S,i)]
+$$
+Please see the following [citation](https://pubmed.ncbi.nlm.nih.gov/19847166/) for more information.
 
-```{r}
-ES.seurat <- enrichIt(obj = pbmc_small, 
+### **GSVA**
+
+GSVA varies slightly by estimating a Poisson-based kernel cumulative density function. But like ssGSEA, the ultimate enrichment score reported is based on the maximum value of the random walk statistic. GSVA appears to have better overall consistency and runs faster than ssGSEA.
+
+$$
+ES_{jk}^{max} = V_{jk} [max_{l=1,...,p}|v_{jk}(l)]
+$$
+Please see the following [citation](https://pubmed.ncbi.nlm.nih.gov/23323831/) for more information.
+
+### **AUCell**
+
+In contrast to ssGSEA and GSVA, AUCell takes the gene rankings for each cell and step-wise plots the position of each gene in the gene set along the y-axis. The output score is the area under the curve for this approach.
+
+Please see the following [citation](https://pubmed.ncbi.nlm.nih.gov/28991892/) for more information.
+
+### UCell
+
+UCell calculates a Mann-Whitney U statistic based on the gene rank list. **Importantly**, UCell has a cut-off for ranked genes ($$r_{max}$$) at 1500 - this is per design as drop-out in single-cell can alter enrichment results. This also substantially speeds the calculations up.
+
+The enrichment score output is then calculated using the complement of the U statistic scaled by the gene set size and cut-off.
+
+$$
+U_j^` = 1-\frac{U_j}{n \bullet r_{max}}
+$$
+
+
+Please see the following [citation](https://pubmed.ncbi.nlm.nih.gov/34285779/) for more information.
+
+
+## escape.matrix
+
+escape has 2 major functions - the first being ```escape.matrix()```, which serves as the backbone of enrichment calculations. Using count-level data supplied from a single-cell object or matrix, ```escape.matrix()``` will produce an enrichment score for the individual cells with the gene sets selected and output the values as a matrix.
+
+**method** 
+
+* AUCell 
+* GSVA 
+* ssGSEA
+* UCell
+
+**groups**  
+
+* The number of cells to calculate at once. 
+
+**min.size** 
+
+* The minimum size of detectable genes in a gene set. Gene sets less than the **min.size** will be removed before the calculation.
+
+**normalize**
+
+* Use the number of genes from the gene sets in each cell to normalize the enrichment scores. The default value is **FALSE**.
+
+**make.positive**
+
+* During normalization, whether to shift the enrichment values to a positive range (**TRUE**) or not (**FALSE**). The default value is **FALSE**. 
+
+*Cautionary note:* **make.positive** was added to allow for differential analysis downstream of enrichment as some methods may produce negative values. It preserves log-fold change, but ultimately modifies the enrichment values and should be used with caution.
+
+
+```{r tidy = FALSE}
+enrichment.scores <- escape.matrix(pbmc_small, 
+                                   gene.sets = GS.hallmark, 
+                                   groups = 1000, 
+                                   min.size = 5)
+
+ggplot(data = as.data.frame(enrichment.scores), 
+      mapping = aes(enrichment.scores[,1], enrichment.scores[,2])) + 
+  geom_point() + 
+  theme_classic() + 
+  theme(axis.title = element_blank())
+```
+
+## runEscape
+
+Alternatively, we can use ```runEscape()``` to calculate the enrichment score and directly attach the output to a single-cell object. The additional parameter for ```runEscape` is **new.assay.name**, in order to save the enrichment scores as a custom assay in the single-cell object. 
+
+
+```{r tidy = FALSE}
+pbmc_small <- runEscape(pbmc_small, 
+                        method = "ssGSEA",
+                        gene.sets = GS.hallmark, 
+                        groups = 1000, 
+                        min.size = 5,
+                        new.assay.name = "escape.ssGSEA")
+
+sce.pbmc <- runEscape(sce.pbmc, 
+                      method = "UCell",
                       gene.sets = GS.hallmark, 
-                      groups = 1000, cores = 2, 
-                      min.size = 5)
+                      groups = 1000, 
+                      min.size = 5,
+                      new.assay.name = "escape.UCell")
+```
+We can quickly examine the attached enrichment scores using the visualization/workflow we prefer - here we will use just `FeaturePlot()` from the Seurat R package. 
 
-ES.sce <- enrichIt(obj = sce, 
-                   gene.sets = GS.hallmark, 
-                   method = "UCell",
-                   groups = 1000, cores = 2, 
-                   min.size = 5)
+```{r tidy = FALSE}
+#Define color palette 
+colorblind_vector <- hcl.colors(n=7, palette = "inferno", fixup = TRUE)
+
+FeaturePlot(pbmc_small, "HALLMARK-APOPTOSIS") + 
+  scale_color_gradientn(colors = colorblind_vector) + 
+  theme(plot.title = element_blank())
 ```
 
-We can then easily add these results back to our Seurat or SCE object.
+## performNormalization
+
+Although we glossed over the normalization that can be used in ```escape.matrix()``` and ```runEscape()```, it is worth mentioning here as normalization can affect all downstream analyses. 
+
+There can be inherent bias in enrichment values due to drop out in single-cell expression data. Cells with larger numbers of features and counts will likely have higher enrichment values. ```performNormalization()``` will normalize the enrichment values by calculating the number of genes expressed in each gene set and cell. This is similar to the normalization in classic GSEA and it will be stored in a new assay. 
+
 
 ```{r}
-## if working with a Seurat object
-pbmc_small <- Seurat::AddMetaData(pbmc_small, ES.seurat)
-
-## if working with an SCE object
-met.data <- merge(colData(sce), ES.sce, by = "row.names", all=TRUE)
-row.names(met.data) <- met.data$Row.names
-met.data$Row.names <- NULL
-colData(sce) <- met.data
+pbmc_small <- performNormalization(pbmc_small, 
+                                   assay = "escape.ssGSEA", 
+                                   gene.sets = GS.hallmark)
 ```
+
+```performNormalization()``` has an additional parameter **make.positive**. Across the individual gene sets, if negative normalized enrichment scores are seen, the minimum value is added to all values. For example if the normalized enrichment scores (after the above accounting for drop out) ranges from -50 to 50, **make.positive** will adjust the range to 0 to 100 (by adding 50). This allows for compatible log2-fold change downstream, but can alter the enrichment score interpretation.
 
 ****
 
 # Visualizations
 
-The easiest way to generate almost any visualization for single cell data is via `r Biocpkg("dittoSeq")`, which is an extremely flexible visualization package for both bulk and single-cell RNA-seq data that works very well for both expression data and metadata. Better yet, it can handle both SingleCellExperiment and Seurat objects.
+There are a number of ways to look at the enrichment values downstream of ```runEscape()``` with the myriad plotting and visualizations functions/packages for single-cell data. *escape* include several additional plotting functions to assist in the analysis.
 
-To keep things consistent, we'll define a pleasing color scheme.
+## heatmapEnrichment
+
+We can examine the enrichment values across our gene sets by using ```heatmapEnrichment()```. This visualization will return the mean of the **group.by** variable. As a default - all visualizations of single-cell objects will use the cluster assignment or active identity as a default for visualizations.
+
 ```{r}
-colors <- colorRampPalette(c("#0D0887FF","#7E03A8FF","#CC4678FF","#F89441FF","#F0F921FF"))
+heatmapEnrichment(pbmc_small, 
+                  group.by = "ident",
+                  gene.set.use = "all",
+                  assay = "escape.ssGSEA")
+```
+Most of the visualizations in *escape* have a defined set of parameters.
+
+**group.by**
+
+* The grouping variable for the comparison.
+
+**facet.by**
+
+* Using a variable to facet the graph into separate visualizations.
+
+**scale**
+
+* **TRUE** - z-transform the enrichment values.
+* **FALSE** - leave raw values (**DEFAULT**).
+
+In addition, ```heatmapEnrichment()``` allows for the reclustering of rows and columns using Euclidean distance of the enrichment scores and the Ward2 methods for clustering using **cluster.rows** and **cluster.columns**.
+
+```{r}
+heatmapEnrichment(sce.pbmc, 
+                  group.by = "ident",
+                  assay = "escape.UCell",
+                  scale = TRUE,
+                  cluster.rows = TRUE,
+                  cluster.columns = TRUE)
 ```
 
-
-## Heatmaps
-
-A simple way to approach visualizations for enrichment results is the heatmap, especially if you are using a number of gene sets or libraries. 
+Each visualization has an additional argument called **palette that supplies the coloring scheme to be used - available color palettes can be viewed with ```hcl.pals()```. 
 
 ```{r}
-dittoHeatmap(pbmc_small, genes = NULL, metas = names(ES.seurat), 
-             annot.by = "groups", 
-             fontsize = 7, 
-             cluster_cols = TRUE,
-             heatmap.colors = colors(50))
+hcl.pals()
 ```
 
-A user can also produce a heatmap with select gene sets by providing specific names to the **metas** parameter. For example, we can isolated gene sets involved immune response.
-
 ```{r}
-dittoHeatmap(sce, genes = NULL, 
-             metas = c("HALLMARK_IL2_STAT5_SIGNALING_UCell", 
-                       "HALLMARK_IL6_JAK_STAT3_SIGNALING_UCell", 
-                       "HALLMARK_INFLAMMATORY_RESPONSE_UCell"), 
-             annot.by = "groups", 
-             fontsize = 7,
-             heatmap.colors = colors(50))
+heatmapEnrichment(pbmc_small, 
+                  assay = "escape.ssGSEA",
+                  palette = "Spectral") 
 ```
 
-## Violin Plots
-
-Another way to visualize a subset of gene set enrichment would be to graph the distribution of enrichment using violin, jitter, boxplot, or ridgeplots. We can also compare between categorical variables using the **group.by** parameter.
+Alternatively, we can add an additional layer to the ggplot object that is returned by the visualizations using something like ```scale_fill_gradientn()``` for continuous values or ```scale_fill_manual()``` for the categorical variables.
 
 ```{r}
-multi_dittoPlot(sce, 
-                vars = c("HALLMARK_IL2_STAT5_SIGNALING_UCell", 
-                       "HALLMARK_IL6_JAK_STAT3_SIGNALING_UCell", 
-                       "HALLMARK_INFLAMMATORY_RESPONSE_UCell"), 
-                group.by = "groups", 
-                plots = c("jitter", "vlnplot", "boxplot"), 
-                ylab = "Enrichment Scores", 
-                theme = theme_classic() + 
-                theme(plot.title = element_text(size = 10)))
+heatmapEnrichment(sce.pbmc, 
+                  group.by = "ident",
+                  assay = "escape.UCell") + 
+  scale_fill_gradientn(colors = rev(brewer.pal(11, "RdYlBu"))) 
 ```
 
+## geyserEnrichment
 
-## Hex Density Enrichment Plots
-
-We can also compare the distribution of enrichment scores of 2 distinct gene sets across all single cells using the `dittoScatterHex()` function. Here, we use our SingleCellExperiment object with results of `enrichIt()` and specify gene sets to the **x.var** and **y.var** parameters to produce a density plot. We can also add contours to the plot, by passing **do.contour = TRUE**. 
+We can also focus on individual gene sets - one approach is to use ```geyserEnrichment()```. Here individual cells are plotted along the Y-axis with graphical summary where the central dot refers to the median enrichment value and the thicker/thinner lines demonstrate the interval summaries referring to the 66% and 95%.
 
 ```{r}
-dittoScatterHex(sce, x.var = "HALLMARK_IL2_STAT5_SIGNALING_UCell", 
-                    y.var = "HALLMARK_IL6_JAK_STAT3_SIGNALING_UCell", 
-                    do.contour = TRUE) + 
-        scale_fill_gradientn(colors = colors(11)) 
+geyserEnrichment(pbmc_small, 
+                 assay = "escape.ssGSEA",
+                 gene.set = "HALLMARK-INTERFERON-GAMMA-RESPONSE")
 ```
 
-We can also separate the graph using the **split.by** parameter, allowing for the direct comparison of categorical variables.
+To show the additional parameters that appear in visualizations of individual enrichment gene sets - we can reorder the groups by the mean of the gene set using **order.by** = "mean".
 
 ```{r}
-dittoScatterHex(sce, x.var = "HALLMARK_IL2_STAT5_SIGNALING_UCell", 
-                    y.var = "HALLMARK_IL6_JAK_STAT3_SIGNALING_UCell", 
-                do.contour = TRUE,
-                split.by = "groups")  + 
-        scale_fill_gradientn(colors = colors(11)) 
+geyserEnrichment(pbmc_small, 
+                 assay = "escape.ssGSEA",
+                 gene.set = "HALLMARK-INTERFERON-GAMMA-RESPONSE", 
+                 order.by = "mean")
 ```
 
-## Ridge Plots
-
-Another distribution visualization is using a [Ridge Plot](https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html) from the ggridges R package. This allows the user to incorporate categorical variables to seperate the enrichment scores along the y-axis in addition to the faceting by categorical variables. 
-
-Like above, we can explore the distribution of the **"HALLMARK_DNA_REPAIR"** gene set between groups by calling `ridgeEnrichment()` with the ES2 object. We specify **group = letters.idents**, which will separate groups on the y-axis. We can also add a rug plot (**add.rug = TRUE**) to look at the discrete sample placement along the enrichment ridge plot. 
+What if we had 2 separate samples or groups within the data? Another parameter we can use is **facet.by** to allow for direct visualization of an additional variable. 
 
 ```{r}
-## Seurat object example
-ES2 <- data.frame(pbmc_small[[]], Idents(pbmc_small))
-colnames(ES2)[ncol(ES2)] <- "cluster"
+geyserEnrichment(pbmc_small, 
+                 assay = "escape.ssGSEA",
+                 gene.set = "HALLMARK-INTERFERON-GAMMA-RESPONSE", 
+                 facet.by = "groups")
+```
+Lastly, we can select the way the color is applied to the plot using the **color.by** parameter. Here we can set it to the gene set of interest *"HALLMARK-INTERFERON-GAMMA-RESPONSE"*.
 
-## plot
-ridgeEnrichment(ES2, gene.set = "HALLMARK_IL2_STAT5_SIGNALING", group = "cluster", add.rug = TRUE)
+```{r}
+geyserEnrichment(pbmc_small, 
+                 assay = "escape.ssGSEA",
+                 gene.set = "HALLMARK-INTERFERON-GAMMA-RESPONSE", 
+                 color.by  = "HALLMARK-INTERFERON-GAMMA-RESPONSE")
 ```
 
-In addition to the separation of **letter.idents**, we can also use `ridgeEnrichment()` for better granularity of multiple variables. For example, instead of looking at the difference just between "Type", we can set **group = "cluster"** and then **facet = "letter.idents"**. This gives a visualization of the enrichment of DNA Repair by cluster and Type.
+## ridgeEnrichment
+
+Similar to the ```geyserEnrichment()``` the ```ridgeEnrichment()``` can display the distribution of enrichment values across the selected gene set. The central line is at the median value for the respective grouping. 
 
 ```{r}
-ridgeEnrichment(ES2, 
-                gene.set = "HALLMARK_IL2_STAT5_SIGNALING", 
-                group = "cluster", 
-                facet = "letter.idents", 
-                add.rug = TRUE)
+ridgeEnrichment(sce.pbmc, 
+                assay = "escape.UCell",
+                gene.set = "HALLMARK-IL2-STAT5-SIGNALING")
+```
+We can get the relative position of individual cells along the x-axis using the **add.rug** parameter.
+
+```{r}
+ridgeEnrichment(sce.pbmc, 
+                assay = "escape.UCell",
+                gene.set = "HALLMARK-IL2-STAT5-SIGNALING",
+                add.rug = TRUE,
+                scale = TRUE)
 ```
 
-## Split Violin Plots
+## splitEnrichment
 
-Another distribution visualization is a violin plot, which we seperate and directly compare using a binary classification. Like `ridgeEnrichment()`, this allows for greater use of categorical variables. For `splitEnrichment()`, the output will be two halves of a violin plot bassed on the `split` parameter with a central boxplot with the relative distribution accross all samples. 
-
-Like above, we can explore the distribution of the **"HALLMARK_DNA_REPAIR"** gene set between groups by calling `splitEnrichment()` with the ES2 object and **split = "groups"**. We can also explore the cluster distribution by assigning the **x-axis = "cluster"**.
+Another distribution visualization is a violin plot, which we separate and directly compare using a binary classification. Like ```ridgeEnrichment()```, this allows for greater use of categorical variables. For ```splitEnrichment()```, the output will be two halves of a violin plot based on the **split.by** parameter with a central boxplot with the relative distribution across all samples.
 
 ```{r}
-splitEnrichment(ES2, split = "groups", 
-                gene.set = "HALLMARK_IL2_STAT5_SIGNALING")
-splitEnrichment(ES2, x.axis = "cluster", 
-                split = "groups", 
-                gene.set = "HALLMARK_IL2_STAT5_SIGNALING")
+splitEnrichment(pbmc_small, 
+                assay = "escape.ssGSEA",
+                gene.set = "HALLMARK-IL2-STAT5-SIGNALING", 
+                split.by = "groups")
 ```
 
+## densityEnrichment
 
-## Enrichment Plots
+```densityEnrichment()``` is a method to visualize the mean rank position of the gene set features along the total feature space by group. This is similar to traditional GSEA analysis, but is not calculating the walk-based enrichment score.
 
-New to the dev version of the escape is `enrichmentPlot()` that takes the single-cell expression object (**pbmc_small**) and calculates mean rank order for a gene set across groups. The function requires the name of the specific gene set (**gene.set**) and the library of gene sets (**gene.sets**) to extract the rank positions from the count data stored in the Seurat or single-cell expression object. 
+**gene.set.use** 
+
+* The selected gene set to visualize
+
+**gene.sets**
+
+* The gene set library from either of the 3 options in the first section of the vignette.
 
 ```{r}
-enrichmentPlot(pbmc_small, 
-               gene.set = "HALLMARK_IL2_STAT5_SIGNALING",
-               gene.sets = GS.hallmark,
-               group = "groups")
+densityEnrichment(pbmc_small, 
+                  gene.set.use = "HALLMARK-IL6-JAK-STAT3-SIGNALING", 
+                  gene.sets = GS.hallmark)
+```
+## scatterEnrichment
+
+It may be advantageous to look at the distribution of multiple gene sets - here we can use ```scatterEnrichment()``` for a 2 gene set comparison. The color values are based on the density of points determined by the number of neighbors, similar to the [Nebulosa R package](https://www.bioconductor.org/packages/release/bioc/html/Nebulosa.html). We just need to define which gene set to plot on the **x.axis** and which to plot on the **y.axis**.
+
+
+```{r}
+scatterEnrichment(pbmc_small, 
+                  assay = "escape.ssGSEA",
+                  x.axis = "HALLMARK-INTERFERON-GAMMA-RESPONSE",
+                  y.axis = "HALLMARK-IL6-JAK-STAT3-SIGNALING")
+```
+
+The scatter plot can also be converted into a hexbin, another method for summarizing the individual cell distributions along the x and y axis, by setting **style** = "hex". 
+
+```{r}
+scatterEnrichment(sce.pbmc, 
+                  assay = "escape.UCell",
+                  x.axis = "HALLMARK-INTERFERON-GAMMA-RESPONSE",
+                  y.axis = "HALLMARK-IL6-JAK-STAT3-SIGNALING", 
+                  style = "hex")
+```
+
+****
+
+# Statistical Analysis
+
+## Principal Component Analysis (PCA)
+
+escape has its own PCA function ```performPCA()``` which will work on a single-cell object or a matrix of enrichment values. This is specifically useful for downstream visualizations as it stores the eigenvalues and rotations. If we want to look at the relative contribution to overall variance of each component or a Biplot-like overlay of the individual features, use ```performPCA()```.
+
+Alternatively, other PCA-based functions like Seurat's ```RunPCA()``` or scater's ```runPCA()` can be used. These functions are likely faster and would be ideal if we have a larger number of cells and/or gene sets.
+
+```{r}
+pbmc_small <- performPCA(pbmc_small, 
+                         assay = "escape.ssGSEA",
+                         n.dim = 1:10)
+```
+
+*escape* has a built in method for plotting PCA ```pcaEnrichment()``` that functions similarly to the ```scatterEnrichment()``` function where **x.axis** and **y.axis** are the components to plot.
+
+```{r}
+pcaEnrichment(pbmc_small, 
+              dimRed = "escape.PCA",
+              x.axis = "PC1",
+              y.axis = "PC2")
+```
+
+```pcaEnrichment()``` can plot additional information on the principal component analysis.
+
+**add.percent.contribution** will add the relative percent contribution of the x and y.axis to total variability observed in the PCA.
+
+**display.factors** will overlay the magnitude and direction that the features/gene sets contribute to the selected components. The number of gene sets is determined by **number.of.factors**. This can assist in understanding the underlying differences in enrichment across different cells.
+
+```{r}
+pcaEnrichment(pbmc_small, 
+              dimRed = "escape.PCA",
+              x.axis = "PC1",
+              y.axis = "PC2",
+              add.percent.contribution = TRUE,
+              display.factors = TRUE,
+              number.of.factors = 10)
+```
+
+## Differential Enrichment
+
+Differential enrichment analysis can be performed similar to differential gene expression analysis. For the purposes of finding the differential enrichment values, we can first normalize the enrichment values for the ssGSEA calculations. Notice here, we are using **make.positive** = TRUE in order to adjust any negative values. This is a particular issue when it comes to ssGSEA and GSVA enrichment scores.
+
+```{r}
+pbmc_small <- performNormalization(pbmc_small, 
+                                   assay = "escape.ssGSEA", 
+                                   gene.sets = GS.hallmark,
+                                   make.positive = TRUE)
+
+all.markers <- FindAllMarkers(pbmc_small, 
+                              assay = "escape.ssGSEA_normalized", 
+                              min.pct = 0,
+                              logfc.threshold = 0)
+
+head(all.markers)
 ```
 
 ***
 
-# Expanded Analysis
-
-One frustration of Gene Set Enrichment is trying to make sense of the values. In order to move away from just selecting pathways that may be of interest, escape offers the ability to `performPCA()` on the enrichment scores. Like the other functions, we will need to provide the output of `enrichIt()` to the **enriched** parameter and the **groups** to include for later graphing.
-
-```{r}
-PCA <- performPCA(enriched = ES2, 
-                  gene.sets = names(GS.hallmark), 
-                  groups = c("groups", "cluster"))
-```
-
-```{r}
-pcaEnrichment(PCA, 
-              PCx = "PC1", 
-              PCy = "PC2", 
-              contours = TRUE)
-```
-
-We can also look at the `pcaEnrichment()` output separated by categorical factors using the **facet** parameter, for example using the cluster assignment.
-
-```{r}
-pcaEnrichment(PCA, 
-              PCx = "PC1", 
-              PCy = "PC2", 
-              contours = FALSE, 
-              facet = "cluster") 
-```
-
-We can more closely examine the construction of the PCA by looking at the contribution of each gene set to the respective principal component using `masterPCAPlot()` with the same input as above with the `pcaEnrichment()`. We can also control the number of gene sets plotted with **top.contribution**. 
-
-```{r}
-masterPCAPlot(ES2, 
-              gene.sets = names(GS.hallmark), 
-              PCx = "PC1", 
-              PCy = "PC2", 
-              top.contribution = 10)
-```
-
-
-## Signficance
-
-We can also look for significant differences between groups of variables using `getSignificance()`. For this, we need to assign a **group** parameter and the type of **fit** including: T.test, logistic regression (LR), Wilcoxon Rank Sum Test (Wilcoxon), ANOVA, and Kruskal-Wallis (KW) test. `getSignificance()` will pull any numeric values, to ensure only gene sets, use the **gene.sets** parameter, similar to the PCAplot functions above. 
-
-Returned is a test statistic, raw p value, FDR value , and the median values for each group. In addition, ANOVA and the Kruskal-Wallis test will automatically return the corrected p-values for each comparison in the group. 
-
-```{r}
-output <- getSignificance(ES2, 
-                          group = "groups", 
-                          gene.sets = names(ES.seurat),
-                          fit = "T.test")
-```
-
-***
-
-# Support
+# Conclusions
 
 If you have any questions, comments or suggestions, feel free to visit the [github repository](https://github.com/ncborcherding/escape) or [email me](mailto:ncborch@gmail.com).
 
