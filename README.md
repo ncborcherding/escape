@@ -77,7 +77,7 @@ pbmc_small <- runEscape(pbmc_small,
 
 #### Vignette
 
-A more comprehensive vignette including the visualizations, principal component analysis and differential testing is available [link coming soon](yyy).
+A more comprehensive vignette including the visualizations, principal component analysis and differential testing is available [here](https://www.borch.dev/uploads/screpertoire/articles/Running_Escape.html).
 
 ### Citation 
 If using escape, please cite the [article](https://www.nature.com/articles/s42003-020-01625-6): Borcherding, N., Vishwakarma, A., Voigt, A.P. et al. Mapping the immune environment in clear cell renal carcinoma by single-cell genomics. Commun Biol 4, 122 (2021). 
