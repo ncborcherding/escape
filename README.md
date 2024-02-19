@@ -50,7 +50,7 @@ The basic function of enrichment analysis is done using the ```escape.matrix()``
 ```r
 #Defining Gene Set To Use:
 GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
-          Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
+           Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
 
 #Using Seurat Built-In Example:
 pbmc_small <- SeuratObject::pbmc_small
@@ -68,10 +68,10 @@ Alternatively, ```runEscape()``` will perform the enrichment calculations as abo
 
 ```r
 pbmc_small <- runEscape(pbmc_small,
-                          method = "ssGSEA", 
-                          new.assay.name = "escape.ssGSEA",
-                          gene.sets = GS, 
-                          min.size = NULL)
+                        method = "ssGSEA", 
+                        new.assay.name = "escape.ssGSEA",
+                        gene.sets = GS, 
+                        min.size = NULL)
 ```
                           
 
