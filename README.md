@@ -72,10 +72,9 @@ pbmc_small <- runEscape(pbmc_small,
                         new.assay.name = "escape.ssGSEA",
                         gene.sets = GS, 
                         min.size = NULL)
-```
-                          
+```                
 
-#### Vignette
+### Vignette
 
 A more comprehensive vignette including the visualizations, principal component analysis and differential testing is available [here](https://www.borch.dev/uploads/screpertoire/articles/Running_Escape.html).
 
