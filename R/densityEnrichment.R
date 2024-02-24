@@ -58,11 +58,11 @@ densityEnrichment <- function(input.data,
                    type = "counts")
   cnts.filter <- .filterFeatures(cnts)
   grouping <- as.vector(.grabMeta(input.data)[,group.by])
-  groups <- unique(grouping)
+  groups <- na.omit(unique(grouping))
   
   lapply(seq_len(length(groups)), function(x) {
     tmp <- cnts.filter[,which(grouping == groups[x])]
-    density <- compute.gene.density(tmp, seq_len(ncol(tmp)), TRUE, TRUE)
+    density <-  suppressWarnings(compute.gene.density(tmp, seq_len(ncol(tmp)), TRUE, FALSE))
     rank.scores <- rep(0, nrow(tmp))
     sort.sgn.idxs <- apply(density, 2, order, decreasing=TRUE)
     gsva_rnk2 <- apply(sort.sgn.idxs, 2, compute_rank_score.mod, nrow(cnts))
