@@ -8,7 +8,8 @@ performNormalization(
   input.data,
   assay = NULL,
   gene.sets = NULL,
-  make.positive = FALSE
+  make.positive = FALSE,
+  scale.factor = NULL
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ the individual gene set information from.}
 
 \item{make.positive}{Shift enrichment values to a positive range \strong{TRUE}
 for downstream analysis or not \strong{TRUE} (default).}
+
+\item{scale.factor}{A vector to use for normalizing enrichment scores per cell.}
 }
 \value{
 Single-cell object or matrix of normalized enrichment scores
