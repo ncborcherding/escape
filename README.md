@@ -24,6 +24,14 @@ More information on each method is available in the *escape* manual for ```escap
 
 ### Installation
 
+#### GSVA requirement
+
+*escape* requires GSVA v1.51.5 (not on Bioconductor 3.18). The easiest way to install is: 
+
+```r
+devtools::install_github("rcastelo/GSVA")
+```
+
 #### Install Via GitHub
 
 ```r
