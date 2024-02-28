@@ -43,7 +43,7 @@ jobs:
         run: Rscript -e 'install.packages("remotes")'
 
       - name: Add GSVA repo
-        run: Rscript -e 'remotes::install_github("rcastelo/GSVA")'
+        run: Rscript -e 'remotes::install_github("rcastelo/GSVA", upgrade = "never")'
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
