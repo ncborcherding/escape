@@ -36,6 +36,7 @@ Imports:
     SeuratObject
 Suggests: 
     Seurat,
+    hexbin,
     scran,
     knitr,
     rmarkdown,
