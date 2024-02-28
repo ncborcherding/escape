@@ -26,6 +26,12 @@ jobs:
           extra-packages: any::covr
           needs: coverage
 
+      - name: Install remotes package
+        run: Rscript -e 'install.packages("remotes")'
+
+      - name: Add GSVA repo
+        run: Rscript -e 'remotes::install_github("rcastelo/GSVA")'
+
       - name: Test coverage
         run: |
           covr::codecov(
