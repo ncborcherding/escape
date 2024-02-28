@@ -40,7 +40,7 @@ jobs:
           use-public-rspm: true
       
       - name: Install remotes package
-        run: install.packages("remotes")
+        run: Rscript -e 'install.packages("remotes")'
 
       - name: Add GSVA repo
         run: Rscript -e 'remotes::install_github("rcastelo/GSVA")'
