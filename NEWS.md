@@ -5,6 +5,7 @@
 * ordering by mean values no longer changes the color order
 * add explicit BPPARAM argument to ```runEscape()``` and ```escape.matrix()```
 * added additional details in ```runEscape()``` and ```escape.matrix()``` for make.positive.
+* removed plotting of ```splitEnrichment()``` for group.by = NULL
 
 
 # escape VERSION 1.99.0 (2024-02-27)
