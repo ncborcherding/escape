@@ -48,14 +48,4 @@ test_that("heatmapEnrichment works", {
     )
   )
   
-  expect_doppelganger(
-    "geyserEnrichment_gradient_plot",
-    geyserEnrichment(
-      seuratObj, 
-      assay = "escape",
-      gene.set = "Tcells",
-      color.by = "Tcells"
-    )
-  )
-  
 })

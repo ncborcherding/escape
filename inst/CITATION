@@ -1,0 +1,25 @@
+citHeader("To cite escape in publications use:")
+
+citEntry(
+  entry = "Article",
+  title = "Mapping the immune environment in clear cell renal carcinoma by single-cell genomics",
+  author = personList(
+      as.person("Nicholas Borcherding"),
+      as.person("Ajaykumar Vishwakarma"),
+      as.person("Andrew P. Voigt"),
+      as.person("Andrew Bellizzi"),
+      as.person("Jacob Kaplan"),
+      as.person("Kenneth Nepple"),
+      as.person("Aliasger K. Salem"),
+      as.person("Russell W. Jenkins"),
+      as.person("Yousef Zakharia"),
+      as.person("Weizhou Zhang")
+  ),
+  journal = "Communications Biology",
+  volume = "4",
+  year = "2021",
+  publisher = "Nature",
+  doi = "10.1038/s42003-020-01625-6",
+  url = "https://www.nature.com/articles/s42003-020-01625-6",
+  textVersion = "Borcherding, N.*, Vishwakarma, A.*, Voigt, A.P., Nepple, K., Salem, A., Jenkins, R.W., Zhang, W., Zakharia, Y. (2021) Mapping the immune environment in clear cell renal carcinoma by single-cell genomics. Communications Biology. (doi:10.1038/s42003-020-01625-6)"
+)
