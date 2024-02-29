@@ -67,8 +67,11 @@
 <text transform='translate(18.53,214.89) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='65.43px' lengthAdjust='spacingAndGlyphs'>Rank Density</text>
 <rect x='648.90' y='175.82' width='60.14' height='78.13' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='654.38' y='190.02' style='font-size: 11.00px; font-family: sans;' textLength='30.58px' lengthAdjust='spacingAndGlyphs'>Group</text>
+<rect x='654.38' y='196.64' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <rect x='655.09' y='197.35' width='15.86' height='15.86' style='stroke-width: 1.07; stroke-linecap: butt; stroke-linejoin: miter; fill: #040404; fill-opacity: 0.40;' />
+<rect x='654.38' y='213.92' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <rect x='655.09' y='214.63' width='15.86' height='15.86' style='stroke-width: 1.07; stroke-linecap: butt; stroke-linejoin: miter; fill: #C53270; fill-opacity: 0.40;' />
+<rect x='654.38' y='231.20' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <rect x='655.09' y='231.91' width='15.86' height='15.86' style='stroke-width: 1.07; stroke-linecap: butt; stroke-linejoin: miter; fill: #FFFE9E; fill-opacity: 0.40;' />
 <text x='677.14' y='208.30' style='font-size: 8.80px; font-family: sans;' textLength='26.42px' lengthAdjust='spacingAndGlyphs'>ident.0</text>
 <text x='677.14' y='225.58' style='font-size: 8.80px; font-family: sans;' textLength='26.42px' lengthAdjust='spacingAndGlyphs'>ident.2</text>

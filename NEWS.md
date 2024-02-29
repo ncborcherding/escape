@@ -1,5 +1,13 @@
+# escape VERSION 1.99.1 (2024-02-29)
 
-# escape VERSION 2.0.0 (2024-01-25)
+## UNDERLYING CHANGES
+
+* ordering by mean values no longer changes the color order
+* add explicit BPPARAM argument to ```runEscape()``` and ```escape.matrix()```
+* added additional details in ```runEscape()``` and ```escape.matrix()``` for make.positive.
+
+
+# escape VERSION 1.99.0 (2024-02-27)
 
 ## NEW FEATURES
 

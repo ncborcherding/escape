@@ -17,7 +17,8 @@
 #' of genes \strong{TRUE} or report unnormalized \strong{FALSE}.
 #' @param make.positive During normalization shift enrichment values to a 
 #' positive range \strong{TRUE} for downstream analysis or not 
-#' \strong{TRUE} (default).
+#' \strong{TRUE} (default). Will only be applied if \strong{normalize = TRUE}.
+#' @param BPPARAM A BiocParallel::bpparam() object that for parallelization. 
 #' @param ... pass arguments to AUCell GSVA, ssGSEA, or UCell call
 #'
 #' @importFrom GSVA gsva gsvaParam ssgseaParam
@@ -25,6 +26,7 @@
 #' @importFrom UCell ScoreSignatures_UCell
 #' @importFrom AUCell AUCell_run
 #' @importFrom SummarizedExperiment assay
+#' @importFrom BiocParallel SerialParam MulticoreParam BatchtoolsParam SerialParam
 #'
 #' @examples 
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
@@ -46,8 +48,8 @@ escape.matrix <- function(input.data,
                           min.size = 5,
                           normalize = FALSE,
                           make.positive = FALSE,
+                          BPPARAM = SerialParam(),
                           ...) {
-  
     egc <- .GS.check(gene.sets)
     cnts <- .cntEval(input.data, assay = "RNA", type = "counts")
     egc.size <- lapply(egc, function(x) length(which(rownames(cnts) %in% x)))
@@ -79,18 +81,21 @@ escape.matrix <- function(input.data,
           if(method %in% c("ssGSEA", "GSVA")) {
               a <- suppressWarnings(gsva(param = parameters, 
                         verbose = FALSE,
+                        BPPARAM = BPPARAM,
                         ...))
           } else if(method == "UCell") {
               a <- t(suppressWarnings(
                 ScoreSignatures_UCell(matrix = split.data[[i]], 
                                       features=egc,
                                       name = NULL,
+                                      BPPARAM = BPPARAM,
                                       ...)))
           } else if (method == "AUCell") {
              a <- t(assay(suppressWarnings(
                            AUCell_run(exprMat = split.data[[i]], 
                                       geneSets = egc,
                                       normAUC = FALSE,
+                                      BPPARAM = BPPARAM,
                                       ...))))
              
           }
@@ -135,9 +140,10 @@ escape.matrix <- function(input.data,
 #' of genes \strong{TRUE} or report unnormalized \strong{FALSE}.
 #' @param make.positive During normalization shift enrichment values to a 
 #' positive range \strong{TRUE} for downstream analysis or not 
-#' \strong{TRUE} (default).
+#' \strong{TRUE} (default). Will only be applied if \strong{normalize = TRUE}.
 #' @param new.assay.name The new name of the assay to append to 
 #' the single-cell object containing the enrichment scores.
+#' @param BPPARAM A BiocParallel::bpparam() object that for parallelization. 
 #' @param ... pass arguments to AUCell GSVA, ssGSEA or UCell call
 #' @export
 #' @return Seurat or Single-Cell Experiment object with escape enrichment scores
@@ -151,6 +157,7 @@ runEscape <- function(input.data,
                       normalize = FALSE,
                       make.positive = FALSE,
                       new.assay.name = "escape",
+                      BPPARAM = SerialParam(),
                       ...) {
   .checkSingleObject(input.data)
    enrichment <- escape.matrix(input.data = input.data,
