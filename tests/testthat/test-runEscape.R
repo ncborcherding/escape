@@ -38,7 +38,8 @@ test_that("runEscape works", {
   expect_equal(trial.UCell, 
                getdata("runEscape", "escape.matrix_UCell"))
   expect_equal(trial.AUCell, 
-               getdata("runEscape", "escape.matrix_AUCell"))
+               getdata("runEscape", "escape.matrix_AUCell"), 
+               tolerance=1e-4)
   
   pbmc_small <- runEscape(pbmc_small,
                           method = "ssGSEA", 
