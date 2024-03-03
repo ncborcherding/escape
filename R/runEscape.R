@@ -24,7 +24,7 @@
 #' @importFrom GSVA gsva gsvaParam ssgseaParam
 #' @importFrom GSEABase GeneSetCollection 
 #' @importFrom UCell ScoreSignatures_UCell
-#' @importFrom AUCell AUCell_run
+#' @importFrom AUCell AUCell_buildRankings AUCell_calcAUC
 #' @importFrom SummarizedExperiment assay
 #' @importFrom BiocParallel SerialParam MulticoreParam BatchtoolsParam SerialParam
 #'
@@ -91,12 +91,23 @@ escape.matrix <- function(input.data,
                                       BPPARAM = BPPARAM,
                                       ...)))
           } else if (method == "AUCell") {
-             a <- t(assay(suppressWarnings(
-                           AUCell_run(exprMat = split.data[[i]], 
-                                      geneSets = egc,
-                                      normAUC = FALSE,
-                                      BPPARAM = BPPARAM,
-                                      ...))))
+            rankings <- AUCell_buildRankings(split.data[[i]],
+                                             plotStats = FALSE,
+                                             verbose = FALSE)
+            a <- assay(AUCell_calcAUC(geneSets = egc,
+                                     rankings,
+                                     normAUC = TRUE,
+                                     aucMaxRank = ceiling(0.2 * nrow(split.data[[i]])),
+                                     verbose = FALSE,
+                                     ...))
+            
+            # a <- t(assay(suppressWarnings(
+            #               AUCell_run(exprMat = split.data[[i]], 
+            #                          geneSets = egc,
+            #                          normAUC = TRUE,
+            #                          BPPARAM = BPPARAM,
+            #                          aucMaxRank = ceiling(0.2 * nrow(split.data[[i]])),
+            #                          ...))))
              
           }
           scores[[i]] <- a
