@@ -25,5 +25,15 @@ test_that("splitEnrichment works", {
     )
   )
   
+  expect_doppelganger(
+    "splitEnrichment_facet_plot",
+    splitEnrichment(
+      seuratObj, 
+      split.by = "groups",
+      facet.by = "letter.idents",
+      assay = "escape",
+      gene.set = "Tcells"
+    )
+  )
   
 })

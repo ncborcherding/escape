@@ -13,6 +13,7 @@ runEscape(
   normalize = FALSE,
   make.positive = FALSE,
   new.assay.name = "escape",
+  BPPARAM = SerialParam(),
   ...
 )
 }
@@ -36,10 +37,12 @@ of genes \strong{TRUE} or report unnormalized \strong{FALSE}.}
 
 \item{make.positive}{During normalization shift enrichment values to a 
 positive range \strong{TRUE} for downstream analysis or not 
-\strong{TRUE} (default).}
+\strong{TRUE} (default). Will only be applied if \strong{normalize = TRUE}.}
 
 \item{new.assay.name}{The new name of the assay to append to 
 the single-cell object containing the enrichment scores.}
+
+\item{BPPARAM}{A BiocParallel::bpparam() object that for parallelization.}
 
 \item{...}{pass arguments to AUCell GSVA, ssGSEA or UCell call}
 }

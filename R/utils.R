@@ -82,11 +82,16 @@ is_seurat_or_se_object <- function(obj) {
   return(enriched)
 }
 
+#' @importFrom stringr str_sort
 .colorby <- function(enriched,
                      plot, 
                      color.by,
                      palette, 
                      type = "fill") { 
+  if (inherits(enriched[,color.by], c("factor", "character"))) {
+    grouping <- str_sort(unique(enriched[,color.by]), numeric = TRUE)
+  }
+
   if(type == "fill") {
     if(inherits(enriched[,color.by], "numeric")) {
       plot <- plot +
@@ -94,8 +99,10 @@ is_seurat_or_se_object <- function(obj) {
               labs(fill = color.by) 
     } else {
       col <- length(unique(enriched[,color.by]))
+      col.pal <- .colorizer(palette, col)
+      names(col.pal) <- grouping
       plot <- plot + 
-              scale_fill_manual(values = .colorizer(palette, col)) +
+              scale_fill_manual(values = col.pal) +
               labs(fill = color.by) 
     }
   } else if (type == "color") {
@@ -105,8 +112,10 @@ is_seurat_or_se_object <- function(obj) {
               labs(color = color.by) 
     } else {
       col <- length(unique(enriched[,color.by]))
+      col.pal <- .colorizer(palette, col)
+      names(col.pal) <- grouping
       plot <- plot + 
-              scale_color_manual(values = .colorizer(palette, col)) +
+              scale_color_manual(values = col.pal) +
               labs(color = color.by) 
     }
   }
@@ -244,3 +253,5 @@ is_seurat_or_se_object <- function(obj) {
   }
   return(values)
 }
+
+
