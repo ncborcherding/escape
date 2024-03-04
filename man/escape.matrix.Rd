@@ -12,6 +12,7 @@ escape.matrix(
   min.size = 5,
   normalize = FALSE,
   make.positive = FALSE,
+  BPPARAM = SerialParam(),
   ...
 )
 }
@@ -35,7 +36,9 @@ of genes \strong{TRUE} or report unnormalized \strong{FALSE}.}
 
 \item{make.positive}{During normalization shift enrichment values to a 
 positive range \strong{TRUE} for downstream analysis or not 
-\strong{TRUE} (default).}
+\strong{TRUE} (default). Will only be applied if \strong{normalize = TRUE}.}
+
+\item{BPPARAM}{A BiocParallel::bpparam() object that for parallelization.}
 
 \item{...}{pass arguments to AUCell GSVA, ssGSEA, or UCell call}
 }

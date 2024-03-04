@@ -36,5 +36,16 @@ test_that("scatterEnrichment works", {
     )
   )
   
+  expect_doppelganger(
+    "scatterEnrichment_hex_plot",
+    scatterEnrichment(
+      seuratObj, 
+      style = "hex",
+      assay = "escape",
+      x.axis = "Tcells",
+      y.axis = "Bcells"
+    )
+  )
+  
   
 })

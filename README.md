@@ -24,6 +24,14 @@ More information on each method is available in the *escape* manual for ```escap
 
 ### Installation
 
+#### GSVA requirement
+
+*escape* requires GSVA v1.51.5 (not on Bioconductor 3.18). The easiest way to install is: 
+
+```r
+devtools::install_github("rcastelo/GSVA")
+```
+
 #### Install Via GitHub
 
 ```r
@@ -50,7 +58,7 @@ The basic function of enrichment analysis is done using the ```escape.matrix()``
 ```r
 #Defining Gene Set To Use:
 GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
-          Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
+           Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
 
 #Using Seurat Built-In Example:
 pbmc_small <- SeuratObject::pbmc_small
@@ -68,16 +76,15 @@ Alternatively, ```runEscape()``` will perform the enrichment calculations as abo
 
 ```r
 pbmc_small <- runEscape(pbmc_small,
-                          method = "ssGSEA", 
-                          new.assay.name = "escape.ssGSEA",
-                          gene.sets = GS, 
-                          min.size = NULL)
-```
-                          
+                        method = "ssGSEA", 
+                        new.assay.name = "escape.ssGSEA",
+                        gene.sets = GS, 
+                        min.size = NULL)
+```                
 
-#### Vignette
+### Vignette
 
-A more comprehensive vignette including the visualizations, principal component analysis and differential testing is available [link coming soon](yyy).
+A more comprehensive vignette including the visualizations, principal component analysis and differential testing is available [here](https://www.borch.dev/uploads/screpertoire/articles/Running_Escape.html).
 
 ### Citation 
 If using escape, please cite the [article](https://www.nature.com/articles/s42003-020-01625-6): Borcherding, N., Vishwakarma, A., Voigt, A.P. et al. Mapping the immune environment in clear cell renal carcinoma by single-cell genomics. Commun Biol 4, 122 (2021). 

@@ -1,4 +1,4 @@
-# test script for runEscape.R - testcases are NOT comprehensive!
+# test script for utils.R - testcases are NOT comprehensive!
 
 test_that(".orderFunction works", {
   
@@ -17,6 +17,20 @@ test_that(".orderFunction works", {
                getdata("utils", "orderFunction_group"))
 })
 
+test_that(".cntEval works", {
+  seuratObj <- getdata("runEscape", "pbmc_small_ssGSEA")
+  seurat.rna <- .cntEval(seuratObj)
+  
+  expect_equal(seurat.rna,
+               seuratObj@assays$RNA@counts)
+  
+  sce <- Seurat::as.SingleCellExperiment(seuratObj)
+  sce.rna <- .cntEval(sce)
+  
+  expect_equal(sce.rna,
+               sce@assays@data$counts)
+})
+
 
 test_that(".makeDFfromSCO works", {
   seuratObj <- getdata("runEscape", "pbmc_small_ssGSEA")
@@ -29,4 +43,20 @@ test_that(".makeDFfromSCO works", {
   
   expect_equal(enriched,
                getdata("utils", "makeDFfromSCO_data.frame"))
+})
+
+
+test_that(".grabMeta works", {
+  seuratObj <- getdata("runEscape", "pbmc_small_ssGSEA")
+  seurat.meta<- .grabMeta(seuratObj)
+  
+  expect_equal(seurat.meta,
+               cbind.data.frame(seuratObj@meta.data, ident = seuratObj@active.ident), 
+               tolerance = 1e-3)
+  
+  sce <- Seurat::as.SingleCellExperiment(seuratObj)
+  sce.meta <- .grabMeta(sce)
+  
+  expect_equal(sce.meta,
+               as.data.frame(SummarizedExperiment::colData(sce)))
 })

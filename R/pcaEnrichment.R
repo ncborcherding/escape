@@ -65,7 +65,7 @@ pcaEnrichment <- function(input.data,
   x.axis.dim <- as.numeric(substring(x.axis, 3, nchar(x.axis)))
   y.axis.dim <- as.numeric(substring(y.axis, 3, nchar(y.axis)))
   
-  if(add.percent.contribution & length(input.data) == 4) {
+  if(add.percent.contribution & length(pca.values) == 4) {
     x.axis.title <- paste0(x.axis, "\n (", pca.values[[3]][x.axis.dim],"%)")
     y.axis.title <- paste0(y.axis, "\n (", pca.values[[3]][y.axis.dim],"%)")
   } else {
