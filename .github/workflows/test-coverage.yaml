@@ -30,7 +30,7 @@ jobs:
         run: Rscript -e 'install.packages("remotes")'
 
       - name: Add GSVA repo
-        run: Rscript -e 'remotes::install_github("rcastelo/GSVA")'
+        run: Rscript -e 'remotes::install_github("rcastelo/GSVA@27d70c068f12f922e5ca2f363626089310dc2a2b")'
 
       - name: Test coverage
         run: |
