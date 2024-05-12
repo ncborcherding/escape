@@ -88,7 +88,7 @@ If using escape, please cite the [article](https://www.nature.com/articles/s4200
 #### If you run into any issues or bugs please submit a [GitHub issue](https://github.com/ncborcherding/escape/issues) with details of the issue.
 
 - If possible please include a [reproducible example](https://reprex.tidyverse.org/). 
-Alternatively, an example with the internal **scRep_example** and **contig_list** would 
+Alternatively, an example with the the Seurat pbmc_small object would 
 be extremely helpful.
 
 #### Any requests for new features or enhancements can also be submitted as [GitHub issues](https://github.com/ncborcherding/escape/issues).
