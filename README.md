@@ -83,5 +83,14 @@ A more comprehensive vignette including the visualizations, principal component 
 ### Citation 
 If using escape, please cite the [article](https://www.nature.com/articles/s42003-020-01625-6): Borcherding, N., Vishwakarma, A., Voigt, A.P. et al. Mapping the immune environment in clear cell renal carcinoma by single-cell genomics. Commun Biol 4, 122 (2021). 
 
-### Contact
-Questions, comments, suggestions, please feel free to contact Nick Borcherding via this repository, [email](mailto:ncborch@gmail.com), or using [twitter](https://twitter.com/theHumanBorch). 
+### Bug Reports/New Features
+
+#### If you run into any issues or bugs please submit a [GitHub issue](https://github.com/ncborcherding/escape/issues) with details of the issue.
+
+- If possible please include a [reproducible example](https://reprex.tidyverse.org/). 
+Alternatively, an example with the internal **scRep_example** and **contig_list** would 
+be extremely helpful.
+
+#### Any requests for new features or enhancements can also be submitted as [GitHub issues](https://github.com/ncborcherding/escape/issues).
+
+#### [Pull Requests](https://github.com/ncborcherding/escape/pulls) are welcome for bug fixes, new features, or enhancements.
