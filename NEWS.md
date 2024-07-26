@@ -1,3 +1,9 @@
+# escape VERSION 2.0.1 (2024-07-26)
+
+## UNDERLYING CHANGES
+
+* passing parallel processing properly to ```runEscape()``` function.
+
 # escape VERSION 1.99.1 (2024-02-29)
 
 ## UNDERLYING CHANGES
