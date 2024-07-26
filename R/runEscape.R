@@ -175,7 +175,8 @@ runEscape <- function(input.data,
                               gene.sets = gene.sets,
                               method = method,
                               groups = groups,
-                              min.size = min.size)
+                              min.size = min.size, 
+                              BPPARAM = BPPARAM)
   
   input.data <- .adding.Enrich(input.data, enrichment, new.assay.name)
   return(input.data)
