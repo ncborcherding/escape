@@ -100,14 +100,6 @@ escape.matrix <- function(input.data,
                                      aucMaxRank = ceiling(0.2 * nrow(split.data[[i]])),
                                      verbose = FALSE,
                                      ...))
-            
-            # a <- t(assay(suppressWarnings(
-            #               AUCell_run(exprMat = split.data[[i]], 
-            #                          geneSets = egc,
-            #                          normAUC = TRUE,
-            #                          BPPARAM = BPPARAM,
-            #                          aucMaxRank = ceiling(0.2 * nrow(split.data[[i]])),
-            #                          ...))))
              
           }
           scores[[i]] <- a
@@ -117,7 +109,8 @@ escape.matrix <- function(input.data,
     
     #Normalize based on dropout
     if(normalize) {
-      output <- performNormalization(output,
+      output <- performNormalization(sc.data = input.data,
+                                     enrichment.data = output,
                                      assay = NULL,
                                      gene.sets = gene.sets,
                                      make.positive = make.positive)
@@ -175,7 +168,8 @@ runEscape <- function(input.data,
                               gene.sets = gene.sets,
                               method = method,
                               groups = groups,
-                              min.size = min.size)
+                              min.size = min.size,
+                              BPPARAM = BPPARAM)
   
   input.data <- .adding.Enrich(input.data, enrichment, new.assay.name)
   return(input.data)
