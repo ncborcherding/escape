@@ -8,7 +8,7 @@
 [![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://ncborcherding.github.io/vignettes/escape_vignette.html)
 <!-- badges: end -->
 
-<img align="right" src="https://github.com/ncborcherding/escape/blob/dev/www/escape_hex.png" width="352" height="352">
+<img align="right" src="https://github.com/ncborcherding/escape/blob/master/www/escape_hex.png" width="352" height="352">
 
 ### Introduction
 Single-cell sequencing (SCS) is a fundamental technology in investigating a diverse array of biological fields. Part of the struggle with the high-resolution approach of SCS, is distilling the data down to meaningful scientific hypotheses. *escape* was created to bridge SCS results, either from raw counts or from popular R-based single-cell pipelines, like [Seurat](https://satijalab.org/seurat/) or [SingleCellExperiment](https://bioconductor.org/books/release/OSCA/book-contents.html#basics), with gene set enrichment analyses (GSEA). The *escape* package allows users to easily incorporate multiple methods of GSEA and offers several visualization and analysis methods. The package accesses the entire [Molecular Signature Database v7.0](https://www.gsea-msigdb.org/gsea/msigdb/search.jsp) and enables users to select single, multiple gene sets, and even libraries to perform enrichment analysis on. 
@@ -24,14 +24,6 @@ More information on each method is available in the *escape* manual for ```escap
 
 ### Installation
 
-#### GSVA requirement
-
-*escape* requires GSVA v1.51.5 (not on Bioconductor 3.18). The easiest way to install is: 
-
-```r
-devtools::install_github("rcastelo/GSVA")
-```
-
 #### Install Via GitHub
 
 ```r
@@ -40,10 +32,12 @@ devtools::install_github("ncborcherding/escape")
 
 #### Install via Bioconductor
 
-For now, the newest version of escape is available in the Bioconductor dev version (3.19).
+[escape v2](https://www.bioconductor.org/packages/release/bioc/html/escape.html) is available for Bioconductor users. It can be installed with the following:
 
 ```r
-BiocManager::install(version='devel')
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
 BiocManager::install("escape")
 ```
 
@@ -86,8 +80,18 @@ pbmc_small <- runEscape(pbmc_small,
 
 A more comprehensive vignette including the visualizations, principal component analysis and differential testing is available [here](https://www.borch.dev/uploads/screpertoire/articles/Running_Escape.html).
 
-### Citation 
-If using escape, please cite the [article](https://www.nature.com/articles/s42003-020-01625-6): Borcherding, N., Vishwakarma, A., Voigt, A.P. et al. Mapping the immune environment in clear cell renal carcinoma by single-cell genomics. Commun Biol 4, 122 (2021). 
 
-### Contact
-Questions, comments, suggestions, please feel free to contact Nick Borcherding via this repository, [email](mailto:ncborch@gmail.com), or using [twitter](https://twitter.com/theHumanBorch). 
+## Bug Reports/New Features
+
+#### If you run into any issues or bugs please submit a [GitHub issue](https://github.com/ncborcherding/escape/issues) with details of the issue.
+
+- If possible please include a [reproducible example](https://reprex.tidyverse.org/). 
+Alternatively, an example with the the Seurat pbmc_small object would 
+be extremely helpful.
+
+#### Any requests for new features or enhancements can also be submitted as [GitHub issues](https://github.com/ncborcherding/escape/issues).
+
+#### [Pull Requests](https://github.com/ncborcherding/escape/pulls) are welcome for bug fixes, new features, or enhancements.
+
+## Citation 
+If using escape, please cite the [article](https://www.nature.com/articles/s42003-020-01625-6): Borcherding, N., Vishwakarma, A., Voigt, A.P. et al. Mapping the immune environment in clear cell renal carcinoma by single-cell genomics. Commun Biol 4, 122 (2021). 
