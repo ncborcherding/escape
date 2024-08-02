@@ -2,6 +2,7 @@
 
 ## UNDERLYING CHANGES
 
+* fixed ```performNormalziation()``` errors when input.data was a matrix, now requires single-cell object and enrichment data
 * passing parallel processing properly to ```runEscape()``` function.
 
 # escape VERSION 1.99.1 (2024-02-29)
