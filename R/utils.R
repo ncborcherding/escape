@@ -183,7 +183,7 @@ is_seurat_or_se_object <- function(obj) {
     new.assay <- suppressWarnings(CreateAssayObject(
                                   data = as.matrix(t(enrichment))))
     
-    sc[[enrichment.name]] <- new.assay
+    suppressWarnings(sc[[enrichment.name]] <- new.assay)
   } else if (inherits(sc, "SingleCellExperiment")) {
     altExp(sc, enrichment.name) <- SummarizedExperiment(assays = t(enrichment))
     names(assays(altExp(sc, enrichment.name))) <- enrichment.name
