@@ -102,22 +102,22 @@ performNormalization <- function(sc.data,
   
   print("Normalizing enrichment scores per cell...")
   #Dividing the enrichment score by number of genes expressed
-  bpvec(seq_len(ncol(enriched)), FUN=function(x){lapply(x, function(x) {
+  enriched <- asplit(enriched, 2) #split into list of columns so we don't use too much memory in bpvec
+  bpvec(seq_along(enriched), FUN=function(x){lapply(x, function(x) {
         if (!is.null(scale.factor)) {
-            enriched[, x] <- enriched[, x]/scale.factor
+            enriched[[x]] <- enriched[[x]]/scale.factor
         }
         else {
-            gene.set <- unlist(egc.size[colnames(enriched)[x]])
+            gene.set <- unlist(egc.size[names(enriched)[[x]]])
             if (any(gene.set == 0)) {
                 gene.set[which(gene.set == 0)] <- 1
             }
-            enriched[, x] <- enriched[, x]/gene.set
+            enriched[[x]] <- enriched[[x]]/gene.set
         }
-        if (any(enriched[, x] < 0) & make.positive) {
-            enriched[, x] <- enriched[, x] + abs(min(enriched[, 
-                x]))
+        if (any(enriched[[x]] < 0) & make.positive) {
+            enriched[[x]] <- enriched[[x]] + abs(min(enriched[[x]]))
         }
-        enriched[, x]
+        enriched[[x]]
     })}, BPPARAM=BPPARAM) -> normalized.values
   normalized.enriched <- do.call(cbind, normalized.values)
   colnames(normalized.enriched) <- colnames(enriched)
