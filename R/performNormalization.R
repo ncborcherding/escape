@@ -17,10 +17,12 @@
 #' @param scale.factor A vector to use for normalizing enrichment scores per cell.
 #' @param make.positive Shift enrichment values to a positive range \strong{TRUE}
 #' for downstream analysis or not \strong{TRUE} (default).
-#' 
+#' @param BPPARAM A BiocParallel::bpparam() object that for parallelization. 
+#'
 #' @importFrom stringr str_replace_all
 #' @importFrom SeuratObject Assays
 #' @importFrom SummarizedExperiment assays
+#' @importFrom BiocParallel SerialParam MulticoreParam BatchtoolsParam SerialParam
 #' 
 #' @examples
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
@@ -38,12 +40,17 @@
 #' 
 #' @return Single-cell object or matrix of normalized enrichment scores
 
+
+
+
+
 performNormalization <- function(sc.data,
                                  enrichment.data = NULL,
                                  assay = "escape",
                                  gene.sets = NULL,
                                  make.positive = FALSE,
-                                 scale.factor = NULL) {
+                                 scale.factor = NULL,
+                                 BPPARAM = SerialParam()) {
   if(!is.null(assay)) {
     if(is_seurat_object(sc.data)) {
       assay.present <- assay %in% Assays(sc.data)
@@ -95,22 +102,23 @@ performNormalization <- function(sc.data,
   
   print("Normalizing enrichment scores per cell...")
   #Dividing the enrichment score by number of genes expressed
-  lapply(seq_len(ncol(enriched)), function(x) {
-    if (!is.null(scale.factor)) {
-      enriched[,x] <- enriched[,x]/scale.factor
-    } else {
-      gene.set <- unlist(egc.size[colnames(enriched)[x]])
-      if(any(gene.set == 0)) {
-        gene.set[which(gene.set == 0)] <- 1
-      }
-      enriched[,x] <- enriched[,x]/gene.set
-    }
-    if(any(enriched[,x] < 0) & make.positive) {
-      enriched[,x] <- enriched[,x] + abs(min(enriched[,x]))
-    }
-    enriched[,x]
-  }) -> normalized.values
-  
+  bpvec(seq_len(ncol(enriched)), FUN=function(x){lapply(x, function(x) {
+        if (!is.null(scale.factor)) {
+            enriched[, x] <- enriched[, x]/scale.factor
+        }
+        else {
+            gene.set <- unlist(egc.size[colnames(enriched)[x]])
+            if (any(gene.set == 0)) {
+                gene.set[which(gene.set == 0)] <- 1
+            }
+            enriched[, x] <- enriched[, x]/gene.set
+        }
+        if (any(enriched[, x] < 0) & make.positive) {
+            enriched[, x] <- enriched[, x] + abs(min(enriched[, 
+                x]))
+        }
+        enriched[, x]
+    })}, BPPARAM=BPPARAM) -> normalized.values
   normalized.enriched <- do.call(cbind, normalized.values)
   colnames(normalized.enriched) <- colnames(enriched)
   
