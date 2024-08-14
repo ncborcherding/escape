@@ -22,7 +22,7 @@
 #' @importFrom stringr str_replace_all
 #' @importFrom SeuratObject Assays
 #' @importFrom SummarizedExperiment assays
-#' @importFrom BiocParallel SerialParam MulticoreParam BatchtoolsParam SerialParam
+#' @importFrom BiocParallel SerialParam MulticoreParam BatchtoolsParam SerialParam bpvec
 #' 
 #' @examples
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
