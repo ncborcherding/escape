@@ -80,23 +80,10 @@ performNormalization <- function(sc.data,
   #Isolating the number of genes per cell expressed
   cnts <- .cntEval(sc.data, assay = "RNA", type = "counts")
   
-  if(is.null(scale.factor)) {
+  if (is.null(scale.factor)) {
     print("Calculating features per cell...")
-    
-    # Pre-compute which genes are non-zero in each sample
-    non_zero_indices <- lapply(seq_len(ncol(cnts)), function(y) {
-      which(cnts[, y] != 0)
-    })
-    
-    # Convert gene sets to a list of indices
-    egc_indices <- lapply(egc, function(x) {
-      which(rownames(cnts) %in% x)
-    })
-    
-    egc.size <- lapply(egc_indices, function(gene_set_indices) {
-      sapply(non_zero_indices, function(sample_indices) {
-        length(intersect(sample_indices, gene_set_indices))
-      })
+    egc.sizes <- lapply(egc, function(x){
+      unname(colSums(cnts[which(rownames(cnts) %in% x),]!=0))    
     })
   }
   
