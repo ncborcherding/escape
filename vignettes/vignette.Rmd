@@ -374,6 +374,7 @@ densityEnrichment(pbmc_small,
                   gene.set.use = "HALLMARK-IL6-JAK-STAT3-SIGNALING", 
                   gene.sets = GS.hallmark)
 ```
+
 ## scatterEnrichment
 
 It may be advantageous to look at the distribution of multiple gene sets - here we can use ```scatterEnrichment()``` for a 2 gene set comparison. The color values are based on the density of points determined by the number of neighbors, similar to the [Nebulosa R package](https://www.bioconductor.org/packages/release/bioc/html/Nebulosa.html). We just need to define which gene set to plot on the **x.axis** and which to plot on the **y.axis**.
