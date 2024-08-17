@@ -36,7 +36,6 @@
 #'                                    gene.sets = GS)
 #'
 #' @export
-#' 
 #' @return Single-cell object or matrix of normalized enrichment scores
 
 
