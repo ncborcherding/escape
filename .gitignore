@@ -1,2 +1,5 @@
-
+.Rbuildignore
 .DS_Store
+.RHistory
+escape.Rproj
+.Rproj*

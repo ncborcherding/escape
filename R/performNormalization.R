@@ -80,7 +80,7 @@ performNormalization <- function(sc.data,
     chunks <- dim(enriched)[[1]]
   }
   else{
-    chunks <- groups
+    chunks <- min(groups, dim(enriched)[[1]])
   }
   
   if (is.null(scale.factor)) {
@@ -95,7 +95,7 @@ performNormalization <- function(sc.data,
     rm(cnts)
   }
   else{
-    egc.sizes <- split_rows(scale.factor, chunk.size=chunks)
+    egc.sizes <- split_vector(scale.factor, chunk.size=chunks)
   }
   enriched <- split_rows(enriched, chunk.size=chunks)
   
