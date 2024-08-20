@@ -22,6 +22,7 @@
 #' @importFrom stringr str_replace_all
 #' @importFrom SeuratObject Assays
 #' @importFrom SummarizedExperiment assays
+#' @importFrom Matrix colSums
 
 #' @examples
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),

@@ -36,7 +36,8 @@ Imports:
     UCell,
     stringr,
     methods,
-    SeuratObject
+    SeuratObject,
+    Matrix
 Suggests: 
     Seurat,
     hexbin,
