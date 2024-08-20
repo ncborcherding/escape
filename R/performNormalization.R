@@ -17,8 +17,8 @@
 #' @param scale.factor A vector to use for normalizing enrichment scores per cell.
 #' @param make.positive Shift enrichment values to a positive range \strong{TRUE}
 #' for downstream analysis or not \strong{TRUE} (default).
-#' @param BPPARAM A BiocParallel::bpparam() object that for parallelization. 
-#' @importFrom UCell split_data.matrix
+#' @param groups the number of cells to calculate normalization on at once.
+#' chunks matrix into groups sized chunks. Useful in case of memory issues.
 #' @importFrom stringr str_replace_all
 #' @importFrom SeuratObject Assays
 #' @importFrom SummarizedExperiment assays
@@ -106,9 +106,6 @@ performNormalization <- function(sc.data,
     scores/scales
   }, enriched, egc.sizes, SIMPLIFY = FALSE)
   enriched <- do.call(rbind, enriched)
-  if(!is.null(groups)){
-    
-  }
   if(make.positive){
     enriched <- apply(enriched, 2, function(x){
       x+max(0, -min(x))

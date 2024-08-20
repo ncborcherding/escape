@@ -253,6 +253,28 @@ is_seurat_or_se_object <- function(obj) {
   }
   return(values)
 }
+#function to split matrices by column
+#Directly from Ucell as an internal funciton. Copied here to be usable within
+#the code
+split_data.matrix<-function (matrix, chunk.size = 1000) 
+{
+  ncols <- dim(matrix)[2]
+  nchunks <- (ncols - 1)%/%chunk.size + 1
+  split.data <- list()
+  min <- 1
+  for (i in seq_len(nchunks)) {
+    if (i == nchunks - 1) {
+      left <- ncols - (i - 1) * chunk.size
+      max <- min + round(left/2) - 1
+    }
+    else {
+      max <- min(i * chunk.size, ncols)
+    }
+    split.data[[i]] <- matrix[, min:max, drop = FALSE]
+    min <- max + 1
+  }
+  return(split.data)
+}
 #function to split matrices by row
 #adopted from ucells split_data.matrix
 split_rows <- function (matrix, chunk.size = 1000) 
