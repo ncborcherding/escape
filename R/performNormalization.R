@@ -17,11 +17,13 @@
 #' @param scale.factor A vector to use for normalizing enrichment scores per cell.
 #' @param make.positive Shift enrichment values to a positive range \strong{TRUE}
 #' for downstream analysis or not \strong{TRUE} (default).
-#' 
+#' @param groups the number of cells to calculate normalization on at once.
+#' chunks matrix into groups sized chunks. Useful in case of memory issues.
 #' @importFrom stringr str_replace_all
 #' @importFrom SeuratObject Assays
 #' @importFrom SummarizedExperiment assays
-#' 
+#' @importFrom Matrix colSums
+
 #' @examples
 #' GS <- list(Bcells = c("MS4A1", "CD79B", "CD79A", "IGH1", "IGH2"),
 #'            Tcells = c("CD3E", "CD3D", "CD3G", "CD7","CD8A"))
@@ -35,15 +37,19 @@
 #'                                    gene.sets = GS)
 #'
 #' @export
-#' 
 #' @return Single-cell object or matrix of normalized enrichment scores
 
+
+
+
+
 performNormalization <- function(sc.data,
-                                 enrichment.data = NULL,
-                                 assay = "escape",
-                                 gene.sets = NULL,
-                                 make.positive = FALSE,
-                                 scale.factor = NULL) {
+                                        enrichment.data = NULL,
+                                        assay = "escape",
+                                        gene.sets = NULL,
+                                        make.positive = FALSE,
+                                        scale.factor = NULL,
+                                        groups = NULL) {
   if(!is.null(assay)) {
     if(is_seurat_object(sc.data)) {
       assay.present <- assay %in% Assays(sc.data)
@@ -71,57 +77,48 @@ performNormalization <- function(sc.data,
   egc <- egc[names(egc) %in% colnames(enriched)]
   
   #Isolating the number of genes per cell expressed
-  cnts <- .cntEval(sc.data, assay = "RNA", type = "counts")
-  
-  if(is.null(scale.factor)) {
-    print("Calculating features per cell...")
-    
-    # Pre-compute which genes are non-zero in each sample
-    non_zero_indices <- lapply(seq_len(ncol(cnts)), function(y) {
-      which(cnts[, y] != 0)
-    })
-    
-    # Convert gene sets to a list of indices
-    egc_indices <- lapply(egc, function(x) {
-      which(rownames(cnts) %in% x)
-    })
-    
-    egc.size <- lapply(egc_indices, function(gene_set_indices) {
-      sapply(non_zero_indices, function(sample_indices) {
-        length(intersect(sample_indices, gene_set_indices))
-      })
-    })
+  if(is.null(groups)){
+    chunks <- dim(enriched)[[1]]
   }
+  else{
+    chunks <- min(groups, dim(enriched)[[1]])
+  }
+  
+  if (is.null(scale.factor)) {
+    cnts <- .cntEval(sc.data, assay = "RNA", type = "counts")
+    print("Calculating features per cell...")
+    egc.sizes <- lapply(egc, function(x){
+      scales<-unname(Matrix::colSums(cnts[which(rownames(cnts) %in% x),]!=0))
+      scales[scales==0] <- 1
+      scales
+    })
+    egc.sizes <- split_rows(do.call(cbind,egc.sizes), chunk.size=chunks)
+    rm(cnts)
+  }
+  else{
+    egc.sizes <- split_vector(scale.factor, chunk.size=chunks)
+  }
+  enriched <- split_rows(enriched, chunk.size=chunks)
   
   print("Normalizing enrichment scores per cell...")
   #Dividing the enrichment score by number of genes expressed
-  lapply(seq_len(ncol(enriched)), function(x) {
-    if (!is.null(scale.factor)) {
-      enriched[,x] <- enriched[,x]/scale.factor
-    } else {
-      gene.set <- unlist(egc.size[colnames(enriched)[x]])
-      if(any(gene.set == 0)) {
-        gene.set[which(gene.set == 0)] <- 1
-      }
-      enriched[,x] <- enriched[,x]/gene.set
-    }
-    if(any(enriched[,x] < 0) & make.positive) {
-      enriched[,x] <- enriched[,x] + abs(min(enriched[,x]))
-    }
-    enriched[,x]
-  }) -> normalized.values
-  
-  normalized.enriched <- do.call(cbind, normalized.values)
-  colnames(normalized.enriched) <- colnames(enriched)
-  
+
+  enriched<-mapply(function(scores, scales){
+    scores/scales
+  }, enriched, egc.sizes, SIMPLIFY = FALSE)
+  enriched <- do.call(rbind, enriched)
+  if(make.positive){
+    enriched <- apply(enriched, 2, function(x){
+      x+max(0, -min(x))
+    })
+  }
   if(is_seurat_or_se_object(sc.data)) {
     if(is.null(assay)) {
       assay <- "escape"
     }
-    sc.data <- .adding.Enrich(sc.data, normalized.enriched, paste0(assay, "_normalized"))
+    sc.data <- .adding.Enrich(sc.data, enriched, paste0(assay, "_normalized"))
     return(sc.data)
   } else {
-    return(normalized.enriched)
+    return(enriched)
   }
-  
 }

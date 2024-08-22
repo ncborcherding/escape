@@ -1,3 +1,5 @@
 ^\.github$
 ^www$
 ^codecov\.yml$
+^.*\.Rproj$
+^\.Rproj\.user$

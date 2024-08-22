@@ -10,7 +10,8 @@ performNormalization(
   assay = "escape",
   gene.sets = NULL,
   make.positive = FALSE,
-  scale.factor = NULL
+  scale.factor = NULL,
+  groups = NULL
 )
 }
 \arguments{
@@ -29,6 +30,9 @@ the individual gene set information from}
 for downstream analysis or not \strong{TRUE} (default).}
 
 \item{scale.factor}{A vector to use for normalizing enrichment scores per cell.}
+
+\item{groups}{the number of cells to calculate normalization on at once.
+chunks matrix into groups sized chunks. Useful in case of memory issues.}
 }
 \value{
 Single-cell object or matrix of normalized enrichment scores

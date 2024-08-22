@@ -369,7 +369,7 @@ splitEnrichment(pbmc_small,
 
 * The gene set library from either of the 3 options in the first section of the vignette.
 
-```{r}
+```{r tidy=FALSE, eval=FALSE}
 densityEnrichment(pbmc_small, 
                   gene.set.use = "HALLMARK-IL6-JAK-STAT3-SIGNALING", 
                   gene.sets = GS.hallmark)
