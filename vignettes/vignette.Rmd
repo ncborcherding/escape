@@ -212,7 +212,7 @@ There can be inherent bias in enrichment values due to drop out in single-cell e
 
 
 ```{r}
-pbmc_small <- performNormalization(pbmc_small, 
+pbmc_small <- performNormalization(sc.data = pbmc_small, 
                                    assay = "escape.ssGSEA", 
                                    gene.sets = GS.hallmark)
 ```
@@ -220,7 +220,7 @@ pbmc_small <- performNormalization(pbmc_small,
 An alternative for scaling by expressed gene sets would be to use a scaling factor previously calculated during normal single-cell data processing and quality control. This can be done using the **scale.factor** argument and providing a vector. 
 
 ```{r}
-pbmc_small <- performNormalization(pbmc_small, 
+pbmc_small <- performNormalization(sc.data = pbmc_small, 
                                    assay = "escape.ssGSEA", 
                                    gene.sets = GS.hallmark, 
                                    scale.factor = pbmc_small$nFeature_RNA)
@@ -369,7 +369,7 @@ splitEnrichment(pbmc_small,
 
 * The gene set library from either of the 3 options in the first section of the vignette.
 
-```{r}
+```{r tidy=FALSE, eval=FALSE}
 densityEnrichment(pbmc_small, 
                   gene.set.use = "HALLMARK-IL6-JAK-STAT3-SIGNALING", 
                   gene.sets = GS.hallmark)

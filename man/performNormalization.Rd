@@ -5,26 +5,34 @@
 \title{Perform Normalization on Enrichment Data}
 \usage{
 performNormalization(
-  input.data,
-  assay = NULL,
+  sc.data,
+  enrichment.data = NULL,
+  assay = "escape",
   gene.sets = NULL,
   make.positive = FALSE,
-  scale.factor = NULL
+  scale.factor = NULL,
+  groups = NULL
 )
 }
 \arguments{
-\item{input.data}{Enrichment output from \code{\link{escape.matrix}} or
-\code{\link{runEscape}}.}
+\item{sc.data}{Single-cell object or matrix used in the gene set enrichment calculation in 
+\code{\link{escape.matrix}} or \code{\link{runEscape}}.}
 
-\item{assay}{Name of the assay to plot if data is a single-cell object.}
+\item{enrichment.data}{The enrichment results from \code{\link{escape.matrix}} 
+or \code{\link{runEscape}} (optional)}
+
+\item{assay}{Name of the assay to normalize if using a single-cell object}
 
 \item{gene.sets}{The gene set library to use to extract 
-the individual gene set information from.}
+the individual gene set information from}
 
 \item{make.positive}{Shift enrichment values to a positive range \strong{TRUE}
 for downstream analysis or not \strong{TRUE} (default).}
 
 \item{scale.factor}{A vector to use for normalizing enrichment scores per cell.}
+
+\item{groups}{the number of cells to calculate normalization on at once.
+chunks matrix into groups sized chunks. Useful in case of memory issues.}
 }
 \value{
 Single-cell object or matrix of normalized enrichment scores
