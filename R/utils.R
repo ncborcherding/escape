@@ -183,7 +183,7 @@ is_seurat_or_se_object <- function(obj) {
     new.assay <- suppressWarnings(CreateAssayObject(
                                   data = as.matrix(t(enrichment))))
     
-    sc[[enrichment.name]] <- new.assay
+    suppressWarnings(sc[[enrichment.name]] <- new.assay)
   } else if (inherits(sc, "SingleCellExperiment")) {
     altExp(sc, enrichment.name) <- SummarizedExperiment(assays = t(enrichment))
     names(assays(altExp(sc, enrichment.name))) <- enrichment.name
@@ -252,6 +252,53 @@ is_seurat_or_se_object <- function(obj) {
     
   }
   return(values)
+}
+
+#function to split matrices by row
+#adopted from ucells split_data.matrix
+split_rows <- function (matrix, chunk.size = 1000) 
+{
+  nrows <- dim(matrix)[1]
+  if(is.vector(matrix)){
+    nrows <- length(matrix)
+  }
+  nchunks <- (nrows - 1)%/%chunk.size + 1
+  split.data <- list()
+  min <- 1
+  for (i in seq_len(nchunks)) {
+    if (i == nchunks - 1) {
+      left <- nrows - (i - 1) * chunk.size
+      max <- min + round(left/2) - 1
+    }
+    else {
+      max <- min(i * chunk.size, nrows)
+    }
+    split.data[[i]] <- matrix[min:max,]
+    min <- max + 1
+  }
+  return(split.data)
+}
+#function to split vector
+#adopted from ucells split_data.matrix
+split_vector <- function (vector, chunk.size = 1000) 
+{
+
+  nrows <- length(vector)
+  nchunks <- (nrows - 1)%/%chunk.size + 1
+  split.data <- list()
+  min <- 1
+  for (i in seq_len(nchunks)) {
+    if (i == nchunks - 1) {
+      left <- nrows - (i - 1) * chunk.size
+      max <- min + round(left/2) - 1
+    }
+    else {
+      max <- min(i * chunk.size, nrows)
+    }
+    split.data[[i]] <- vector[min:max]
+    min <- max + 1
+  }
+  return(split.data)
 }
 
 

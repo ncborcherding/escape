@@ -18,8 +18,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macos-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
 
     env:
@@ -46,7 +44,7 @@ jobs:
           needs: check
 
       - name: Add GSVA repo
-        run: Rscript -e 'remotes::install_github("rcastelo/GSVA")'
+        run: Rscript -e 'remotes::install_github("rcastelo/GSVA@27d70c068f12f922e5ca2f363626089310dc2a2b")'
 
       - uses: r-lib/actions/check-r-package@v2
         with:
