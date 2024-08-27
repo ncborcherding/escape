@@ -28,32 +28,25 @@ getGeneSets <- function(species = "Homo sapiens",
                         library = NULL, 
                         subcategory = NULL,
                         gene.sets = NULL) {
-  spec <- msigdbr_species()
-  spec_check <- unlist(spec[spec$species_name %in% species,][,1])
-  if (length(spec_check) == 0) {
-    message(paste0("Please select a compatible species: ", 
-                   paste(spec, collapse = ", ")))
+  spec <- msigdbr_species()$species_name
+  if (!(species %in% spec)) {
+    stop(paste0("Please select a compatible species: ", 
+                paste(spec, collapse = ", ")))
   }
   if(!is.null(library)) {
-    if (length(library) == 1) {
-      if (is.null(subcategory)) {
-        m_df = msigdbr(species = spec_check, category = library)
-      } else {
-        m_df = msigdbr(species = spec_check, category = library, subcategory = subcategory)
-      }
-    }
-    m_df <- NULL
     for (x in seq_along(library)) {
       if (is.null(subcategory)) {
-        tmp2 = msigdbr(species = spec_check, category = library[x])
+        tmp2 = msigdbr(species = species, category = library[x])
       } else {
-        tmp2 = msigdbr(species = spec_check, category = library, subcategory = subcategory)
+        tmp2 = msigdbr(species = species, category = library, subcategory = subcategory)
       }
       m_df <- rbind(m_df, tmp2)
     }
     if(!is.null(gene.sets)) {
       m_df <- m_df[m_df$gs_name %in% gene.sets,]
     }    
+  } else{
+    m_df <- msigdbr(species = species)
   }
   gs <- unique(m_df$gs_name)
   ls <- list()
