@@ -40,7 +40,11 @@ getGeneSets <- function(species = "Homo sapiens",
       } else {
         tmp2 = msigdbr(species = species, category = library, subcategory = subcategory)
       }
-      m_df <- rbind(m_df, tmp2)
+      if(x == 1) {
+        m_df <- tmp2
+      } else {
+        m_df <- rbind(m_df, tmp2)
+      }
     }
     if(!is.null(gene.sets)) {
       m_df <- m_df[m_df$gs_name %in% gene.sets,]
