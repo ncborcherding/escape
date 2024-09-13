@@ -113,7 +113,8 @@ escape.matrix <- function(input.data,
                                      enrichment.data = output,
                                      assay = NULL,
                                      gene.sets = gene.sets,
-                                     make.positive = make.positive)
+                                     make.positive = make.positive,
+                                     groups = groups)
     }
     return(output)
 }
