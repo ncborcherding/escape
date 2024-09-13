@@ -33,36 +33,40 @@ getGeneSets <- function(species = "Homo sapiens",
     stop(paste0("Please select a compatible species: ", 
                 paste(spec, collapse = ", ")))
   }
-  if(!is.null(library)) {
+  
+  if (!is.null(library)) {
+    m_df_list <- list()
     for (x in seq_along(library)) {
       if (is.null(subcategory)) {
-        tmp2 = msigdbr(species = species, category = library[x])
+        tmp2 <- msigdbr(species = species, category = library[x])
       } else {
-        tmp2 = msigdbr(species = species, category = library, subcategory = subcategory)
+        tmp2 <- msigdbr(species = species, category = library[x], subcategory = subcategory)
       }
-      if(x == 1) {
-        m_df <- tmp2
-      } else {
-        m_df <- rbind(m_df, tmp2)
-      }
+      m_df_list[[x]] <- tmp2
     }
-    if(!is.null(gene.sets)) {
-      m_df <- m_df[m_df$gs_name %in% gene.sets,]
+    m_df <- dplyr::bind_rows(m_df_list)
+    if (!is.null(gene.sets)) {
+      m_df <- m_df[m_df$gs_name %in% gene.sets, ]
     }    
-  } else{
+  } else {
     m_df <- msigdbr(species = species)
   }
-  gs <- unique(m_df$gs_name)
-  ls <- list()
-  for (i in seq_along(gs)) {
-    tmp <- m_df[m_df$gs_name == gs[i],]
-    tmp <- tmp$gene_symbol
-    tmp <- unique(tmp)
-    tmp <- GeneSet(tmp, setName=paste(gs[i]))
-    ls[[i]] <- tmp
+  
+  if (nrow(m_df) == 0) {
+    warning("No gene sets found for the specified parameters.")
+    return(NULL)
   }
-  gsc <- GeneSetCollection(ls)
-  mod.names <- str_replace_all(names(gsc) , "_", "-")
+  
+  gs <- unique(m_df$gs_name)
+  ls <- vector("list", length(gs))
+  
+  for (i in seq_along(gs)) {
+    tmp <- unique(m_df$gene_symbol[m_df$gs_name == gs[i]])
+    ls[[i]] <- GSEABase::GeneSet(tmp, setName = paste(gs[i]))
+  }
+  
+  gsc <- GSEABase::GeneSetCollection(ls)
+  mod.names <- stringr::str_replace_all(names(gsc), "_", "-")
   gsc <- GSEABase::geneIds(gsc)
   names(gsc) <- mod.names
   
