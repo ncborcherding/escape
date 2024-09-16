@@ -1,3 +1,13 @@
+# escape VERSION 2.1.3 (2024-09-13)
+
+#VERSION BUMP FOR BIOCONDUCTOR
+
+## UNDERLYING CHANGES
+
+* update ```densityEnrichment()``` for new GSVA function name
+* Parallelization of ```performNormalization()```
+* Refactor of ```getGeneSets()``` to prevent issues with m_df error. 
+
 # escape VERSION 2.0.1 (2024-07-26)
 
 ## UNDERLYING CHANGES
