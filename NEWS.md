@@ -1,3 +1,7 @@
+# escape VERSION 2.1.4 (2024-09-13)
+
+* update ```densityEnrichment()``` GSVA function pull
+
 # escape VERSION 2.1.3 (2024-09-13)
 
 #VERSION BUMP FOR BIOCONDUCTOR

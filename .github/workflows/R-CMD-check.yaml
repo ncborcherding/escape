@@ -44,8 +44,8 @@ jobs:
           needs: check
 
       - name: Add GSVA repo
-        run: Rscript -e 'remotes::install_github("rcastelo/GSVA@27d70c068f12f922e5ca2f363626089310dc2a2b")'
-
+        run: Rscript -e 'remotes::install_github("rcastelo/GSVA@c9fb985eb555f06a4195260b902747fe0a1ade9f")'
+        
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true

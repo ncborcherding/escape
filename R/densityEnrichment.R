@@ -48,7 +48,7 @@ densityEnrichment <- function(input.data,
     group.by <- "ident"
   }
   
-  compute.gene.density<-utils::getFromNamespace("compute.gene.density", "GSVA")
+  compute.gene.density<-utils::getFromNamespace("compute.gene.cdf", "GSVA")
   
   gene.sets <- .GS.check(gene.sets)
   gene.set <- gene.sets[[gene.set.use]]
