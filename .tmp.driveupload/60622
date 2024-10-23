@@ -1,0 +1,116 @@
+0000000000000000000000000000000000000000 abcba4e078b4aa0d789e9f7d2c732ca3dd93b7b0 theHumanBorch <ncborch@gmail.com> 1707924076 -0600	clone: from https://github.com/ncborcherding/escape.git
+abcba4e078b4aa0d789e9f7d2c732ca3dd93b7b0 1a34527371d893bfdb047e45226ec9bc5fb32979 theHumanBorch <ncborch@gmail.com> 1707924081 -0600	checkout: moving from master to dev
+1a34527371d893bfdb047e45226ec9bc5fb32979 e05528d88e9056f66b4fee8618b86145628c7b6b theHumanBorch <ncborch@gmail.com> 1707924124 -0600	commit: Add method rundown
+e05528d88e9056f66b4fee8618b86145628c7b6b b4e14525d0f62f44bfe41c77c188d9a2131d0291 theHumanBorch <ncborch@gmail.com> 1708005249 -0600	commit: Add facet.by to pcaEnrichment
+b4e14525d0f62f44bfe41c77c188d9a2131d0291 bdcd23de3fe9cfa41c35a3da5232c3bbaac20b19 theHumanBorch <ncborch@gmail.com> 1708005728 -0600	commit: Create test-pcaEnrichment.R
+bdcd23de3fe9cfa41c35a3da5232c3bbaac20b19 ab5761df97e03837ccd8c97625f1146fc44c960d theHumanBorch <ncborch@gmail.com> 1708011310 -0600	commit: pass check
+ab5761df97e03837ccd8c97625f1146fc44c960d a23b03acfad67f727034ed1843bf00b5176c3b50 theHumanBorch <ncborch@gmail.com> 1708015839 -0600	checkout: moving from dev to devel
+a23b03acfad67f727034ed1843bf00b5176c3b50 a23b03acfad67f727034ed1843bf00b5176c3b50 theHumanBorch <ncborch@gmail.com> 1708016110 -0600	checkout: moving from devel to devel
+a23b03acfad67f727034ed1843bf00b5176c3b50 a23b03acfad67f727034ed1843bf00b5176c3b50 theHumanBorch <ncborch@gmail.com> 1708081935 -0600	reset: moving to HEAD
+a23b03acfad67f727034ed1843bf00b5176c3b50 ab5761df97e03837ccd8c97625f1146fc44c960d theHumanBorch <ncborch@gmail.com> 1708081935 -0600	checkout: moving from devel to dev
+ab5761df97e03837ccd8c97625f1146fc44c960d 6a849099775c6a7784ad425a3384ac901e5c2413 theHumanBorch <ncborch@gmail.com> 1708107034 -0600	commit: Adding details to vignette
+6a849099775c6a7784ad425a3384ac901e5c2413 6a849099775c6a7784ad425a3384ac901e5c2413 theHumanBorch <ncborch@gmail.com> 1708122852 -0600	reset: moving to HEAD
+6a849099775c6a7784ad425a3384ac901e5c2413 dec11b31410fc29e82117dfb7ccbf584a7f8ab28 theHumanBorch <ncborch@gmail.com> 1708122852 -0600	pull --ff --recurse-submodules --progress origin: Fast-forward
+dec11b31410fc29e82117dfb7ccbf584a7f8ab28 e393e07f9392060fcc5dcf00ac921cdb484f740a theHumanBorch <ncborch@gmail.com> 1708172318 -0600	commit: conditional removal of gene sets
+e393e07f9392060fcc5dcf00ac921cdb484f740a 9ac939bc41fb0fb00f9593beb4f5e0aff30e6033 theHumanBorch <ncborch@gmail.com> 1708182542 -0600	commit: Spellcheck vignette
+9ac939bc41fb0fb00f9593beb4f5e0aff30e6033 f909c12438ad195c649cc53b3bc383c50361a1d2 theHumanBorch <ncborch@gmail.com> 1708271145 -0600	commit: subset gene.set for heatmap
+f909c12438ad195c649cc53b3bc383c50361a1d2 7ee200ca6147bb2a44f3ca45eebb9693528e4a4a theHumanBorch <ncborch@gmail.com> 1708271155 -0600	commit: performPCA documentation
+7ee200ca6147bb2a44f3ca45eebb9693528e4a4a 79074da688b00dda5552d250d5edbed75733bfd9 theHumanBorch <ncborch@gmail.com> 1708271334 -0600	commit: update manual
+79074da688b00dda5552d250d5edbed75733bfd9 79074da688b00dda5552d250d5edbed75733bfd9 theHumanBorch <ncborch@gmail.com> 1708273112 -0600	reset: moving to HEAD
+79074da688b00dda5552d250d5edbed75733bfd9 abcba4e078b4aa0d789e9f7d2c732ca3dd93b7b0 theHumanBorch <ncborch@gmail.com> 1708273112 -0600	checkout: moving from dev to master
+abcba4e078b4aa0d789e9f7d2c732ca3dd93b7b0 a3bcf2d3f9415b295845ff89fdb41dcb2aa808be theHumanBorch <ncborch@gmail.com> 1708273177 -0600	pull --ff --recurse-submodules --progress origin: Fast-forward
+a3bcf2d3f9415b295845ff89fdb41dcb2aa808be a23b03acfad67f727034ed1843bf00b5176c3b50 theHumanBorch <ncborch@gmail.com> 1708349803 -0600	checkout: moving from master to devel
+a23b03acfad67f727034ed1843bf00b5176c3b50 a3bcf2d3f9415b295845ff89fdb41dcb2aa808be theHumanBorch <ncborch@gmail.com> 1708349858 -0600	checkout: moving from devel to master
+a3bcf2d3f9415b295845ff89fdb41dcb2aa808be a23b03acfad67f727034ed1843bf00b5176c3b50 theHumanBorch <ncborch@gmail.com> 1708349877 -0600	checkout: moving from master to devel
+a23b03acfad67f727034ed1843bf00b5176c3b50 a3bcf2d3f9415b295845ff89fdb41dcb2aa808be theHumanBorch <ncborch@gmail.com> 1708349938 -0600	checkout: moving from devel to master
+a3bcf2d3f9415b295845ff89fdb41dcb2aa808be a23b03acfad67f727034ed1843bf00b5176c3b50 theHumanBorch <ncborch@gmail.com> 1708349985 -0600	checkout: moving from master to devel
+a23b03acfad67f727034ed1843bf00b5176c3b50 1ab4a70187f3b342bce07ca3fae26b42db4a4c29 theHumanBorch <ncborch@gmail.com> 1708350099 -0600	commit: v1.99.0
+1ab4a70187f3b342bce07ca3fae26b42db4a4c29 a3bcf2d3f9415b295845ff89fdb41dcb2aa808be theHumanBorch <ncborch@gmail.com> 1709143878 -0600	checkout: moving from devel to master
+a3bcf2d3f9415b295845ff89fdb41dcb2aa808be 94980102e8ba6089a390b29a8f846888bae6366c theHumanBorch <ncborch@gmail.com> 1709143880 -0600	pull --ff --recurse-submodules --progress origin: Fast-forward
+94980102e8ba6089a390b29a8f846888bae6366c a6af0527d0670f7119516bda7f17b5ab34867f6a theHumanBorch <ncborch@gmail.com> 1709146110 -0600	commit: Add new testthat viz after update
+a6af0527d0670f7119516bda7f17b5ab34867f6a 236f67b44b9da080ce4027078aac966ef4b3c0f5 theHumanBorch <ncborch@gmail.com> 1709550169 -0600	pull --ff --recurse-submodules --progress origin: Fast-forward
+236f67b44b9da080ce4027078aac966ef4b3c0f5 1ab4a70187f3b342bce07ca3fae26b42db4a4c29 theHumanBorch <ncborch@gmail.com> 1709550251 -0600	checkout: moving from master to devel
+1ab4a70187f3b342bce07ca3fae26b42db4a4c29 1ebd90945b5e0337ffff3887b03e72473fb8e3ef theHumanBorch <ncborch@gmail.com> 1709551184 -0600	commit: v1.99.1
+1ebd90945b5e0337ffff3887b03e72473fb8e3ef 1ebd90945b5e0337ffff3887b03e72473fb8e3ef theHumanBorch <ncborch@gmail.com> 1709645534 -0600	checkout: moving from devel to devel
+1ebd90945b5e0337ffff3887b03e72473fb8e3ef 117d14a645cc46dd383062cf7aa81838f5052823 theHumanBorch <ncborch@gmail.com> 1709645716 -0600	commit (merge): Merge remote-tracking branch 'origin' into devel
+117d14a645cc46dd383062cf7aa81838f5052823 117d14a645cc46dd383062cf7aa81838f5052823 theHumanBorch <ncborch@gmail.com> 1709645815 -0600	checkout: moving from devel to devel
+117d14a645cc46dd383062cf7aa81838f5052823 117d14a645cc46dd383062cf7aa81838f5052823 theHumanBorch <ncborch@gmail.com> 1709645881 -0600	checkout: moving from devel to devel
+117d14a645cc46dd383062cf7aa81838f5052823 236f67b44b9da080ce4027078aac966ef4b3c0f5 theHumanBorch <ncborch@gmail.com> 1710164699 -0500	checkout: moving from devel to master
+236f67b44b9da080ce4027078aac966ef4b3c0f5 117d14a645cc46dd383062cf7aa81838f5052823 theHumanBorch <ncborch@gmail.com> 1710164898 -0500	checkout: moving from master to devel
+117d14a645cc46dd383062cf7aa81838f5052823 117d14a645cc46dd383062cf7aa81838f5052823 theHumanBorch <ncborch@gmail.com> 1710354489 -0500	checkout: moving from devel to devel
+117d14a645cc46dd383062cf7aa81838f5052823 117d14a645cc46dd383062cf7aa81838f5052823 theHumanBorch <ncborch@gmail.com> 1710354799 -0500	checkout: moving from devel to devel
+117d14a645cc46dd383062cf7aa81838f5052823 c640b1aa2cfe5e136085503da8eb28b2b5a8f75a theHumanBorch <ncborch@gmail.com> 1710355040 -0500	commit: Update test-runEscape.R
+c640b1aa2cfe5e136085503da8eb28b2b5a8f75a 236f67b44b9da080ce4027078aac966ef4b3c0f5 theHumanBorch <ncborch@gmail.com> 1710763720 -0500	checkout: moving from devel to master
+236f67b44b9da080ce4027078aac966ef4b3c0f5 c640b1aa2cfe5e136085503da8eb28b2b5a8f75a theHumanBorch <ncborch@gmail.com> 1710763809 -0500	checkout: moving from master to devel
+c640b1aa2cfe5e136085503da8eb28b2b5a8f75a 236f67b44b9da080ce4027078aac966ef4b3c0f5 theHumanBorch <ncborch@gmail.com> 1710931604 -0500	checkout: moving from devel to master
+236f67b44b9da080ce4027078aac966ef4b3c0f5 c640b1aa2cfe5e136085503da8eb28b2b5a8f75a theHumanBorch <ncborch@gmail.com> 1710931649 -0500	checkout: moving from master to devel
+c640b1aa2cfe5e136085503da8eb28b2b5a8f75a 236f67b44b9da080ce4027078aac966ef4b3c0f5 theHumanBorch <ncborch@gmail.com> 1710931769 -0500	checkout: moving from devel to master
+236f67b44b9da080ce4027078aac966ef4b3c0f5 c640b1aa2cfe5e136085503da8eb28b2b5a8f75a theHumanBorch <ncborch@gmail.com> 1710931793 -0500	checkout: moving from master to devel
+c640b1aa2cfe5e136085503da8eb28b2b5a8f75a 236f67b44b9da080ce4027078aac966ef4b3c0f5 theHumanBorch <ncborch@gmail.com> 1710931796 -0500	checkout: moving from devel to master
+236f67b44b9da080ce4027078aac966ef4b3c0f5 6d15498de8000d8ff29c76253b0f001e2c241849 theHumanBorch <ncborch@gmail.com> 1711024086 -0500	commit: update for bioconductor
+6d15498de8000d8ff29c76253b0f001e2c241849 c640b1aa2cfe5e136085503da8eb28b2b5a8f75a theHumanBorch <ncborch@gmail.com> 1711024172 -0500	checkout: moving from master to devel
+c640b1aa2cfe5e136085503da8eb28b2b5a8f75a a206f4958f228098beaca512ff5927da786fa426 theHumanBorch <ncborch@gmail.com> 1711024232 -0500	merge origin: Merge made by the 'ort' strategy.
+a206f4958f228098beaca512ff5927da786fa426 99fed6482d39477cbff92171849cf68c067da5c9 theHumanBorch <ncborch@gmail.com> 1711365892 -0500	commit: silencing some tests
+99fed6482d39477cbff92171849cf68c067da5c9 6d15498de8000d8ff29c76253b0f001e2c241849 theHumanBorch <ncborch@gmail.com> 1711365899 -0500	checkout: moving from devel to master
+6d15498de8000d8ff29c76253b0f001e2c241849 99fed6482d39477cbff92171849cf68c067da5c9 theHumanBorch <ncborch@gmail.com> 1711365904 -0500	checkout: moving from master to devel
+99fed6482d39477cbff92171849cf68c067da5c9 6d15498de8000d8ff29c76253b0f001e2c241849 theHumanBorch <ncborch@gmail.com> 1711366035 -0500	checkout: moving from devel to master
+6d15498de8000d8ff29c76253b0f001e2c241849 e5ee9bf2c9c46aba444eecb6cf2c18e391c1f721 theHumanBorch <ncborch@gmail.com> 1711366077 -0500	commit: silence some tests
+e5ee9bf2c9c46aba444eecb6cf2c18e391c1f721 336f7ee240b7ba4b86acb08c5b9156b66d447e95 theHumanBorch <ncborch@gmail.com> 1711366102 -0500	merge upstream/devel: Merge made by the 'ort' strategy.
+336f7ee240b7ba4b86acb08c5b9156b66d447e95 99fed6482d39477cbff92171849cf68c067da5c9 theHumanBorch <ncborch@gmail.com> 1711371796 -0500	checkout: moving from master to devel
+99fed6482d39477cbff92171849cf68c067da5c9 99fed6482d39477cbff92171849cf68c067da5c9 theHumanBorch <ncborch@gmail.com> 1721999305 -0500	reset: moving to HEAD
+99fed6482d39477cbff92171849cf68c067da5c9 336f7ee240b7ba4b86acb08c5b9156b66d447e95 theHumanBorch <ncborch@gmail.com> 1721999305 -0500	checkout: moving from devel to master
+336f7ee240b7ba4b86acb08c5b9156b66d447e95 8d4ec7a821e86f211fdf221dc52f53d6dd988077 theHumanBorch <ncborch@gmail.com> 1721999306 -0500	pull --ff --recurse-submodules --progress origin: Merge made by the 'ort' strategy.
+8d4ec7a821e86f211fdf221dc52f53d6dd988077 774905b64a68ec735a1810cd6f3a9c947f45bb05 theHumanBorch <ncborch@gmail.com> 1722000185 -0500	commit: Pass parallel to runEscape
+774905b64a68ec735a1810cd6f3a9c947f45bb05 c301476431efcd2d8d017c12e247ff20e97d3374 theHumanBorch <ncborch@gmail.com> 1722000325 -0500	commit: News and Version update
+c301476431efcd2d8d017c12e247ff20e97d3374 c301476431efcd2d8d017c12e247ff20e97d3374 theHumanBorch <ncborch@gmail.com> 1722436234 -0500	reset: moving to HEAD
+c301476431efcd2d8d017c12e247ff20e97d3374 f27dc899de760c9d1cb14ea48ad1aa464b63eeb1 theHumanBorch <ncborch@gmail.com> 1722436234 -0500	checkout: moving from master to dev
+f27dc899de760c9d1cb14ea48ad1aa464b63eeb1 7e4b065a8f0381abef6c60d00f30d6b1d795892e theHumanBorch <ncborch@gmail.com> 1722436573 -0500	commit: Normalization fix
+7e4b065a8f0381abef6c60d00f30d6b1d795892e 7e4b065a8f0381abef6c60d00f30d6b1d795892e theHumanBorch <ncborch@gmail.com> 1723734349 -0500	reset: moving to HEAD
+7e4b065a8f0381abef6c60d00f30d6b1d795892e 44f083e3162781bb8c52d5dd9bade042133d4300 theHumanBorch <ncborch@gmail.com> 1723734350 -0500	checkout: moving from dev to master
+44f083e3162781bb8c52d5dd9bade042133d4300 b5307d028401878da621291a21a99974c3ac3b53 theHumanBorch <ncborch@gmail.com> 1724781888 -0500	pull --ff --recurse-submodules --progress origin: Fast-forward
+b5307d028401878da621291a21a99974c3ac3b53 dbea780efff8f323bdae2e3d66b1f5bb3503d194 theHumanBorch <ncborch@gmail.com> 1724782035 -0500	checkout: moving from master to devel
+dbea780efff8f323bdae2e3d66b1f5bb3503d194 b5307d028401878da621291a21a99974c3ac3b53 theHumanBorch <ncborch@gmail.com> 1724782080 -0500	checkout: moving from devel to master
+b5307d028401878da621291a21a99974c3ac3b53 dbea780efff8f323bdae2e3d66b1f5bb3503d194 theHumanBorch <ncborch@gmail.com> 1724782277 -0500	checkout: moving from master to devel
+dbea780efff8f323bdae2e3d66b1f5bb3503d194 8b738a291cc3d52eb964dd33bbdadaf1225704d6 theHumanBorch <ncborch@gmail.com> 1724782445 -0500	commit (merge): Resolved merge conflicts between main and devel
+8b738a291cc3d52eb964dd33bbdadaf1225704d6 8b738a291cc3d52eb964dd33bbdadaf1225704d6 theHumanBorch <ncborch@gmail.com> 1724783292 -0500	checkout: moving from devel to devel
+8b738a291cc3d52eb964dd33bbdadaf1225704d6 8b738a291cc3d52eb964dd33bbdadaf1225704d6 theHumanBorch <ncborch@gmail.com> 1724783376 -0500	checkout: moving from devel to devel
+8b738a291cc3d52eb964dd33bbdadaf1225704d6 8b738a291cc3d52eb964dd33bbdadaf1225704d6 theHumanBorch <ncborch@gmail.com> 1724783385 -0500	merge origin/devel: updating HEAD
+8b738a291cc3d52eb964dd33bbdadaf1225704d6 8b738a291cc3d52eb964dd33bbdadaf1225704d6 theHumanBorch <ncborch@gmail.com> 1724783420 -0500	merge origin/devel: updating HEAD
+8b738a291cc3d52eb964dd33bbdadaf1225704d6 8b738a291cc3d52eb964dd33bbdadaf1225704d6 theHumanBorch <ncborch@gmail.com> 1724783493 -0500	merge origin/devel: updating HEAD
+8b738a291cc3d52eb964dd33bbdadaf1225704d6 4c51261c2024d541a3a3e014f814cd6552eac5ce theHumanBorch <ncborch@gmail.com> 1724783793 -0500	commit (merge): Merge remote-tracking branch 'origin/devel' into devel
+4c51261c2024d541a3a3e014f814cd6552eac5ce b5307d028401878da621291a21a99974c3ac3b53 theHumanBorch <ncborch@gmail.com> 1724784018 -0500	checkout: moving from devel to master
+b5307d028401878da621291a21a99974c3ac3b53 2f3c704e9e2fb9ef008575c805082030cc67d768 theHumanBorch <ncborch@gmail.com> 1724942457 -0500	pull --ff --recurse-submodules --progress origin: Fast-forward
+2f3c704e9e2fb9ef008575c805082030cc67d768 737d346bfe697717ee268071b16b47dd1b9e04b5 theHumanBorch <ncborch@gmail.com> 1724942572 -0500	commit (merge): Merged origin/devel into current branch, resolved conflicts by favoring origin
+737d346bfe697717ee268071b16b47dd1b9e04b5 cbcaf333812ce774ee4ccc878cf216f357a98894 theHumanBorch <ncborch@gmail.com> 1724943282 -0500	commit: Update getGeneSets.R
+cbcaf333812ce774ee4ccc878cf216f357a98894 cbcaf333812ce774ee4ccc878cf216f357a98894 theHumanBorch <ncborch@gmail.com> 1724943296 -0500	reset: moving to HEAD
+cbcaf333812ce774ee4ccc878cf216f357a98894 46ff18c7dbf2e2a3dacaf2f6ecce637c044ae1a6 theHumanBorch <ncborch@gmail.com> 1724943296 -0500	pull --ff --recurse-submodules --progress origin: Merge made by the 'ort' strategy.
+46ff18c7dbf2e2a3dacaf2f6ecce637c044ae1a6 4c51261c2024d541a3a3e014f814cd6552eac5ce theHumanBorch <ncborch@gmail.com> 1725367669 -0500	checkout: moving from master to devel
+4c51261c2024d541a3a3e014f814cd6552eac5ce d138763294e0b5eafad22eb49299364f6db2686f theHumanBorch <ncborch@gmail.com> 1725367732 -0500	commit: Update DESCRIPTION
+d138763294e0b5eafad22eb49299364f6db2686f d138763294e0b5eafad22eb49299364f6db2686f theHumanBorch <ncborch@gmail.com> 1725479361 -0500	checkout: moving from devel to devel
+d138763294e0b5eafad22eb49299364f6db2686f d138763294e0b5eafad22eb49299364f6db2686f theHumanBorch <ncborch@gmail.com> 1725479375 -0500	reset: moving to HEAD
+d138763294e0b5eafad22eb49299364f6db2686f 46ff18c7dbf2e2a3dacaf2f6ecce637c044ae1a6 theHumanBorch <ncborch@gmail.com> 1725479375 -0500	checkout: moving from devel to master
+46ff18c7dbf2e2a3dacaf2f6ecce637c044ae1a6 5213a31cf8308ddc99a139e41ed47a638b1d3d43 theHumanBorch <ncborch@gmail.com> 1725479398 -0500	commit: Update DESCRIPTION
+5213a31cf8308ddc99a139e41ed47a638b1d3d43 d138763294e0b5eafad22eb49299364f6db2686f theHumanBorch <ncborch@gmail.com> 1725479403 -0500	checkout: moving from master to devel
+d138763294e0b5eafad22eb49299364f6db2686f 3cbf4bf8ec7a7cf38fb90fbb3a31688b512048ac theHumanBorch <ncborch@gmail.com> 1725479607 -0500	commit: version bump
+3cbf4bf8ec7a7cf38fb90fbb3a31688b512048ac 3cbf4bf8ec7a7cf38fb90fbb3a31688b512048ac theHumanBorch <ncborch@gmail.com> 1726233139 -0500	checkout: moving from devel to devel
+3cbf4bf8ec7a7cf38fb90fbb3a31688b512048ac 29a46a99fb8b04dda0c4ed91ce9cc03cbda95e92 theHumanBorch <ncborch@gmail.com> 1726233207 -0500	checkout: moving from devel to master
+29a46a99fb8b04dda0c4ed91ce9cc03cbda95e92 3cbf4bf8ec7a7cf38fb90fbb3a31688b512048ac theHumanBorch <ncborch@gmail.com> 1726233226 -0500	checkout: moving from master to devel
+3cbf4bf8ec7a7cf38fb90fbb3a31688b512048ac 29a46a99fb8b04dda0c4ed91ce9cc03cbda95e92 theHumanBorch <ncborch@gmail.com> 1726510663 -0500	checkout: moving from devel to master
+29a46a99fb8b04dda0c4ed91ce9cc03cbda95e92 3cbf4bf8ec7a7cf38fb90fbb3a31688b512048ac theHumanBorch <ncborch@gmail.com> 1726510765 -0500	checkout: moving from master to devel
+3cbf4bf8ec7a7cf38fb90fbb3a31688b512048ac c4d9e62a6f1d7bc612a7e578c49bf03877751792 theHumanBorch <ncborch@gmail.com> 1726510829 -0500	commit (merge): Updating m_df error
+c4d9e62a6f1d7bc612a7e578c49bf03877751792 c4d9e62a6f1d7bc612a7e578c49bf03877751792 theHumanBorch <ncborch@gmail.com> 1726757007 -0500	checkout: moving from devel to devel
+c4d9e62a6f1d7bc612a7e578c49bf03877751792 c4d9e62a6f1d7bc612a7e578c49bf03877751792 theHumanBorch <ncborch@gmail.com> 1726757016 -0500	reset: moving to HEAD
+c4d9e62a6f1d7bc612a7e578c49bf03877751792 d89f74e62c3ba781ee972c370dfd04ff835b786e theHumanBorch <ncborch@gmail.com> 1726757016 -0500	checkout: moving from devel to master
+d89f74e62c3ba781ee972c370dfd04ff835b786e c4d9e62a6f1d7bc612a7e578c49bf03877751792 theHumanBorch <ncborch@gmail.com> 1726757044 -0500	checkout: moving from master to devel
+c4d9e62a6f1d7bc612a7e578c49bf03877751792 9c13be1535dc9894e5f0f04f0db64493b729a7ee theHumanBorch <ncborch@gmail.com> 1726757091 -0500	commit (merge): Merge branch 'master' into devel
+9c13be1535dc9894e5f0f04f0db64493b729a7ee 4de86b61bb9b164c8692c7c2464b97f8f3713029 theHumanBorch <ncborch@gmail.com> 1726757145 -0500	commit: Updating GSVA function pull
+4de86b61bb9b164c8692c7c2464b97f8f3713029 9c13be1535dc9894e5f0f04f0db64493b729a7ee theHumanBorch <ncborch@gmail.com> 1726757186 -0500	reset: moving to 9c13be1535dc9894e5f0f04f0db64493b729a7ee
+9c13be1535dc9894e5f0f04f0db64493b729a7ee 9c13be1535dc9894e5f0f04f0db64493b729a7ee theHumanBorch <ncborch@gmail.com> 1726757215 -0500	reset: moving to HEAD
+9c13be1535dc9894e5f0f04f0db64493b729a7ee d89f74e62c3ba781ee972c370dfd04ff835b786e theHumanBorch <ncborch@gmail.com> 1726757215 -0500	checkout: moving from devel to master
+d89f74e62c3ba781ee972c370dfd04ff835b786e 9c13be1535dc9894e5f0f04f0db64493b729a7ee theHumanBorch <ncborch@gmail.com> 1726757230 -0500	checkout: moving from master to devel
+9c13be1535dc9894e5f0f04f0db64493b729a7ee 9c13be1535dc9894e5f0f04f0db64493b729a7ee theHumanBorch <ncborch@gmail.com> 1729699792 -0700	reset: moving to HEAD
+9c13be1535dc9894e5f0f04f0db64493b729a7ee d89f74e62c3ba781ee972c370dfd04ff835b786e theHumanBorch <ncborch@gmail.com> 1729699792 -0700	checkout: moving from devel to master
+d89f74e62c3ba781ee972c370dfd04ff835b786e 850adbe29436d6511b1042bd591479a284831f58 theHumanBorch <ncborch@gmail.com> 1729700502 -0700	commit: v2.1.5
+850adbe29436d6511b1042bd591479a284831f58 9c13be1535dc9894e5f0f04f0db64493b729a7ee theHumanBorch <ncborch@gmail.com> 1729714277 -0700	checkout: moving from master to devel
+9c13be1535dc9894e5f0f04f0db64493b729a7ee 9c13be1535dc9894e5f0f04f0db64493b729a7ee theHumanBorch <ncborch@gmail.com> 1729714522 -0700	checkout: moving from devel to devel
+9c13be1535dc9894e5f0f04f0db64493b729a7ee 9c13be1535dc9894e5f0f04f0db64493b729a7ee theHumanBorch <ncborch@gmail.com> 1729714533 -0700	merge master: updating HEAD

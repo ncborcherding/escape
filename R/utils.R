@@ -175,13 +175,18 @@ is_seurat_or_se_object <- function(obj) {
 }
 
 #Add the values to single cell object
-#' @importFrom SeuratObject CreateAssayObject
+#' @importFrom SeuratObject CreateAssayObject CreateAssay5Object
 #' @importFrom SummarizedExperiment SummarizedExperiment assays<-
 #' @importFrom SingleCellExperiment altExps altExp<- 
 .adding.Enrich <- function(sc, enrichment, enrichment.name) {
   if (inherits(sc, "Seurat")) {
-    new.assay <- suppressWarnings(CreateAssayObject(
-                                  data = as.matrix(t(enrichment))))
+    if (as.numeric(substr(sc@version,1,1)) == 5) {
+      new.assay <- suppressWarnings(CreateAssay5Object(
+                                    data = as.matrix(t(enrichment))))
+    } else {
+      new.assay <- suppressWarnings(CreateAssayObject(
+                                    data = as.matrix(t(enrichment))))
+    }
     
     suppressWarnings(sc[[enrichment.name]] <- new.assay)
   } else if (inherits(sc, "SingleCellExperiment")) {
