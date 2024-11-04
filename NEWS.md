@@ -1,3 +1,7 @@
+# escape VERSION 2.2.1
+
+#VERSION BUMP FOR BIOCONDUCTOR
+
 # escape VERSION 2.1.5 (2024-10-23)
 
 * update handling of v5 Seurat versus <v5 Seurat Objects
