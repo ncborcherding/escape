@@ -1,3 +1,23 @@
+# escape VERSION 2.2.2
+
+## UNDERLYING CHANGES
+
+* fix ```performNormalization()``` conditional statements
+* fix ```performNormalization()``` rescaling for per gene set calculations
+
+# escape VERSION 2.2.1
+
+#VERSION BUMP FOR BIOCONDUCTOR
+
+# escape VERSION 2.1.5 (2024-10-23)
+
+* update handling of v5 Seurat versus <v5 Seurat Objects
+* added mean and median visualization for ```heatmapEnrichment()```
+
+# escape VERSION 2.1.4 (2024-09-13)
+
+* update ```densityEnrichment()``` GSVA function pull
+
 # escape VERSION 2.1.3 (2024-09-13)
 
 #VERSION BUMP FOR BIOCONDUCTOR
