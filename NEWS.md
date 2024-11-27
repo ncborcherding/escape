@@ -3,6 +3,7 @@
 ## UNDERLYING CHANGES
 
 * fix ```performNormalization()``` conditional statements
+* fix ```performNormalization()``` rescaling for per gene set calculations
 
 # escape VERSION 2.2.1
 
