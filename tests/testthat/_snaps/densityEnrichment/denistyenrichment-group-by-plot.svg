@@ -40,16 +40,6 @@
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 </g>
 <defs>
-  <clipPath id='cpNS40OHw3MTQuNTJ8NDA5Ljc0fDU3MC41Mg=='>
-    <rect x='5.48' y='409.74' width='709.04' height='160.78' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpNS40OHw3MTQuNTJ8NDA5Ljc0fDU3MC41Mg==)'>
-<rect x='5.48' y='409.74' width='709.04' height='160.78' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
-</g>
-<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
-</g>
-<defs>
   <clipPath id='cpNDAuNzJ8NjI1LjIyfDI4LjI2fDQwMS41Mg=='>
     <rect x='40.72' y='28.26' width='584.50' height='373.25' />
   </clipPath>
@@ -81,6 +71,16 @@
 <rect x='642.36' y='223.27' width='15.86' height='15.86' style='stroke-width: 1.07; stroke-linecap: butt; stroke-linejoin: miter; fill: #FFFE9E; fill-opacity: 0.40;' />
 <text x='664.42' y='216.94' style='font-size: 8.80px; font-family: sans;' textLength='39.15px' lengthAdjust='spacingAndGlyphs'>groups.g2</text>
 <text x='664.42' y='234.22' style='font-size: 8.80px; font-family: sans;' textLength='39.15px' lengthAdjust='spacingAndGlyphs'>groups.g1</text>
+</g>
+<defs>
+  <clipPath id='cpNS40OHw3MTQuNTJ8NDA5Ljc0fDU3MC41Mg=='>
+    <rect x='5.48' y='409.74' width='709.04' height='160.78' />
+  </clipPath>
+</defs>
+<g clip-path='url(#cpNS40OHw3MTQuNTJ8NDA5Ljc0fDU3MC41Mg==)'>
+<rect x='5.48' y='409.74' width='709.04' height='160.78' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+</g>
+<g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 </g>
 <defs>
   <clipPath id='cpNDAuNzJ8NjI1LjIyfDQxNS4yMnw1MzkuNjM='>
