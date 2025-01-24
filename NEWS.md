@@ -1,3 +1,10 @@
+# escape VERSION 2.2.3
+
+## UNDERLYING CHANGES
+
+* fixed handling of *groups* parameter and data splitting in ```escape.matrix()```
+* improved efficiency of internal ```.split_data.matrix()```
+
 # escape VERSION 2.2.2
 
 ## UNDERLYING CHANGES
