@@ -1,6 +1,25 @@
+# escape VERSION 2.2.3
+
+## UNDERLYING CHANGES
+
+* fixed handling of *groups* parameter and data splitting in ```escape.matrix()```
+* improved efficiency of internal ```.split_data.matrix()```
+
+# escape VERSION 2.2.2
+
+## UNDERLYING CHANGES
+
+* fix ```performNormalization()``` conditional statements
+* fix ```performNormalization()``` rescaling for per gene set calculations
+
+# escape VERSION 2.2.1
+
+#VERSION BUMP FOR BIOCONDUCTOR
+
 # escape VERSION 2.1.5 (2024-10-23)
 
 * update handling of v5 Seurat versus <v5 Seurat Objects
+* added mean and median visualization for ```heatmapEnrichment()```
 
 # escape VERSION 2.1.4 (2024-09-13)
 
