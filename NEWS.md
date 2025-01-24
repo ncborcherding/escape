@@ -2,6 +2,13 @@
 
 ## UNDERLYING CHANGES
 
+* fixed handling of *groups* parameter and data splitting in ```escape.matrix()```
+* improved efficiency of internal ```.split_data.matrix()```
+
+# escape VERSION 2.2.2
+
+## UNDERLYING CHANGES
+
 * fix ```performNormalization()``` conditional statements
 * fix ```performNormalization()``` rescaling for per gene set calculations
 
